@@ -1,0 +1,63 @@
+/* Styles for the student completing the activity. */
+.responsetype-text.has-form .femptylabel .fitemtitle {
+    display: none;
+}
+.responsetype-text.has-form .femptylabel .felement {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.responsetype-text.has-form .fitem_fgroup .felement {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.responsetype-text.has-form div.editor_atto_toolbar {
+    padding: 0;
+    border-bottom: none;
+    min-height: 0;
+}
+.responsetype-text.has-form .editor_atto_content {
+    resize: none;
+    min-height: 200px !important;
+    height: 200px !important;
+}
+.responsetype-text.has-form .maximumwordsprompt {
+    text-align: right;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-right: 50px;
+}
+.responsetype-text.has-form .fdescription.required {
+    display: none;
+}
+
+/* Styles for showing the answers to students. */
+.user-response.responsetype-text .user-profile {
+    float: left;
+    margin-right: 20px;
+}
+.user-response.responsetype-text .user-wrote {
+    font-weight: bold;
+    float: left;
+    padding-right: 5px;
+}
+.user-response.responsetype-text .user-answer {
+    display: inline;
+}
+.user-response.responsetype-text .response-time {
+    clear:both;
+    font-size: 0.85em;
+    font-style: italic;
+    text-align:right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* Styles for the overall summary. */
+.activity-course .responsetype-text .user-wrote {
+    font-weight: bold;
+    float: left;
+    padding-right: 5px;
+}
+.activity-course .responsetype-text .user-answer {
+    display: inline;
+}

@@ -1,0 +1,32 @@
+{{# fullpage }}
+    <section class="response-activity">
+    <h1>{{heading}}</h1>
+    <div class="question">{{{question}}}</div>
+{{/ fullpage }}
+
+<div class="response"{{#contextid}} data-context="{{contextid}}"{{/contextid}}>
+{{$content}}Default content{{/content}}
+</div>
+
+{{#contextid}}{{#js}}
+require(['mod_response/ajaxform'], function(form) {
+    form.init('div.response[data-context={{contextid}}]');
+});
+{{/js}}{{/contextid}}
+
+{{^form}}
+        <div class="manage-links">
+            {{# can_see_all }}
+            <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
+                |
+            {{/ can_see_all }}
+            <a href="{{{summary_url}}}">{{# str }} viewcoursesummary, response{{/ str }}</a>
+            {{# can_delete }}
+                |
+                <a href="{{{delete_url}}}">{{# str }} deleteresponse, response{{/ str }}</a>
+            {{/ can_delete }}
+        </div>
+{{/form}}
+{{# fullpage }}
+    </section>
+{{/ fullpage }}

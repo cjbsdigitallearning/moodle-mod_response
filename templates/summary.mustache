@@ -1,0 +1,13 @@
+<div class="response activity-course">
+{{# sections }}
+    <div class="activity-section-container">
+    <h3 class="activity-section">{{section_title}}</h3>
+    {{# responses }}
+        <div class="activity-container">
+        {{{render}}}
+        </div>
+    {{/ responses }}
+    </div>
+    <hr />
+{{/ sections }}
+</div>

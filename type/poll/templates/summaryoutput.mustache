@@ -1,0 +1,27 @@
+<div class="activity-title responsetype-poll" data-response="{{response_id}}">
+    <h4>{{{icon}}} {{{activity_title}}}</h4>
+
+    <h5>{{{activity_question}}}</h5>
+
+    <div class="row-fluid">
+        <div class="span8">
+            <div class="user-wrote">
+                {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}{{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
+
+                <div class="clearfix"></div>
+                <div class="context-link text-right">
+                    <span class="time-completed">{{{timemodified_date}}}</span>
+                    <a class="btn btn-default" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="span4 aggregate">
+
+        </div>
+    </div>
+</div>
+{{#js}}
+require(['mod_response/summarychart'], function(summarychart) {
+    summarychart({{response_id}}, {{{aggregate}}}, {{{colours}}}, {{#quote}}{{# str }} selectedby, responsetype_poll {{/ str }}{{/quote}});
+})
+{{/js}}

@@ -1,0 +1,24 @@
+<img src="{{{icon_url}}}" class="iconlarge activityicon" alt="" role="presentation"><span class="instancename">{{{activity_title}}}</span>
+<div class="contentafterlink">
+    {{#description}}
+        <div class="no-overflow">{{{description}}}</div>
+    {{/description}}
+    <div class="no-overflow">
+        <p>{{{question}}}</p>
+    </div>
+    {{# form }}
+        <div class="response" data-context="{{contextid}}">
+            <div class="user-response responsetype-{{responsetype}} has-form">
+                {{{form}}}
+            </div>
+        </div>
+        {{#js}}
+        require(['mod_response/ajaxform'], function(form) {
+            form.init('div.response[data-context={{contextid}}]');
+        });
+        {{/js}}
+    {{/ form }}
+    {{# user_answer }}
+        {{{user_answer}}}
+    {{/ user_answer }}
+</div>

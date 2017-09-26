@@ -1,0 +1,32 @@
+<section class="response-activity view-all responsetype-text">
+    <a class="btn btn-default pull-right" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a><h1>{{{icon}}} {{heading}}</h1>
+    <div class="question">{{{question}}}</div>
+
+    {{# all_responses }}
+    <div class="row-fluid view-all-response">
+        <div class="span3 user-profile text-center">
+            <div class="profile-picture">
+                {{{profile_picture}}}
+            </div>
+            <div class="user-name">
+                {{first_name}} {{last_name}}
+            </div>
+        </div>
+        <div class="span9">
+            <div class="user-wrote">
+                {{# str }} theywrote, responsetype_text, {{first_name}}{{/ str }}<div class="user-answer">{{{response_text}}}</div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="context-link text-right">
+                <span class="time-completed">{{{timecompleted_datetime}}}</span>
+            </div>
+        </div>
+    </div>
+    {{/ all_responses }}
+    {{^ all_responses }}
+    <div class="alert alert-warning">
+        {{# str }} nocompletions, response {{/ str }}
+    </div>
+    {{/ all_responses }}
+</section>

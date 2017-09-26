@@ -1,0 +1,36 @@
+{{< mod_response/response}}
+{{$content}}
+    <div class="user-response responsetype-poll" data-response="{{{response_id}}}">
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="user-profile">
+                    {{{profile_picture}}}
+                </div>
+                <div class="user-wrote">
+                    {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                </div>
+                {{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
+
+                <div class="response-time">
+                    {{{user_response_time}}}
+                </div>
+            </div>
+            <div class="span4 aggregate">
+                <div class="aggregate-container">
+                    <canvas id="aggregate"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{{/content}}
+{{/ mod_response/response}}
+{{#js}}
+require(['responsetype_poll/viewchart'], function(viewchart) {
+    viewchart.init({{{response_id}}}, {
+        data: {{{aggregate}}},
+        colours: {{{colours}}},
+        tooltip: {{#quote}}{{# str }} selectedby, responsetype_poll {{/ str }}{{/quote}}
+    });
+});
+{{/js}}

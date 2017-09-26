@@ -1,0 +1,114 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Rendering for the summary of response activity - poll subplugin.
+ *
+ * @package   responsetype_poll
+ * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace mod_response\type\poll;
+use mod_response\responsetype\abstractoutput;
+use stdClass;
+use renderable;
+use renderer_base;
+use templatable;
+use mod_response\helper;
+use moodle_url;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Creates a renderer for summary of a course's activitities.
+ *
+ * @package   responsetype_poll
+ * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class summaryoutput extends abstractoutput implements renderable, templatable {
+    /** @var object Contains all the data for a response so a user can complete it. */
+    protected $data = null;
+
+    /**
+     * Provides the data for the template.
+     *
+     * Essentially hands everything to the subplugin because the subplugin
+     * knows what it needs for its own templates.
+     *
+     * @param renderer_base $output The output renderer object
+     * @return object $data An object containing all the template data
+     */
+    public function export_for_template(renderer_base $output) {
+        global $USER, $OUTPUT;
+
+        $data = new stdClass();
+
+        $data->response_id = $this->data->activity->response;
+        $data->activity_title = $this->data->activity_title;
+        $data->activity_question = $this->data->question;
+        $data->icon = $OUTPUT->render($this->data->icon);
+
+        $userchoice = $this->data->response->choice;
+        $data->user_choice = $this->data->activity->poll_choices[$userchoice]->choice;
+        if (!empty($this->data->response->reflection_text)) {
+            $data->user_response = helper::clean_text($this->data->response->reflection_text);
+        }
+
+        $data->responsetype = $this->data->responsetype;
+        $data->template = 'summaryoutput';
+        if ($this->data->view_in_course) {
+            $courseid = $this->data->course_id;
+            $data->context_link = new moodle_url('/course/view.php', array('id' => $courseid), 'module-' . $this->data->cm_id);
+        } else {
+            $data->context_link = new moodle_url('/mod/response/view.php', array('id' => $this->data->cm_id));
+        }
+
+        // Export date+time and date to the template in case people want to change it.
+        $data->timemodified = $this->data->response->timemodified;
+        $dateformat = get_string('strftimedatefullshort', 'langconfig');
+        $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
+        $data->timemodified_date = userdate($data->timemodified, $dateformat, 99, false, false);
+        $data->timemodified_datetime = userdate($data->timemodified, $datetimeformat, 99, false, false);
+
+        $aggregate = [];
+        if (!empty($this->data->aggregate)) {
+            $aggregate = new stdClass();
+            foreach (array('group', 'all') as $set) {
+                if (empty($this->data->aggregate->$set)) {
+                    continue;
+                }
+                $aggregate->$set = new stdClass();
+                $aggregate->$set->title = get_string('aggregate_title_' . $set, 'responsetype_poll');
+                $aggregate->$set->labels = array();
+                $aggregate->$set->data = array();
+                foreach ($this->data->activity->poll_choices as $choicenum => $choice) {
+                    $aggregate->$set->labels[] = $choice->choice;
+                    $amount = 0;
+                    if (!empty($this->data->aggregate->{$set}[$choicenum])) {
+                        $amount = $this->data->aggregate->{$set}[$choicenum];
+                    }
+                    $aggregate->$set->data[] = $amount;
+                }
+            }
+        }
+        $data->aggregate = json_encode($aggregate);
+        $data->colours = $this->stringify_chart_colorset();
+
+        return $data;
+    }
+}

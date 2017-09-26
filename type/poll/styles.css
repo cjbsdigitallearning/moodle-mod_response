@@ -1,0 +1,116 @@
+/* Styles for the student completing the activity. */
+.responsetype-poll.has-form .femptylabel .fitemtitle {
+    display: none;
+}
+.responsetype-poll.has-form .femptylabel .felement {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.responsetype-poll.has-form .fitem_fgroup .felement {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.responsetype-poll.has-form .felement.feditor {
+    margin-top: 30px;
+}
+.responsetype-poll.has-form div.editor_atto_toolbar {
+    padding: 0;
+    border-bottom: none;
+    min-height: 0;
+}
+.responsetype-poll.has-form .editor_atto_content {
+    resize: none;
+    min-height: 200px !important;
+    height: 200px !important;
+}
+.responsetype-poll.has-form .maximumwordsprompt {
+    text-align: right;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-right: 50px;
+}
+.responsetype-poll.has-form .fdescription.required {
+    display: none;
+}
+
+.responsetype-poll.has-form .user-choice {
+    font-weight: 600;
+}
+
+/* Styles for showing the answers to students. */
+.user-response.responsetype-poll .user-profile {
+    float:left;
+    margin-right:20px;
+}
+.user-response.responsetype-poll .user-wrote {
+    float:left;
+}
+.user-response.responsetype-poll .user-answer {
+    display:inline;
+    font-weight: 600;
+}
+.user-response.responsetype-poll .user-reflection p:first-of-type {
+    display: block;
+    margin-left: 70px;
+    padding-top: 10px;
+}
+.user-response.responsetype-poll .user-reflection p:nth-of-type(n+2) {
+    padding-left:70px
+}
+.user-response.responsetype-poll .response-time {
+    clear:both;
+    font-size: 0.85em;
+    font-style: italic;
+    text-align:right;
+    margin-top:15px;
+    margin-bottom:15px
+}
+
+/* Styles for the overall summary. */
+.activity-course .responsetype-poll .user-wrote {
+    float:left;
+    width: 100%;
+}
+.activity-course .responsetype-poll .user-answer {
+    display:inline;
+    font-weight: 600;
+}
+.activity-course .responsetype-poll .user-reflection,
+ .activity-course .responsetype-poll .user-reflection p:first-of-type {
+    display: inline;
+}
+
+.user-response.responsetype-poll .row-fluid {
+    margin-bottom: 15px;
+}
+.user-response.responsetype-poll .row-fluid [class*="span"] {
+    padding: 10px 10px 0;
+}
+.user-response.responsetype-poll .row-fluid [class*="span"]:first-of-type {
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3)
+}
+.user-response.responsetype-poll .row-fluid .aggregate {
+    margin-bottom: 15px;
+}
+
+/* Styles for the teacher summary. */
+.view-all.responsetype-poll .view-all-response .user-wrote {
+    float: left;
+}
+.view-all.responsetype-poll .view-all-response .user-answer {
+    display:inline;
+    font-weight: 600;
+}
+.view-all.responsetype-poll .view-all-response .user-reflection,
+ .view-all.responsetype-poll .view-all-response .user-reflection p:first-of-type {
+    display: inline;
+}
+.view-all #viewall_chart {
+    margin-top: 30px;
+    margin-bottom: 40px;
+    margin-left: 10%;
+    width: 80%;
+    height: 250px;
+}

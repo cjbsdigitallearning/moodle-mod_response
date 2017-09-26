@@ -1,0 +1,30 @@
+<div class="display-completion profile">
+    {{# number_all }}
+        <div class="first-x">
+            {{# people_all }}
+            <img src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+            {{/ people_all }}
+        </div>
+        {{# number_all_other }}
+            <div class="others hide">
+                {{# people_all_other }}
+                <img src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                {{/ people_all_other }}
+            </div>
+            <div class="plus-x-others">
+                <button type="button" class="btn btn-default plus-x-other">{{plus_x_other_string}}</button> {{others_completed_string}}
+            </div>
+            <button type="button" class="btn btn-default plus-x-other hide">{{# str }} showless, form {{/ str }}</button>
+        {{/ number_all_other }}
+        {{^ number_all_other }}
+            <div class="plus-x-others">
+                {{others_completed_string}}
+            </div>
+        {{/ number_all_other}}
+    {{/ number_all }}
+</div>
+{{#js}}
+require(['mod_response/precompletion'], function(precompletion) {
+    precompletion();
+});
+{{/js}}
