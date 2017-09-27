@@ -1,0 +1,18 @@
+            <div class="user-profile">
+                {{{profile_picture}}}
+            </div>
+            <div class="user-wrote">
+                {{# viewing_own }}
+                    {{# str }} youwrote, responsetype_text {{/ str }}
+                {{/ viewing_own }}
+                {{^ viewing_own }}
+                    {{# str }} theywrote, responsetype_text, {{profile_name}} {{/ str }}
+                {{/ viewing_own }}
+            </div>
+            <div class="user-answer">
+                {{{user_response}}}
+            </div>
+
+            <div class="response-time">
+                {{{user_response_time}}}
+            </div>

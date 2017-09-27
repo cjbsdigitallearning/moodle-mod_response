@@ -150,6 +150,47 @@ abstract class abstractform extends moodleform {
     }
 
     /**
+     * Adds the post-completion stats display.
+     *
+     * This is for displaying the completion status once a given
+     * activity is complete. We use the form system for consistent
+     * styling purposes.
+     *
+     * @param int $userid The user viewing the form
+     * @param array $submitarea The submission area group from the form
+     * @param object $response The response object
+     * @return object $completions The data about the completions being displayed
+     */
+    public function add_postcompletion_completion($userid, &$submitarea, $response) {
+        global $PAGE;
+        $mform = $this->_form;
+
+        // Whether we're doing one or both of group or all, we have one place to get all the data.
+        $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid, false);
+        $completions->response_id = $response->id;
+
+        $displaypeerresults = (int) $response->displaypeerresults;
+
+        // Now some housekeeping.
+        if (($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) === 0) {
+            $completions->people_all = array();
+            $completions->number_all = 0;
+        }
+        if (($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) === 0) {
+            $completions->people_group = array();
+            $completions->number_group = 0;
+        }
+
+        if ($completions->number_all || $completions->number_group) {
+            $renderer = $PAGE->get_renderer('mod_response');
+            $displaystring = $renderer->render_postcompletion($completions);
+            $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
+        }
+
+        return $completions;
+    }
+
+    /**
      * Adds a mod_response word count widget to a given activity.
      *
      * This assumes it functions the way plugins like text makes use of it.

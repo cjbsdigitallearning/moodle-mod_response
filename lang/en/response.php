@@ -73,6 +73,7 @@ $string['subplugintype_responsetype_plural'] = 'Response types';
 $string['togglepeerresults'] = 'Toggle peer results';
 $string['togglepeerresults_desc'] = 'When showing users who else has completed the activity, which users to show to a student.';
 $string['togglepeerresultsall'] = 'All';
+$string['togglepeerresultsgroup'] = 'Group';
 $string['togglepeerresultsstudygroup'] = 'Study group';
 $string['viewallresponses'] = 'View all responses';
 $string['viewcoursesummary'] = 'View course summary';

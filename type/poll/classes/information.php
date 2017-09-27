@@ -84,25 +84,27 @@ class information extends abstractinfo {
     public function load_response_for_users($instance, $users, $completedonly = false) {
         global $DB;
 
-        $users = $this->sanitise_int_array($users);
+        $users = $this->sanitise_int_array($users, false);
         if (empty($users)) {
             // Nothing to do, don't even bother querying.
             return array();
         }
+
+        list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
+        $params['response'] = $instance->id;
+
         $query = "SELECT ru.userid, rpu.id, ru.timecreated, ru.timemodified, ru.timecompleted, rpu.choice, rpu.reflection_text
                     FROM {response_user} ru
                     JOIN {responsetype_poll_user} rpu ON (ru.response_identifier = rpu.id)
-                   WHERE ru.userid IN (:users)
+                   WHERE ru.userid $sql
                      AND ru.response = :response";
-        $params = array(
-            'response' => $instance->id,
-            'users' => $users,
-        );
+
         if ($completedonly) {
             $query .= '
                      AND ru.timecompleted > :timecompleted';
             $params['timecompleted'] = 0;
         }
+
         $responses = $DB->get_records_sql($query, $params);
         return $responses;
     }

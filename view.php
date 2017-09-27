@@ -69,6 +69,11 @@ $instance->load_form($response, $USER->id);
 // There might be some aggregate data to load, e.g. group stuff.
 if (!empty($response->user_responses[$USER->id]->timecompleted)) {
     $instance->load_aggregate_data($response, $USER->id);
+
+    require_once($CFG->libdir . '/formslib.php');
+    $responseclone = clone $response;
+    $responseclone->context = $context;
+    $response->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
 }
 
 // Can they delete their own answer?

@@ -117,6 +117,25 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Rendering the post-completion view for a given activity
+     * to show who completed it and potentially review their
+     * answers.
+     *
+     * @param object $completion The completion data
+     * @return string The rendered HTML
+     */
+    public function render_postcompletion($completion) {
+        $data = new stdClass();
+        $data->people_all = !empty($completion->people_all) ? array_values($completion->people_all) : array();
+        $data->number_all = count($data->people_all);
+        $data->people_group = !empty($completion->people_group) ? array_values($completion->people_group) : array();
+        $data->number_group = count($data->people_group);
+        $data->response_id = $completion->response_id;
+
+        return parent::render_from_template('response/postcompletion', $data);
+    }
+
+    /**
      * Render the course layout for an activity.
      *
      * @param object $rawdata The activity data, including the course module
@@ -141,6 +160,20 @@ class renderer extends plugin_renderer_base {
         if (!empty($rawdata->user_answer)) {
             $data->user_answer = $rawdata->user_answer;
         }
+        $data->postcompletion = !empty($rawdata->postcompletion) ? $rawdata->postcompletion : '';
+
         return parent::render_from_template('response/courseinline', $data);
+    }
+
+    /**
+     * Render the layout for an inline view of a student's answer for an activity.
+     *
+     * @param object $rawdata The activity data, including the course module
+     * @return string The rendered HTML
+     */
+    public function render_inlineoutput($rawdata) {
+        $data = $rawdata->export_for_template($this);
+        $component = 'responsetype_' . $data->responsetype;
+        return parent::render_from_template($component . '/inlinesubmission', $data);
     }
 }

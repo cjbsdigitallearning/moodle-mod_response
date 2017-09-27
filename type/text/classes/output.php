@@ -91,6 +91,12 @@ class output extends abstractoutput implements renderable, templatable {
 
             $data->can_see_all = !empty($this->data->can_see_all);
             $data->viewall_url = !empty($this->data->viewall_url) ? $this->data->viewall_url : '';
+
+            // We also want to handle the completion stuff.
+            $data->postcompletion = '';
+            if (!empty($this->data->displaypeerresults) && !empty($this->data->postcompletion)) {
+                $data->postcompletion = $this->data->postcompletion->render();
+            }
         }
         return $data;
     }

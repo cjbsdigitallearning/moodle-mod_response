@@ -1,17 +1,21 @@
 {{< mod_response/response}}
 {{$content}}
     <div class="user-response responsetype-text" data-response="{{{response_id}}}">
-        <div class="user-profile">
-            {{{profile_picture}}}
-        </div>
-        <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
-        <div class="user-answer">
-            {{{user_response}}}
+        <div class="user-container">
+            <div class="user-profile">
+                {{{profile_picture}}}
+            </div>
+            <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
+            <div class="user-answer">
+                {{{user_response}}}
+            </div>
+
+            <div class="response-time">
+                {{{user_response_time}}}
+            </div>
         </div>
 
-        <div class="response-time">
-            {{{user_response_time}}}
-        </div>
+        {{{postcompletion}}}
     </div>
 {{/content}}
 {{/ mod_response/response}}

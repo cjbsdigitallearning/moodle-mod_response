@@ -33,6 +33,10 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify', 'mod_response
                 this.set_tooltip(cm, opts.tooltip);
 
                 var set = window.responsetype_poll_chart[cm].data;
+                var that = this;
+                $('div.user-response[data-response=' + cm + ']').on('peer_change.response', function(e, data) {
+                    that.draw(cm, data.display);
+                });
                 if (set.hasOwnProperty('all')) {
                     this.draw(cm, 'all');
                 }

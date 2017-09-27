@@ -7,7 +7,6 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'], function($, 
             labels.push(aggregate[i].choice);
         }
         data = percentify.convert(data.slice(0));
-        console.log(data);
 
         var element = $('#viewall_chart');
         var ctx = element.append('<canvas></canvas>').find('canvas')[0].getContext('2d');

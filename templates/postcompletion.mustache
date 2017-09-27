@@ -1,0 +1,21 @@
+<div class="display-completion profile">
+    {{# number_all }}
+        <div class="profiles all">
+            {{# people_all }}
+            <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+            {{/ people_all }}
+        </div>
+    {{/ number_all }}
+    {{# number_group }}
+        <div class="profiles group">
+            {{# people_group }}
+            <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+            {{/ people_group }}
+        </div>
+    {{/ number_group }}
+</div>
+{{#js}}
+require(['mod_response/postcompletion'], function(postcompletion) {
+    postcompletion.init('#mod_response_form_{{response_id}}');
+});
+{{/js}}

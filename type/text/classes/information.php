@@ -62,22 +62,34 @@ class information extends abstractinfo {
      *
      * @param int $instance Instance id for this activity.
      * @param array $users List of user ids to load data for.
+     * @param bool $completedonly True to only load completed responses.
      * @return array Array of responses, user id -> that users' most recent response.
      */
-    public function load_response_for_users($instance, $users) {
+    public function load_response_for_users($instance, $users, $completedonly = false) {
         global $DB;
 
-        $users = $this->sanitise_int_array($users);
+        $users = $this->sanitise_int_array($users, false);
         if (empty($users)) {
             // Nothing to do, don't even bother querying.
             return array();
         }
+
+        list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
+        $params['response'] = $instance->id;
+
         $query = "SELECT ru.userid, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
                     FROM {response_user} ru
                     JOIN {responsetype_text_user} rtu ON (ru.response_identifier = rtu.id)
-                   WHERE ru.userid IN (:users)
+                   WHERE ru.userid $sql
                      AND ru.response = :response";
-        $responses = $DB->get_records_sql($query, array('response' => $instance->id, 'users' => $users));
+
+        if ($completedonly) {
+            $query .= '
+                     AND ru.timecompleted > :timecompleted';
+            $params['timecompleted'] = 0;
+        }
+
+        $responses = $DB->get_records_sql($query, $params);
         return $responses;
     }
 

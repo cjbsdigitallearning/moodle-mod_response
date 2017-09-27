@@ -95,6 +95,12 @@ class output extends abstractoutput implements renderable, templatable {
             $data->can_see_all = !empty($this->data->can_see_all);
             $data->viewall_url = !empty($this->data->viewall_url) ? $this->data->viewall_url : '';
 
+            // We also want to handle the completion stuff.
+            $data->postcompletion = '';
+            if (!empty($this->data->displaypeerresults) && !empty($this->data->postcompletion)) {
+                $data->postcompletion = $this->data->postcompletion->render();
+            }
+
             // There may be some stuff to display aggregate-wise.
             $aggregate = false;
             if (!empty($this->data->aggregate)) {
@@ -114,6 +120,10 @@ class output extends abstractoutput implements renderable, templatable {
                             $amount = $this->data->aggregate->{$set}[$choicenum];
                         }
                         $aggregate->$set->data[] = $amount;
+                    }
+
+                    if (array_sum($aggregate->$set->data) == 0) {
+                        unset($aggregate->$set);
                     }
                 }
             }

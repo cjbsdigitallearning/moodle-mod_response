@@ -241,7 +241,7 @@ function response_cm_info_dynamic(cm_info $cm) {
  * @param cm_info $cm Course module instance
  */
 function response_cm_info_view(cm_info $cm) {
-    global $PAGE, $USER;
+    global $PAGE, $USER, $CFG;
 
     // Before we go any further, we need to work out if the user has completed this instance.
     $customdata = $cm->customdata;
@@ -265,6 +265,14 @@ function response_cm_info_view(cm_info $cm) {
 
         // Can they see all the responses?
         helper::check_can_see_all_responses($customdata, $context, $cm);
+
+        // Show the peer results.
+        if (!empty($customdata->displaypeerresults)) {
+            require_once($CFG->libdir . '/formslib.php');
+            $responseclone = clone $customdata;
+            $responseclone->context = $context;
+            $customdata->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
+        }
 
         $renderable = helper::instance_factory($customdata->responsetype, 'output', array($customdata, $instance));
         $data->user_answer = $renderer->render($renderable);
@@ -354,9 +362,16 @@ function mod_response_output_fragment_form($args) {
 
     $output = $PAGE->get_renderer('mod_response');
 
+    $response->postcompletion = '';
+
     if (empty($response->form)) {
         // We have no form to process (presumably completed), but load the aggregate data if appropriate.
         $instance->load_aggregate_data($response, $USER->id);
+        require_once($CFG->libdir . '/formslib.php');
+
+        $responseclone = clone $response;
+        $responseclone->context = $context;
+        $response->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
     } else if ($data = $response->form->get_data()) {
         // We have a form submission, so save it and then work out what happens next.
         $instance->save_submission($response, $USER->id, $data);
@@ -380,6 +395,10 @@ function mod_response_output_fragment_form($args) {
         $instance->load_form($response, $USER->id, $response->in_course);
         if (!empty($response->user_responses[$USER->id]->timecompleted)) {
             $instance->load_aggregate_data($response, $USER->id);
+            require_once($CFG->libdir . '/formslib.php');
+            $responseclone = clone $response;
+            $responseclone->context = $context;
+            $response->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
         }
     }
 
@@ -394,4 +413,82 @@ function mod_response_output_fragment_form($args) {
     // Return whatever view we have on the data.
     $renderable = helper::instance_factory($response->responsetype, 'output', array($response, $instance));
     return $output->render($renderable);
+}
+
+/**
+ * Handles returning view or form components back to the course layout
+ * when supplied via AJAX.
+ *
+ * @param array $args The arguments as provided by core/fragment
+ * @return string Rendered HTML for the browser (JS is handled by mutated global state)
+ */
+function mod_response_output_fragment_answer($args) {
+    global $PAGE, $DB, $USER;
+
+    $context = $args['context'];
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return null;
+    }
+    if (!$cm = get_coursemodule_from_id('response', $context->instanceid)) {
+        print_error('invalidcoursemodule');
+    }
+    require_capability('mod/response:participate', $context);
+    require_capability('mod/response:viewother', $context);
+
+    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+
+    $userid = !empty($args['userid']) ? (int) $args['userid'] : 0;
+    if (empty($userid)) {
+        print_error('invalidcoursemodule');
+    }
+
+    // Now we need to verify the user could conceivably could see these answers.
+    $instance = helper::instance_factory($response->responsetype, 'information');
+    $instance->load_activity($response);
+    $response->user_responses = $instance->load_response_for_users($response, array($userid, $USER->id));
+
+    // First, did the viewing user complete the activity?
+    if (empty($response->user_responses[$USER->id])) {
+        print_error('invalidcoursemodule');
+    }
+    // Did the user whose completion is requested complete the activity?
+    if (empty($response->user_responses[$userid])) {
+        print_error('invalidcoursemodule');
+    }
+
+    // Now, can the user actually see it? This involves verifying peer results etc.
+    $cansee = false;
+    if ($userid == $USER->id) {
+        $cansee = true;
+    }
+    $displaypeerresults = (int) $response->displaypeerresults;
+    if ($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) {
+        $cansee = true;
+    }
+    if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) {
+        // Is the user in the same group?
+        $membersingroup = helper::get_users_in_same_group($response->id, $USER->id);
+        if (in_array($userid, $membersingroup)) {
+            $cansee = true;
+        }
+    }
+    if (!$cansee) {
+        print_error('invalidcoursemodule');
+    }
+
+    // If we're here, we can see the response.
+    $data = new stdClass();
+    $data = $response;
+    $data->response = $response->user_responses[$userid];
+    unset ($data->user_responses);
+
+    $userwrote = $instance->load_user_information($userid);
+    $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : array();
+    $data->viewing_own = $userid == $USER->id; // Viewing our own item?
+
+    $renderer = $PAGE->get_renderer('mod_response');
+
+    $renderable = helper::instance_factory($response->responsetype, 'inlineoutput', array($data, $instance));
+    return $renderer->render($renderable);
 }

@@ -145,8 +145,9 @@ class completions {
     protected static function sift_groups_out(&$completions, $membersingroup) {
         // Now sift out groups.
         $completions->people_group = array();
-        foreach ($membersingroup as $user) {
-            if (isset($completions->people_all[$user])) {
+        $members = array_flip($membersingroup); // As isset runs faster than in_array, flip the array and do it as a hash lookup.
+        foreach (array_keys($completions->people_all) as $user) {
+            if (isset($members[$user])) {
                 $completions->people_group[$user] = $completions->people_all[$user];
             }
         }
@@ -209,9 +210,11 @@ class completions {
      *
      * @param int $id Response activity as per resposne table
      * @param int $userid User ID to look up (to match groups)
+     * @param bool $splitusers If true, split the users on the value of
+     *     the mod_response/maxprofileimages configuration item
      * @return object An object containing the completion information
      */
-    public static function get_displaycompletion_full($id, $userid) {
+    public static function get_displaycompletion_full($id, $userid, $splitusers = true) {
         $completions = new stdClass();
 
         $completions->people_all = self::fetch_completions($id, $userid);
@@ -224,7 +227,9 @@ class completions {
         self::load_user_data_for_completion($completions);
         self::sift_groups_out($completions, $membersingroup);
 
-        self::slice_people_lists($completions);
+        if ($splitusers) {
+            self::slice_people_lists($completions);
+        }
 
         return $completions;
     }

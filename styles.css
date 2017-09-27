@@ -16,7 +16,8 @@
 }
 
 .activity.modtype_response .has-form .femptylabel .felement,
-.activity.modtype_response .has-form .fitem_fgroup .felement {
+.activity.modtype_response .has-form .fitem_fgroup .felement,
+.user-response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .felement.fgroup {
     margin: 0;
 }
 
@@ -83,6 +84,18 @@
     text-align: right;
     margin-top: 20px;
     margin-bottom: 30px;
+}
+.response .mod_response_postcompletion {
+    display: none;
+}
+.user-response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .fitemtitle {
+    width: 20px;
+}
+.activity.modtype_response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .fitemtitle {
+    display: none;
+}
+.user-response .profiles img[data-id] {
+    cursor: pointer;
 }
 
 /* Styles for the overall summary. */
