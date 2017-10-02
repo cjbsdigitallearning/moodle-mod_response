@@ -65,6 +65,12 @@ class text_form extends abstractform {
             $mform->setType('incourse', PARAM_INT);
         }
 
+        // Are we editing?
+        if (!empty($this->_customdata->is_editing)) {
+            $mform->addElement('hidden', 'editing', $this->_customdata->is_editing);
+            $mform->setType('editing', PARAM_INT);
+        }
+
         $submitarea = array();
 
         $this->add_precomplete_completion($USER->id, $submitarea);

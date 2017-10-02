@@ -1,3 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template responsetype_text/summaryoutput
+
+    The purpose of this template is to render the summary view for a learner of
+    all their responses, or at least a specific instance inside the summary view.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * icon - the HTML for the icon indicating what type of activity it is
+    * activity_title - the title of the activity
+    * activity_question - the question prompt given in the activity
+    * user_response - response text
+    * timemodified_date - date/time the response was modified
+    * context_link - URL to the activity in context
+    * response_id - id of the response (as per response table)
+
+    Example context (json):
+    {
+        "icon": "<img class=\"smallicon\" alt=\"\" src=\"http://your.moodle.here/theme/image.php/clean/responsetype_text/1506688378/icon\">",
+        "activity_title": "The weather",
+        "activity_question": "What's the weather doing today?",
+        "user_response": "It's sunny outside and it's warm for October.",
+        "timemodified_date": "02/10/17",
+        "context_link": "http://your.moodle.here/course/view.php?id=2#module-10",
+        "response_id": "1",
+    }
+}}
 <div class="activity-title responsetype-text" data-response="{{response_id}}">
     <h4>{{{icon}}} {{{activity_title}}}</h4>
 

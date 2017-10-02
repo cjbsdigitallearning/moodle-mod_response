@@ -1,3 +1,60 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_response/response
+
+    The purpose of this template is to render an activity instance inline to a course page.
+    This template may be used in either the full page context or a course context.
+
+    Classes required for JS:
+    * response, on a parent of the content block
+
+    Data attributes required for JS:
+    * context if provided
+
+    Context variables required for this template:
+    * fullpage - boolean, true for viewing the activity as a full page item (false for inline in course)
+    * heading - the title of the activity
+    * question - the prompt question for the activity
+    * contextid - the context id for the activity (usually only in inline view)
+    * form - the form object where relevant for the activity
+    * can_see_all - boolean for whether the user can see the teacher view of all responses
+    * viewall_url - if the user can see the teacher view of all responses, the relevant URL
+    * summary_url - the URL for the learner's view of all responses in a course
+    * can_edit - boolean for whether the user can edit a completed response
+    * edit_url - the URL for editing this instance of the response
+    * can_delete - boolean for whether the user can delete this response
+    * delete_url - the URL for the page that lets a user delete their response
+
+    Note that can_see_all/viewall_url/summary_url/can_edit/edit_url/can_delete/delete_url
+    all only apply in the case of a completed response (where form would not be given)
+
+    This template is unlikely to be invoked directly, but included from instance-specific
+    templates injecting their content into the $content block.
+
+    Example context (json):
+    {
+        "fullpage": true,
+        "heading": "This learning response",
+        "question": "Do you like learning responses?",
+        "contextid": 64,
+        "form": { a string that contains a rendered Moodle form's HTML }
+    }
+}}
 {{# fullpage }}
     <section class="response-activity">
     <h1>{{heading}}</h1>
@@ -21,11 +78,22 @@ require(['mod_response/ajaxform'], function(form) {
                 |
             {{/ can_see_all }}
             <a href="{{{summary_url}}}">{{# str }} viewcoursesummary, response{{/ str }}</a>
+            {{# can_edit }}
+                |
+                <a href="{{{edit_url}}}">{{# str }} editresponse, response{{/ str }}</a>
+            {{/ can_edit }}
             {{# can_delete }}
                 |
                 <a href="{{{delete_url}}}">{{# str }} deleteresponse, response{{/ str }}</a>
             {{/ can_delete }}
         </div>
+{{/form}}
+{{#form}}
+    {{#can_see_all}}
+        <div class="manage-links">
+            <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
+        </div>
+    {{/can_see_all}}
 {{/form}}
 {{# fullpage }}
     </section>

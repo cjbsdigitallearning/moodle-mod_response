@@ -270,4 +270,23 @@ class helper {
             $response->viewall_url = new moodle_url('/mod/response/viewall.php', array('id' => $cm->id));
         }
     }
+
+    /**
+     * Checks if the user can edit their own response
+     * and sets up appropriate links for the templates.
+     *
+     * @param object $response The response object, modified in place
+     * @param object $context The course module context for the user
+     * @param object $cm The course module object
+     */
+    public static function check_can_edit_own_response(&$response, $context, $cm) {
+        global $USER;
+        $response->can_edit = false;
+        if (!empty($response->user_responses[$USER->id]->timecompleted)) {
+            $response->can_edit = has_capability('mod/response:editown', $context);
+        }
+        if ($response->can_edit) {
+            $response->edit_url = new moodle_url('/mod/response/view.php', array('id' => $cm->id, 'editing' => 1));
+        }
+    }
 }

@@ -15,17 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Response backup settings
  *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_response
+ * @category    backup
+ * @copyright   2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2017092703;
-$plugin->release   = '1.0.0';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->maturity  = MATURITY_ALPHA;

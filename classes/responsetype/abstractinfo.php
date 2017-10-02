@@ -65,10 +65,38 @@ abstract class abstractinfo {
      *
      * @param int $instance Instance id for this activity.
      * @param array $users List of user ids to load data for.
+     * @param bool $completedonly True to only load completed responses.
+     * @param bool $getuserinfo True to load the user profile picture/name as well.
      * @return array Array of responses, user id -> that users' most recent response.
      */
-    public function load_response_for_users($instance, $users) {
+    public function load_response_for_users($instance, $users, $completedonly = false, $getuserinfo = false) {
         return array();
+    }
+
+    /**
+     * Takes a set of responses and loads the user data into those
+     * responses specifically.
+     *
+     * @param array $responses An array of responses from users, keyed by user id, modified in place
+     */
+    public function merge_user_data(&$responses) {
+        if (!empty($responses)) {
+            $users = $this->load_user_information(array_keys($responses));
+
+            // Go through the responses, match up against userdata, and prune ones without.
+            foreach (array_keys($responses) as $userid) {
+                // It shouldn't happen but that means it might sometime...
+                if (!isset($users[$userid])) {
+                    unset ($responses[$userid]);
+                    continue;
+                }
+
+                // Match 'em up.
+                $responses[$userid]->profile_picture = $users[$userid]['picture'];
+                $responses[$userid]->first_name = $users[$userid]['first_name'];
+                $responses[$userid]->last_name = $users[$userid]['last_name'];
+            }
+        }
     }
 
     /**
@@ -91,10 +119,9 @@ abstract class abstractinfo {
      *
      * @param object $response The response object that contains all the instance data.
      * @param int $userid User ID to check for.
-     * @param bool $incourse True if coming from the in-course view.
      * @param array $ajaxformdata Array of form data, or null
      */
-    public function load_form(&$response, $userid = null, $incourse = false, $ajaxformdata = null) {
+    public function load_form(&$response, $userid = null, $ajaxformdata = null) {
         $response->form = false;
     }
 

@@ -1,3 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template responsetype_poll/showsubmission
+
+    The purpose of this template is to render the full view of an activity and its
+    response from the user.
+
+    Classes required for JS:
+    * user-container
+
+    Data attributes required for JS:
+    * response_id
+
+    Context variables required for this template:
+    * profile_picture - HTML for a given user's profile picture
+    * viewing_other - boolean as to whether a user is viewing a response that isn't theirs
+    * profile_name - the name of the user whose response this is
+    * user_response - response given by the user
+    * user_response_time - the date/time the response was given
+    * response_id - ID of the response activity
+    * postcompletion - HTML for a form to show off the completions from other students
+
+    Example context (json):
+    {
+        "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">',
+        "viewing_other": false,
+        "profile_name": "Joe",
+        "user_response": "It's sunny outside, I like it like that.",
+        "user_response_time": "01/10/17 13:28",
+        "response_id": 2,
+        "postcompletion": { HTML representing a Moodle form object },
+    }
+}}
 {{< mod_response/response}}
 {{$content}}
     <div class="user-response responsetype-text" data-response="{{{response_id}}}">
@@ -5,7 +53,13 @@
             <div class="user-profile">
                 {{{profile_picture}}}
             </div>
+            {{# viewing_other}}
+            <div class="user-wrote">{{# str }} theywrote, responsetype_text, {{profile_name}} {{/ str }}</div>
+            {{/ viewing_other}}
+            {{^ viewing_other}}
             <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
+            {{/ viewing_other}}
+
             <div class="user-answer">
                 {{{user_response}}}
             </div>

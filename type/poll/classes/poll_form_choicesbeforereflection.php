@@ -56,11 +56,29 @@ class poll_form_choicesbeforereflection extends abstractform {
         if (!empty($this->_customdata->user_responses[$USER->id])) {
             $userchoice = $this->_customdata->user_responses[$USER->id]->choice;
             $mform->setDefault('poll_choice' . $id, $userchoice);
+
+            // We need to preserve the original reflection step.
+            $userresponse = $this->_customdata->user_responses[$USER->id];
+
+            $fieldprefix = 'responsetype_poll_' . $id;
+
+            if (!empty($this->_customdata->is_editing)) {
+                $mform->addElement('hidden', $fieldprefix . '[text]', $userresponse->reflection_text);
+                $mform->setType($fieldprefix . '[text]', PARAM_RAW);
+                $mform->addElement('hidden', $fieldprefix . '[format]', FORMAT_HTML);
+                $mform->setType($fieldprefix . '[format]', PARAM_RAW);
+            }
         }
 
         if (!empty($this->_customdata->going_back)) {
             $mform->addElement('hidden', 'forward', 1);
             $mform->setType('forward', PARAM_INT);
+        }
+
+        // Are we editing?
+        if (!empty($this->_customdata->is_editing)) {
+            $mform->addElement('hidden', 'editing', 1);
+            $mform->setType('editing', PARAM_INT);
         }
 
         $submitarea = array();

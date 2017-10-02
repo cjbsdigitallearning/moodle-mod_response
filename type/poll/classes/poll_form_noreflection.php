@@ -62,6 +62,12 @@ class poll_form_noreflection extends abstractform {
             $mform->setType('incourse', PARAM_INT);
         }
 
+        // Are we editing?
+        if (!empty($this->_customdata->is_editing)) {
+            $mform->addElement('hidden', 'editing', 1);
+            $mform->setType('editing', PARAM_INT);
+        }
+
         $submitarea = array();
         $this->add_precomplete_completion($USER->id, $submitarea);
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));

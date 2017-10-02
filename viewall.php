@@ -60,9 +60,27 @@ $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
 
+$response->group_selector = groups_print_activity_menu($cm, $PAGE->url, true);
+$group = groups_get_activity_group($cm);
+
 $instance = helper::instance_factory($response->responsetype, 'information');
 $instance->load_activity($response);
-$response->all_responses = $instance->load_all_responses($response);
+
+if ($group == 0) {
+    $response->all_responses = $instance->load_all_responses($response);
+} else {
+    // Get who is in the group and then get their responses.
+    $members = groups_get_members($group, 'u.id');
+    $response->all_responses = $instance->load_response_for_users($response, array_keys($members), true, true);
+}
+
+// If they can delete responses, we need to build suitable links.
+if (has_capability('mod/response:manage', $context)) {
+    foreach (array_keys($response->all_responses) as $userid) {
+        $deletelink = new moodle_url('/mod/response/deleteanswer.php', array('id' => $cm->id, 'u' => $userid));
+        $response->all_responses[$userid]->delete_link = $deletelink;
+    }
+}
 
 // The renderer is very much up to the plugin to identify what it is rendering.
 

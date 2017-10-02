@@ -1,3 +1,58 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template responsetype_poll/showsubmission
+
+    The purpose of this template is to render the full view of an activity and its
+    response from the user - in the case of polls in particular, show a chart as well.
+
+    Classes required for JS:
+    * span8, span4 (for defloat behaviour), aggregate (for chart behaviour)
+    * user-container
+
+    Data attributes required for JS:
+    * response_id
+
+    Context variables required for this template:
+    * profile_picture - HTML for a given user's profile picture
+    * viewing_other - boolean as to whether a user is viewing a response that isn't theirs
+    * profile_name - the name of the user whose response this is
+    * user_choice - the text of the poll choice given by the user
+    * user_response - reflection text for a poll response, if given
+    * user_response_time - the date/time the response was given
+    * response_id - ID of the response activity
+    * postcompletion - HTML for a form to show off the completions from other students
+    * aggregate - stringified JSON object containing all the chart data
+    * colours - stringified JSON array of colours to use in the chart
+
+    Example context (json):
+    {
+        "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">',
+        "viewing_other": false,
+        "profile_name": "Joe",
+        "user_choice": "Sunny",
+        "user_response": "It's sunny outside, I like it like that.",
+        "user_response_time": "01/10/17 13:28",
+        "response_id": 2,
+        "postcompletion": { HTML representing a Moodle form object },
+        "aggregate": "{\"group\":{\"title\":\"Answers given by your study group\",\"labels\":[\"Sunny\",\"Cloudy\",\"Stormy\",\"Raining\",\"Other\"],\"data\":[0,2,0,0,0]},\"all\":{\"title\":\"Answers given by all students\",\"labels\":[\"Sunny\",\"Cloudy\",\"Stormy\",\"Raining\",\"Other\"],\"data\":[0,2,0,0,0]} }",
+        "colours": "[\"#f3c300\",\"#875692\",\"#f38400\",\"#a1caf1\",\"#be0032\",\"#c2b280\",\"#7f180d\",\"#008856\",\"#e68fac\",\"#0067a5\"]"
+    }
+}}
 {{< mod_response/response}}
 {{$content}}
     <div class="user-response responsetype-poll" data-response="{{{response_id}}}">
@@ -8,7 +63,12 @@
                         {{{profile_picture}}}
                     </div>
                     <div class="user-wrote">
-                        {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                        {{# viewing_other }}
+                            {{# str }} theyanswered, responsetype_poll, { "person": {{# quote}}{{profile_name}}{{/ quote}}, "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                        {{/ viewing_other }}
+                        {{^ viewing_other }}
+                            {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                        {{/ viewing_other }}
                     </div>
                     {{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
 
@@ -19,7 +79,7 @@
             </div>
             <div class="span4 aggregate">
                 <div class="aggregate-container">
-                    <canvas id="aggregate"></canvas>
+                    <canvas></canvas>
                 </div>
             </div>
         </div>

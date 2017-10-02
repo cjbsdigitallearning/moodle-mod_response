@@ -1,27 +1,95 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template responsetype_text/viewall
+
+    The purpose of this template is to render the summary view for a teacher of
+    all responses for a specific activity.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * icon - the HTML for the icon indicating what type of activity it is
+    * heading - the title of the activity
+    * group_selector - HTML for the group selector menu as per core Moodle
+    * question - the question prompt given in the activity
+    * all_responses - array of responses containing:
+        * profile_picture - HTML for a user's profile picture
+        * first_name - first name of the student
+        * last_name - last name of the student
+        * response_text - response text of the student
+        * timecompleted_datetime - date and time of completion
+        * delete_link - URL to be able to delete the response if user has the capability
+    * context_link - URL to the activity in context
+
+    Example context (json):
+    {
+        "icon": "<img class=\"smallicon\" alt=\"\" src=\"http://your.moodle.here/theme/image.php/clean/responsetype_poll/1506688378/icon\">",
+        "heading": "The weather",
+        "question": "What's the weather doing today?",
+        "all_responses": [
+            {
+                "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">",
+                "first_name": "John",
+                "last_name": "Smith",
+                "response_text": "It's sunny outside and it's warm for October.",
+                "timecompleted_datetime": "02/10/17 10:19",
+                "delete_link": "http://your.moodle.here/mod/response/deleteanswer.php?id=102&u=3"
+            }
+        ],
+        "context_link": "http://your.moodle.here/course/view.php?id=2#module-10",
+    }
+}}
 <section class="response-activity view-all responsetype-text">
     <a class="btn btn-default pull-right" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a><h1>{{{icon}}} {{heading}}</h1>
+    {{{group_selector}}}
     <div class="question">{{{question}}}</div>
 
     {{# all_responses }}
-    <div class="row-fluid view-all-response">
-        <div class="span3 user-profile text-center">
-            <div class="profile-picture">
-                {{{profile_picture}}}
+    <div class="view-all-response">
+        <div class="row-fluid">
+            <div class="span3 user-profile text-center">
+                <div class="profile-picture">
+                    {{{profile_picture}}}
+                </div>
+                <div class="user-name">
+                    {{first_name}} {{last_name}}
+                </div>
             </div>
-            <div class="user-name">
-                {{first_name}} {{last_name}}
-            </div>
-        </div>
-        <div class="span9">
-            <div class="user-wrote">
-                {{# str }} theywrote, responsetype_text, {{first_name}}{{/ str }}<div class="user-answer">{{{response_text}}}</div>
+            <div class="span9">
+                <div class="user-wrote">
+                    {{# str }} theywrote, responsetype_text, {{first_name}}{{/ str }}<div class="user-answer">{{{response_text}}}</div>
 
-                <div class="clearfix"></div>
-            </div>
-            <div class="context-link text-right">
-                <span class="time-completed">{{{timecompleted_datetime}}}</span>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="context-link text-right">
+                    <span class="time-completed">{{{timecompleted_datetime}}}</span>
+                </div>
             </div>
         </div>
+        {{# delete_link }}
+        <div class="manage-links text-right">
+            <a href="{{{delete_link}}}">{{# str }} deleteresponse, response {{/ str }}</a>
+        </div>
+        {{/ delete_link }}
     </div>
     {{/ all_responses }}
     {{^ all_responses }}

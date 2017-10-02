@@ -30,6 +30,7 @@ require_once($CFG->dirroot.'/mod/response/lib.php');
 $id = optional_param('id', 0, PARAM_INT); // Course module ID.
 $r = optional_param('r', 0, PARAM_INT); // Response instance ID.
 $back = optional_param('back', 0, PARAM_INT); // Back a step or not.
+$edit = optional_param('editing', 0, PARAM_INT); // Whether editing or not, and which step through the activity.
 
 if ($r) {
     if (!$response = $DB->get_record('response', array('id' => $r))) {
@@ -52,6 +53,17 @@ require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/response:view', $context);
 
+$response->course = $cm->course;
+$response->cm = $cm;
+
+// Editing requires privileges.
+$canedit = has_capability('mod/response:editown', $context);
+$response->is_editing = false;
+// The user is currently trying to edit...
+if ($edit && $canedit) {
+    $response->is_editing = $edit;
+}
+
 // Set up and show the form.
 $PAGE->set_url('/mod/response/view.php', array('id' => $cm->id));
 $PAGE->set_title($course->shortname . ': ' . $response->name);
@@ -65,6 +77,11 @@ $instance = helper::instance_factory($response->responsetype, 'information');
 $instance->load_activity($response);
 $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
 $instance->load_form($response, $USER->id);
+
+if (!empty($response->form)) {
+    // We need to set the page specifically to the course here so autosave works consistently between course/individual views.
+    $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $PAGE->course->id)));
+}
 
 // There might be some aggregate data to load, e.g. group stuff.
 if (!empty($response->user_responses[$USER->id]->timecompleted)) {
@@ -81,6 +98,9 @@ helper::check_user_delete_own_response($response, $context, $cm);
 
 // Can they see all the responses?
 helper::check_can_see_all_responses($response, $context, $cm);
+
+// Can they edit their response?
+helper::check_can_edit_own_response($response, $context, $cm);
 
 // The renderer is very much up to the plugin to identify what it is rendering.
 

@@ -132,6 +132,24 @@ class renderer extends plugin_renderer_base {
         $data->number_group = count($data->people_group);
         $data->response_id = $completion->response_id;
 
+        $data->number_all_other = 0;
+        if ($data->number_all) {
+            $data->people_all_other = !empty($completion->people_all_other) ? $completion->people_all_other : array();
+            $data->number_all_other = count($data->people_all_other);
+        }
+
+        $data->number_group_other = 0;
+        if ($data->number_group) {
+            $data->people_group_other = !empty($completion->people_group_other) ? $completion->people_group_other : array();
+            $data->number_group_other = count($data->people_group_other);
+        }
+
+        $data->plus_x_other_all = $data->number_all_other == 1 ? 'other1completed' : 'otherncompleted';
+        $data->plus_x_other_string_all = get_string($data->plus_x_other_all, 'response', $data->number_all_other);
+
+        $data->plus_x_other_group = $data->number_group_other == 1 ? 'other1completed' : 'otherncompleted';
+        $data->plus_x_other_string_group = get_string($data->plus_x_other_group, 'response', $data->number_group_other);
+
         return parent::render_from_template('response/postcompletion', $data);
     }
 
@@ -161,6 +179,9 @@ class renderer extends plugin_renderer_base {
             $data->user_answer = $rawdata->user_answer;
         }
         $data->postcompletion = !empty($rawdata->postcompletion) ? $rawdata->postcompletion : '';
+
+        $data->can_see_all = !empty($cm->customdata->can_see_all);
+        $data->viewall_url = !empty($cm->customdata->viewall_url) ? $cm->customdata->viewall_url : '';
 
         return parent::render_from_template('response/courseinline', $data);
     }

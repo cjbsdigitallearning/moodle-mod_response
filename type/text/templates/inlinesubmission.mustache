@@ -1,3 +1,47 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template responsetype_text/inlinesubmission
+
+    The purpose of this template is to render the AJAX view of an activity's responses
+    to show a user the different answers from other users.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * profile_picture - HTML for a given user's profile picture
+    * profile_name - the name of the user whose response this is
+    * viewing_own - boolean as to whether a user is viewing their own response
+    * user_response - response text
+    * user_response_time - the date/time the response was given
+
+    Example context (json):
+    {
+        "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">',
+        "viewing_own": true,
+        "user_response": "It's sunny outside, I like it like that.",
+        "profile_name": "Joe",
+        "user_response_time": "01/10/17 13:28",
+    }
+}}
             <div class="user-profile">
                 {{{profile_picture}}}
             </div>

@@ -25,6 +25,7 @@
 namespace mod_response;
 use MoodleQuickForm_editor;
 use context_course;
+use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 

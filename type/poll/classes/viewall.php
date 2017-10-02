@@ -60,6 +60,7 @@ class viewall extends abstractoutput implements renderable, templatable {
         $data->heading = format_string($this->data->name);
         $data->question = format_string($this->data->question);
         $data->all_responses = !empty($this->data->all_responses) ? $this->data->all_responses : array();
+        $data->group_selector = !empty($this->data->group_selector) ? $this->data->group_selector : '';
 
         $data->responsetype = $this->data->responsetype;
         // Combine the answer possibilities into the answers from users.

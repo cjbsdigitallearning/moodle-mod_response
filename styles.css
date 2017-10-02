@@ -1,5 +1,5 @@
 /* Styles for the course layout itself. */
-.activity.modtype_response div.response {
+.activity.modtype_response div.user-response {
     width: 95%;
     display: table;
     table-layout: fixed;
@@ -13,6 +13,8 @@
     font-weight: bold;
     display: inline-block;
     margin: 0 0 5px;
+    color: #171717;
+    cursor: default;
 }
 
 .activity.modtype_response .has-form .femptylabel .felement,
@@ -96,6 +98,9 @@
 }
 .user-response .profiles img[data-id] {
     cursor: pointer;
+}
+.user-response button.hide {
+    display: none;
 }
 
 /* Styles for the overall summary. */

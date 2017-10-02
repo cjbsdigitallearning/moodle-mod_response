@@ -45,7 +45,7 @@ $context = context_module::instance($cm->id);
 
 $instance = helper::instance_factory($response->responsetype, 'information');
 $instance->load_activity($response);
-$response->user_responses = $instance->load_response_for_users($response, array($userid));
+$response->user_responses = $instance->load_response_for_users($response, array($userid), true, true);
 
 if (empty($response->user_responses[$userid])) {
     // There's no response from this user.
@@ -56,12 +56,22 @@ if (empty($response->user_responses[$userid]->timecompleted)) {
     print_error('deleteresponsenotcomplete', 'response');
 }
 
+$response->viewing_other = $USER->id != $userid;
+$response->viewing_id = $userid;
+
+$response->response = $response->user_responses[$userid];
+$response->user_wrote = array(
+    'picture' => $response->response->profile_picture,
+    'first_name' => $response->response->first_name,
+);
+
 // Now, if we're deleting our own response, we check that we have that capability.
-if ($USER->id == $userid) {
+if (!$response->viewing_other) {
     // We're looking to delete our own.
     require_capability('mod/response:deleteown', $context);
 } else {
-    // We need the super-power version.
+    // We need the super-power version, along with the right to view all (to even see it).
+    require_capability('mod/response:viewall', $context);
     require_capability('mod/response:manage', $context);
 }
 

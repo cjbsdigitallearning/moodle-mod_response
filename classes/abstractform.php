@@ -166,7 +166,7 @@ abstract class abstractform extends moodleform {
         $mform = $this->_form;
 
         // Whether we're doing one or both of group or all, we have one place to get all the data.
-        $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid, false);
+        $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid);
         $completions->response_id = $response->id;
 
         $displaypeerresults = (int) $response->displaypeerresults;

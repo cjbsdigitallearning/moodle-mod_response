@@ -72,6 +72,12 @@ class poll_form_reflection extends abstractform {
             $this->add_word_count($this->_customdata->id, $this->_customdata->activity->maxwords);
         }
 
+        // Are we editing?
+        if (!empty($this->_customdata->is_editing)) {
+            $mform->addElement('hidden', 'editing', 2);
+            $mform->setType('editing', PARAM_INT);
+        }
+
         $mform->addElement('hidden', 'response', $this->_customdata->id);
         $mform->setType('response', PARAM_INT);
 

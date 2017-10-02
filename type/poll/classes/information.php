@@ -79,9 +79,10 @@ class information extends abstractinfo {
      * @param int $instance Instance id for this activity.
      * @param array $users List of user ids to load data for.
      * @param bool $completedonly True to only load completed responses.
+     * @param bool $getuserinfo True to load the user profile picture/name as well.
      * @return array Array of responses, user id -> that users' most recent response.
      */
-    public function load_response_for_users($instance, $users, $completedonly = false) {
+    public function load_response_for_users($instance, $users, $completedonly = false, $getuserinfo = false) {
         global $DB;
 
         $users = $this->sanitise_int_array($users, false);
@@ -106,6 +107,12 @@ class information extends abstractinfo {
         }
 
         $responses = $DB->get_records_sql($query, $params);
+
+        // Now get user data.
+        if ($getuserinfo) {
+            $this->merge_user_data($responses);
+        }
+
         return $responses;
     }
 
@@ -134,23 +141,7 @@ class information extends abstractinfo {
         $responses = $DB->get_records_sql($query, $params);
 
         // Now get user data.
-        if (!empty($responses)) {
-            $users = $this->load_user_information(array_keys($responses));
-
-            // Go through the responses, match up against userdata, and prune ones without.
-            foreach (array_keys($responses) as $userid) {
-                // It shouldn't happen but that means it might sometime...
-                if (!isset($users[$userid])) {
-                    unset ($responses[$userid]);
-                    continue;
-                }
-
-                // Match 'em up.
-                $responses[$userid]->profile_picture = $users[$userid]['picture'];
-                $responses[$userid]->first_name = $users[$userid]['first_name'];
-                $responses[$userid]->last_name = $users[$userid]['last_name'];
-            }
-        }
+        $this->merge_user_data($responses);
 
         return $responses;
     }
@@ -161,10 +152,9 @@ class information extends abstractinfo {
      *
      * @param object $response Current response state.
      * @param int $userid User ID to check for.
-     * @param bool $incourse True if coming from the in-course view.
      * @param array $ajaxformdata Array of form data, or null
      */
-    public function load_form(&$response, $userid = null, $incourse = false, $ajaxformdata = null) {
+    public function load_form(&$response, $userid = null, $ajaxformdata = null) {
         global $CFG;
         require_once($CFG->libdir . '/formslib.php');
 
@@ -189,11 +179,39 @@ class information extends abstractinfo {
         // It's also possible we come back to step 1 after having been to step 2...
         if ($userresponse && empty($response->going_back) && empty($response->going_forward)) {
             // The current user has done something, but there might still be a form.)
-            $response->form = false;
-            if ($response->activity->reflection_step && !$userresponse->reflection_text) {
-                // There's a reflection step and the user hasn't completed it, so we do need a form.
-                $response->form = helper::instance_factory('poll', 'poll_form_reflection', $params);
+            if (empty($response->is_editing)) {
+                $response->form = false;
+                if ($response->activity->reflection_step && !$userresponse->reflection_text) {
+                    // There's a reflection step and the user hasn't completed it, so we do need a form.
+                    $response->form = helper::instance_factory('poll', 'poll_form_reflection', $params);
+                }
+                return;
             }
+            // So the user is editing something.
+            $mform = false;
+            $data = false;
+            if ($response->is_editing == 1 || ($response->is_editing == 2 && $response->going_back)) {
+                // First step through the form - poll choice.
+                $data = array('poll_choice' . $response->id => $response->user_responses[$userid]->choice);
+                if ($response->activity->reflection_step) {
+                    $mform = helper::instance_factory('poll', 'poll_form_choicesbeforereflection', $params);
+
+                } else {
+                    $mform = helper::instance_factory('poll', 'poll_form_noreflection', $params);
+                }
+            }
+            if ($response->is_editing == 2) {
+                // Second step through the form - reflection step.
+                $mform = helper::instance_factory('poll', 'poll_form_reflection', $params);
+
+                $data = array(
+                    'responsetype_poll_' . $response->id => array('text' => $response->user_responses[$userid]->reflection_text),
+                );
+            }
+            if ($mform && $data) {
+                $mform->set_data($data);
+            }
+            $response->form = $mform;
             return;
         }
 
@@ -350,6 +368,11 @@ class information extends abstractinfo {
             $response->has_just_completed = !empty($reflectiontext);
 
             $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
+
+            if ($response->is_editing == 1) {
+                // Mark that we want to redirect to step 2.
+                $redirect = new moodle_url('/mod/response/view.php', array('id' => $response->cm->id, 'editing' => 2));
+            }
         } else {
             // So there's no step, we're just saving the user's poll choice.
             $responseidentifier = $this->save_new_answer($response->id, $userid, $data->{$pollid});

@@ -37,6 +37,7 @@ $string['displaycompletion_desc'] = 'How to show students how many other student
 $string['displaycompletionfull'] = 'Show full completions';
 $string['displaycompletionnone'] = 'Show nothing';
 $string['displaycompletionnumber'] = 'Show the number of completions';
+$string['editresponse'] = 'Edit response';
 $string['generalconfig'] = 'General configuration';
 $string['explaingeneralconfig'] = 'These settings apply to all Learning Response activities.';
 $string['hascompletedthisactivity'] = 'has completed this activity';

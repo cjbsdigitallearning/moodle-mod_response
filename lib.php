@@ -36,13 +36,14 @@ define('RESPONSE_PEER_RESULTS_ALL', 0x02);
  * @param int $feature A number which corresponds to a FEATURE_ constant
  * @return bool Whether the listed feature is supported by this activity
  */
-function mod_response_supports($feature) {
+function response_supports($feature) {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
         case FEATURE_SHOW_DESCRIPTION:
         case FEATURE_IDNUMBER:
         case FEATURE_GROUPS:
         case FEATURE_COMPLETION_HAS_RULES:
+        case FEATURE_BACKUP_MOODLE2:
             return true;
         default:
             return false;
@@ -226,13 +227,6 @@ function response_cm_info_dynamic(cm_info $cm) {
     if (!has_capability('mod/response:view', $context)) {
         $cm->set_user_visible(false);
     }
-
-    // Ordinarily we want no view link (so we control layout inline).
-    // But for single-activity view, we want to handle it elsewhere.
-    $course = $cm->get_course();
-    if ($course->format != 'singleactivity') {
-        $cm->set_no_view_link();
-    }
 }
 
 /**
@@ -253,18 +247,21 @@ function response_cm_info_view(cm_info $cm) {
 
     $data = new stdClass();
     $data->course_module = $cm;
+    $data->course = $data->course_module->course;
     $data->user_completion = !empty($usercompletion[$USER->id]) ? $usercompletion[$USER->id] : false;
+
+    // Can they see all the responses?
+    $context = context_module::instance($cm->id);
+    helper::check_can_see_all_responses($customdata, $context, $cm);
 
     if ($data->user_completion && $data->user_completion->timecompleted) {
         $instance->load_aggregate_data($customdata, $USER->id);
 
-        $context = context_module::instance($cm->id);
-
         // Can they delete their own answer?
         helper::check_user_delete_own_response($customdata, $context, $cm);
 
-        // Can they see all the responses?
-        helper::check_can_see_all_responses($customdata, $context, $cm);
+        // Can they edit their response?
+        helper::check_can_edit_own_response($customdata, $context, $cm);
 
         // Show the peer results.
         if (!empty($customdata->displaypeerresults)) {
@@ -277,16 +274,12 @@ function response_cm_info_view(cm_info $cm) {
         $renderable = helper::instance_factory($customdata->responsetype, 'output', array($customdata, $instance));
         $data->user_answer = $renderer->render($renderable);
     } else {
-        $instance->load_form($customdata, $USER->id, true);
+        $instance->load_form($customdata, $USER->id);
         $data->form = $customdata->form;
 
-        $context = context_module::instance($cm->id);
         $data->contextid = $context->id;
     }
 
-    if (!isset($context)) {
-        $context = context_module::instance($cm->id);
-    }
     if (!empty($data->form) && !has_capability('mod/response:participate', $context)) {
         $data->form->disable_form(get_string('cannotparticipate', 'response'));
     }
@@ -306,6 +299,7 @@ function mod_response_output_fragment_form($args) {
     global $USER, $PAGE, $DB, $CFG;
 
     $context = $args['context'];
+    $contextid = $context->id;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
         return null;
@@ -358,7 +352,7 @@ function mod_response_output_fragment_form($args) {
     $argsclone = $args;
     unset ($argsclone['context']);
     $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $cm->course)));
-    $instance->load_form($response, $USER->id, $response->in_course, $argsclone);
+    $instance->load_form($response, $USER->id, $argsclone);
 
     $output = $PAGE->get_renderer('mod_response');
 
@@ -384,6 +378,7 @@ function mod_response_output_fragment_form($args) {
             $completion = new completion_info($course);
             if ($completion->is_enabled($cm) && $response->requiresubmission) {
                 $completion->update_state($cm, COMPLETION_COMPLETE);
+                $PAGE->requires->js_call_amd('mod_response/completionstatus', 'init', array($contextid));
             }
         }
 
@@ -392,7 +387,7 @@ function mod_response_output_fragment_form($args) {
         $response->going_back = false;
         $response->going_forward = false;
         $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
-        $instance->load_form($response, $USER->id, $response->in_course);
+        $instance->load_form($response, $USER->id);
         if (!empty($response->user_responses[$USER->id]->timecompleted)) {
             $instance->load_aggregate_data($response, $USER->id);
             require_once($CFG->libdir . '/formslib.php');
@@ -408,6 +403,9 @@ function mod_response_output_fragment_form($args) {
     // Can they see all the responses?
     helper::check_can_see_all_responses($response, $context, $cm);
 
+    // Can they edit their response?
+    helper::check_can_edit_own_response($response, $context, $cm);
+
     $response->contextid = $context->id;
 
     // Return whatever view we have on the data.
@@ -416,7 +414,7 @@ function mod_response_output_fragment_form($args) {
 }
 
 /**
- * Handles returning view or form components back to the course layout
+ * Handles returning completed views back to the course layout
  * when supplied via AJAX.
  *
  * @param array $args The arguments as provided by core/fragment
@@ -491,4 +489,43 @@ function mod_response_output_fragment_answer($args) {
 
     $renderable = helper::instance_factory($response->responsetype, 'inlineoutput', array($data, $instance));
     return $renderer->render($renderable);
+}
+
+/**
+ * Handles refreshing completion status via AJAX if it's possible it has changed.
+ *
+ * @param array $args The arguments as provided by core/fragment
+ * @return string Rendered HTML for the browser (JS is handled by mutated global state)
+ */
+function mod_response_output_fragment_completion($args) {
+    global $PAGE, $DB, $USER, $CFG;
+
+    $context = $args['context'];
+
+    // Work out where we are and get some details going for this.
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return null;
+    }
+    if (!$cm = get_coursemodule_from_id('response', $context->instanceid)) {
+        print_error('invalidcoursemodule');
+    }
+    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+
+    // This module has no completion criteria set.
+    if (!$response->requiresubmission) {
+        return '';
+    }
+
+    // For the renderer we need a real cm_info instance, not a stdClass.
+    $modinfo = get_fast_modinfo($cm->course, $USER->id);
+    $cm = $modinfo->get_cm($cm->id);
+
+    // Time to load the icon and return it.
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    require_once($CFG->libdir . '/completionlib.php');
+    $completion = new completion_info($course);
+
+    $renderer = $PAGE->get_renderer('core', 'course');
+    $icon = $renderer->course_section_cm_completion($course, $completion, $cm, array());
+    return $icon;
 }

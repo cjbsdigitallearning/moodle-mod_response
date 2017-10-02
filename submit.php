@@ -32,6 +32,7 @@ $r = optional_param('r', 0, PARAM_INT); // Response instance ID.
 $back = optional_param('back', '', PARAM_TEXT); // Whether to go back a step.
 $forward = optional_param('forward', 0, PARAM_INT); // Whether to re-go forward a step.
 $incourse = optional_param('incourse', 0, PARAM_INT); // Whether to return to course view.
+$edit = optional_param('editing', 0, PARAM_INT); // Whether editing or not, and which step through the activity.
 
 if ($r) {
     if (!$response = $DB->get_record('response', array('id' => $r))) {
@@ -54,9 +55,20 @@ $response->standalone_url = new moodle_url('/mod/response/view.php', array('id' 
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
+$response->course = $course;
+$response->cm = $cm;
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/response:participate', $context);
+
+// Editing requires privileges.
+$canedit = has_capability('mod/response:editown', $context);
+$response->is_editing = false;
+// The user is currently trying to edit...
+if ($edit && $canedit) {
+    $response->is_editing = $edit;
+}
 
 $PAGE->set_url('/mod/response/submit.php', array('id' => $cm->id));
 
@@ -64,7 +76,7 @@ $PAGE->set_url('/mod/response/submit.php', array('id' => $cm->id));
 $instance = helper::instance_factory($response->responsetype, 'information');
 $instance->load_activity($response);
 $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
-$instance->load_form($response, $USER->id, $response->in_course);
+$instance->load_form($response, $USER->id);
 
 // At this point, $response->form might contain false, which is 'nothing to do' - send them off to the completed activity.
 if (empty($response->form)) {
@@ -96,7 +108,8 @@ if ($data = $response->form->get_data()) {
 }
 
 // So the form wasn't valid... better re-render it.
-$PAGE->set_url('/mod/response/view.php', array('id' => $cm->id));
+// Use the course page to ensure consistent access to autosave.
+$PAGE->set_url(new moodle_url('/course/view.php', array('id' => $PAGE->course->id)));
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
 

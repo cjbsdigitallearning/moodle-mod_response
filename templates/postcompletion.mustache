@@ -1,20 +1,114 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_response/postcompletion
+
+    The purpose of this template is to render content for showing who has completed
+    an activity instance and letting the user see others' responses.
+
+    Classes required for JS:
+    * profiles.all and profiles.groups as classes for containers
+
+    Data attributes required for JS:
+    * userid - required for being able to select which response to see
+
+    Context variables required for this template:
+    * number_all - number of people in the 'all' group
+    * people_all - array of people to show, containing:
+       * userid - user id of the person
+       * picture - URL of their profile picture
+       * name - name of the person who has completed the activity
+    * number_group - number of people in the study group
+    * people_group - array of people in the group, same structure as above
+    * response_id - id of the response instance (not the course module instance)
+
+    It is perfectly possible to return an empty 'number_group' and 'people_group' and only have a
+    single person in people_all for when the current user is the first to complete an activity.
+
+    Example context (json):
+    {
+        "number_all": 1,
+        "people_all": [
+            {
+                "userid": 2,
+                "picture": "https://your.moodle.here/pluginfile.php/.../",
+                "name": "John Smith"
+            }
+        ],
+        "number_group": 0,
+        "people_group": []
+    }
+}}
 <div class="display-completion profile">
     {{# number_all }}
         <div class="profiles all">
-            {{# people_all }}
-            <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
-            {{/ people_all }}
+            <div class="first-x">
+                {{# people_all }}
+                <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                {{/ people_all }}
+            </div>
+            {{# number_all_other }}
+                <div class="others hide">
+                    {{# people_all_other }}
+                    <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                    {{/ people_all_other }}
+                </div>
+                <div class="plus-x-others">
+                    <button type="button" class="btn btn-default plus-x-other">{{plus_x_other_string_all}}</button> {{others_completed_string}}
+                </div>
+                <button type="button" class="btn btn-default plus-x-other hide">{{# str }} showless, form {{/ str }}</button>
+            {{/ number_all_other }}
+            {{^ number_all_other }}
+                <div class="plus-x-others">
+                    {{others_completed_string}}
+                </div>
+            {{/ number_all_other}}
         </div>
     {{/ number_all }}
     {{# number_group }}
         <div class="profiles group">
-            {{# people_group }}
-            <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
-            {{/ people_group }}
+            <div class="first-x">
+                {{# people_group }}
+                <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                {{/ people_group }}
+            </div>
+            {{# number_group_other }}
+                <div class="others hide">
+                    {{# people_group_other }}
+                    <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                    {{/ people_group_other }}
+                </div>
+                <div class="plus-x-others">
+                    <button type="button" class="btn btn-default plus-x-other">{{plus_x_other_string_group}}</button> {{others_completed_string}}
+                </div>
+                <button type="button" class="btn btn-default plus-x-other hide">{{# str }} showless, form {{/ str }}</button>
+            {{/ number_group_other }}
+            {{^ number_group_other }}
+                <div class="plus-x-others">
+                    {{others_completed_string}}
+                </div>
+            {{/ number_group_other}}
         </div>
     {{/ number_group }}
 </div>
 {{#js}}
+require(['mod_response/precompletion'], function(precompletion) {
+    precompletion();
+});
 require(['mod_response/postcompletion'], function(postcompletion) {
     postcompletion.init('#mod_response_form_{{response_id}}');
 });

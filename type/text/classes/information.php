@@ -63,9 +63,10 @@ class information extends abstractinfo {
      * @param int $instance Instance id for this activity.
      * @param array $users List of user ids to load data for.
      * @param bool $completedonly True to only load completed responses.
+     * @param bool $getuserinfo True to load the user profile picture/name as well.
      * @return array Array of responses, user id -> that users' most recent response.
      */
-    public function load_response_for_users($instance, $users, $completedonly = false) {
+    public function load_response_for_users($instance, $users, $completedonly = false, $getuserinfo = false) {
         global $DB;
 
         $users = $this->sanitise_int_array($users, false);
@@ -90,6 +91,12 @@ class information extends abstractinfo {
         }
 
         $responses = $DB->get_records_sql($query, $params);
+
+        // Now get user data.
+        if ($getuserinfo) {
+            $this->merge_user_data($responses);
+        }
+
         return $responses;
     }
 
@@ -118,23 +125,7 @@ class information extends abstractinfo {
         $responses = $DB->get_records_sql($query, $params);
 
         // Now get user data.
-        if (!empty($responses)) {
-            $users = $this->load_user_information(array_keys($responses));
-
-            // Go through the responses, match up against userdata, and prune ones without.
-            foreach (array_keys($responses) as $userid) {
-                // It shouldn't happen but that means it might sometime...
-                if (!isset($users[$userid])) {
-                    unset ($responses[$userid]);
-                    continue;
-                }
-
-                // Match 'em up.
-                $responses[$userid]->profile_picture = $users[$userid]['picture'];
-                $responses[$userid]->first_name = $users[$userid]['first_name'];
-                $responses[$userid]->last_name = $users[$userid]['last_name'];
-            }
-        }
+        $this->merge_user_data($responses);
 
         return $responses;
     }
@@ -145,10 +136,9 @@ class information extends abstractinfo {
      *
      * @param object $response Current response state.
      * @param int $userid User ID to check for.
-     * @param bool $incourse True if coming from the in-course view.
      * @param array $ajaxformdata Array of form data, or null
      */
-    public function load_form(&$response, $userid = null, $incourse = false, $ajaxformdata = null) {
+    public function load_form(&$response, $userid = null, $ajaxformdata = null) {
         global $CFG;
 
         if (!$userid) {
@@ -156,8 +146,8 @@ class information extends abstractinfo {
             $response->form = false;
             return;
         }
-        if (!empty($response->user_responses[$userid])) {
-            // The current user has completed this, no form to render.
+        if (!empty($response->user_responses[$userid]) && empty($response->is_editing)) {
+            // The current user has completed this (and not editing), so no form to render.
             $response->form = false;
             return;
         }
@@ -173,6 +163,14 @@ class information extends abstractinfo {
             $ajaxformdata, // Passing through AJAX data.
         );
         $mform = helper::instance_factory('text', 'text_form', $params);
+
+        if (!empty($response->user_responses[$userid]) && !empty($response->is_editing)) {
+            $data = array(
+                'responsetype_text_' . $response->id => array('text' => $response->user_responses[$userid]->response_text),
+            );
+            $mform->set_data($data);
+        }
+
         $response->form = $mform;
     }
 
