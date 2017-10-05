@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['activitydescription'] = 'Activity Description';
-$string['activityquestion'] = 'Activity Question';
-$string['activitytitle'] = 'Activity Title';
+$string['activitydescription'] = 'Activity description';
+$string['activityquestion'] = 'Activity question';
+$string['activitytitle'] = 'Activity title';
 $string['cannotparticipate'] = 'This is a preview of the activity, it cannot be completed at this time.';
 $string['completed1'] = '1 person has completed this activity.';
 $string['completedn'] = '{$a} people have completed this activity.';

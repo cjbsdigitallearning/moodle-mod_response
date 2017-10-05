@@ -61,7 +61,7 @@ class inlineoutput extends abstractoutput implements renderable, templatable {
         $data->profile_name = $this->data->user_wrote['first_name'];
         $data->viewing_own = $this->data->viewing_own;
 
-        $data->user_response = $this->data->response->response_text;
+        $data->user_response = helper::clean_text($this->data->response->response_text);
 
         $dateformat = get_string('strftimedatefullshort', 'langconfig');
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');

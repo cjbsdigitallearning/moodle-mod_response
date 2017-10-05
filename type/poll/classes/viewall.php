@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use pix_icon;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -54,6 +55,8 @@ class viewall extends abstractoutput implements renderable, templatable {
      * @return object $data An object containing all the template data
      */
     public function export_for_template(renderer_base $output) {
+        global $OUTPUT;
+
         $data = new stdClass();
 
         // Whatever we're exporting, we want the title and question. (And support multilang by default).
@@ -62,11 +65,14 @@ class viewall extends abstractoutput implements renderable, templatable {
         $data->all_responses = !empty($this->data->all_responses) ? $this->data->all_responses : array();
         $data->group_selector = !empty($this->data->group_selector) ? $this->data->group_selector : '';
 
+        $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
+
         $data->responsetype = $this->data->responsetype;
         // Combine the answer possibilities into the answers from users.
         foreach ($data->all_responses as $id => $response) {
             if (isset($this->data->activity->poll_choices[$response->choice])) {
                 $data->all_responses[$id]->choicetext = $this->data->activity->poll_choices[$response->choice]->choice;
+                $data->all_responses[$id]->reflection_text = helper::clean_text($response->reflection_text);
             } else {
                 unset($data->all_responses[$id]);
             }

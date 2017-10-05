@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use pix_icon;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -54,6 +55,8 @@ class viewall extends abstractoutput implements renderable, templatable {
      * @return object $data An object containing all the template data
      */
     public function export_for_template(renderer_base $output) {
+        global $OUTPUT;
+
         $data = new stdClass();
 
         // Whatever we're exporting, we want the title and question. (And support multilang by default).
@@ -61,6 +64,8 @@ class viewall extends abstractoutput implements renderable, templatable {
         $data->question = format_string($this->data->question);
         $data->all_responses = !empty($this->data->all_responses) ? $this->data->all_responses : array();
         $data->group_selector = !empty($this->data->group_selector) ? $this->data->group_selector : '';
+
+        $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
 
         $data->responsetype = $this->data->responsetype;
 
@@ -72,6 +77,7 @@ class viewall extends abstractoutput implements renderable, templatable {
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
         foreach ($data->all_responses as $id => $response) {
             $timestamp = $response->timecompleted;
+            $data->all_responses[$id]->response_text = helper::clean_text($response->response_text);
             $data->all_responses[$id]->timecompleted_date = userdate($timestamp, $dateformat, 99, false, false);
             $data->all_responses[$id]->timecompleted_datetime = userdate($timestamp, $datetimeformat, 99, false, false);
         }

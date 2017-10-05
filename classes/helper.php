@@ -49,7 +49,18 @@ class helper {
      * @return string String cleaned to remove all but p tags.
      */
     public static function clean_text($text) {
-        return strip_tags(clean_text($text, FORMAT_HTML), '<p>');
+        // First, convert lists into something useful if somehow we got one.
+        $text = str_replace('</li>', '<br />', $text);
+        $text = str_replace('<li>', '', $text);
+        $text = str_replace(array('<ul>', '<ol>'), '<p>', $text);
+        $text = str_replace(array('</ul>', '</ol>'), '</p>', $text);
+        // Strip the rest of the formatting.
+        $text = strip_tags(clean_text($text, FORMAT_HTML), '<p><br>');
+        // Clean house on weird circumstances; Atto can oddly nest P tags, for example.
+        $text = str_replace('<p><p>', '<p>', $text);
+        $text = str_replace('</p></p>', '</p>', $text);
+        $text = str_replace('<p></p>', '', $text);
+        return $text;
     }
 
     /**

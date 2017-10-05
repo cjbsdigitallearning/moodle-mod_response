@@ -64,7 +64,7 @@ class inlineoutput extends abstractoutput implements renderable, templatable {
         $userchoice = $this->data->response->choice;
         $data->user_choice = $this->data->activity->poll_choices[$userchoice]->choice;
 
-        $data->user_response = $this->data->response->reflection_text;
+        $data->user_response = helper::clean_text($this->data->response->reflection_text);
 
         $dateformat = get_string('strftimedatefullshort', 'langconfig');
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
