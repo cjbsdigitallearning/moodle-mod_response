@@ -1,0 +1,60 @@
+@mod @mod_response @responsetype @responsetype_text
+Feature: Users should be able to complete courses
+  In order to for me to complete a course
+  As a student
+  I need to have my answers mark its activities as completed
+
+  Background:
+    Given the following "courses" exist:
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1 | 0 | 1 |
+    And the following "users" exist:
+      | username | firstname | lastname | email |
+      | teacher1 | Teacher | 1 | teacher1@example.com |
+      | student1 | Student | 1 | student1@example.com |
+    And the following "course enrolments" exist:
+      | user | course | role |
+      | teacher1 | C1 | editingteacher |
+      | student1 | C1 | student |
+    And I log in as "teacher1"
+    And I follow "Course 1"
+    And I turn editing mode on
+    And I navigate to "Edit settings" in current page administration
+    And I set the following fields to these values:
+      | Enable completion tracking | Yes |
+    And I press "Save and display"
+    And I add a "Learning Response" to section "1"
+    And I set the following fields to these values:
+      | Activity title | The weather |
+      | Activity question | What is the weather like outside? |
+      | Response type | Free text |
+      | Completion tracking | Show activity as complete when conditions are met |
+      | Student must submit an answer to complete this activity | 1 |
+    And I press "Save and return to course"
+    And I log out
+
+  @javascript
+  Scenario: Student completes activity inline, marked completed
+    When I log in as "student1"
+    And I follow "Course 1"
+    And I should see "The weather"
+    And I set the field "Your answer" to "It is overcast and bleak outside."
+    And I press "Submit"
+    # We fetch the completion status with an AJAX callback after returning the form.
+    # So we need to wait for that to happen.
+    And I wait "2" seconds
+    Then I should see "You wrote"
+    And I should see "overcast and bleak"
+    And the "The weather" "response" activity with "auto" completion should be marked as complete
+
+  @javascript
+  Scenario: Student completes not inline, marked completed
+    When I log in as "student1"
+    And I follow "Course 1"
+    And I follow "The weather"
+    And I set the field "Your answer" to "It is overcast and bleak outside."
+    And I press "Submit"
+    And I follow "Course 1"
+    Then I should see "You wrote"
+    And I should see "overcast and bleak"
+    And the "The weather" "response" activity with "auto" completion should be marked as complete
