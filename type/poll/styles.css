@@ -6,6 +6,13 @@
     margin-left: 50px;
     margin-right: 50px;
 }
+.responsetype-poll.has-form .fitem_feditor .fitemtitle {
+    display: none;
+}
+.responsetype-poll.has-form .felement.feditor {
+    margin-left: 50px;
+    margin-right: 50px;
+}
 .responsetype-poll.has-form .fitem_fgroup .felement {
     margin-left: 50px;
     margin-right: 50px;
@@ -35,6 +42,11 @@
 
 .responsetype-poll.has-form .user-choice {
     font-weight: 600;
+}
+
+.activity.modtype_response .responsetype-poll.has-form .maximumwordsprompt {
+    margin: 0;
+    padding: 0;
 }
 
 /* Styles for showing the answers to students. */

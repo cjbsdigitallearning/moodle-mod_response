@@ -19,13 +19,9 @@
 
 .activity.modtype_response .has-form .femptylabel .felement,
 .activity.modtype_response .has-form .fitem_fgroup .felement,
+.activity.modtype_response .has-form .felement.feditor,
 .user-response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .felement.fgroup {
     margin: 0;
-}
-
-.activity.modtype_response .responsetype-text.has-form .maximumwordsprompt {
-    margin: 0;
-    padding: 0;
 }
 
 .activity.modtype_response .user-response [id^="fgroup_id_buttonar"] {

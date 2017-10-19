@@ -64,7 +64,7 @@ class poll_form_reflection extends abstractform {
         $mform->setType('poll_choice' . $id, PARAM_INT);
 
         $mform->addElement('html', '<div class="reflection-prompt">' . $reflectionprompt . '</div>');
-        $this->add_simple_editor('responsetype_poll_' . $this->_customdata->id);
+        $this->add_simple_editor('responsetype_poll_' . $this->_customdata->id, get_string('youranswer', 'response'));
 
         // Is there a word count prompt on this activity?
         // If so we need to pass the language string to the client and load our counting JS.

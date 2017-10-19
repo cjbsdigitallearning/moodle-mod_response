@@ -6,6 +6,15 @@
     margin-left: 50px;
     margin-right: 50px;
 }
+.responsetype-text.has-form .fitem_feditor .fitemtitle,
+.responsetype-text.has-form .fitem_ftextarea .fitemtitle {
+    display: none;
+}
+.responsetype-text.has-form .felement.feditor,
+.responsetype-text.has-form .felement.ftextarea {
+    margin-left: 50px;
+    margin-right: 50px;
+}
 .responsetype-text.has-form .fitem_fgroup .felement {
     margin-left: 50px;
     margin-right: 50px;
@@ -28,6 +37,11 @@
 }
 .responsetype-text.has-form .fdescription.required {
     display: none;
+}
+
+.activity.modtype_response .responsetype-text.has-form .maximumwordsprompt {
+    margin: 0;
+    padding: 0;
 }
 
 /* Styles for showing the answers to students. */
