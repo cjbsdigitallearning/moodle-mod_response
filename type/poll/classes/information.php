@@ -369,7 +369,7 @@ class information extends abstractinfo {
 
             $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
 
-            if ($response->is_editing == 1) {
+            if (!empty($response->is_editing) && $response->is_editing == 1) {
                 // Mark that we want to redirect to step 2.
                 $redirect = new moodle_url('/mod/response/view.php', array('id' => $response->cm->id, 'editing' => 2));
             }
