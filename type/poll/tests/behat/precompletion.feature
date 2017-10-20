@@ -57,7 +57,7 @@ Feature: Students should see some incentive to reply
     # This phrasing covers both alternate forms of presentation.
 
   @javascript
-  Scenario: Showing students the number of other completions
+  Scenario: Showing students the number of other completions.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -83,7 +83,7 @@ Feature: Students should see some incentive to reply
     Then I should see "1 person has completed this activity"
 
   @javascript
-  Scenario: Showing students the number of other completions
+  Scenario: Showing students full completions.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -110,7 +110,7 @@ Feature: Students should see some incentive to reply
     And I should not see "1 person has completed this activity"
 
   @javascript
-  Scenario: Showing students the number of other completions when there is more than the minimum number of people
+  Scenario: Showing students full completions when there is more than the minimum number of people.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

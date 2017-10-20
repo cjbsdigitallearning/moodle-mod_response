@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: In a course, students can see and respond to a question and see others' responses
-  In order to for my teacher to assess me
+Feature: In a course, students can see and respond to a question
+  In order to submit to a response activity
   As a student
   I need to answer the prompt question and possibly reflect on my answer
 

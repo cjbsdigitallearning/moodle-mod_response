@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_poll
 Feature: Teachers need to be able to review all answers
-  In order to for me to guide my class and discuss things with them
+  In order for me to guide my class
   As a teacher
   I need to see all their answers together at once
 
@@ -20,7 +20,7 @@ Feature: Teachers need to be able to review all answers
       | student2 | C1 | student |
 
   @javascript
-  Scenario: Two students complete an activity without reflection step, and the admin can see both.
+  Scenario: Two students complete an activity without reflection step, the teacher can see both.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -55,7 +55,7 @@ Feature: Teachers need to be able to review all answers
     And I should see "Cloudy."
 
   @javascript
-  Scenario: Two students complete an activity without reflection step, and the admin can see both.
+  Scenario: Two students complete an activity with reflection step, the teacher can see both.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

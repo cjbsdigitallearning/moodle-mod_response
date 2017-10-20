@@ -1,8 +1,8 @@
 @mod @mod_response @responsetype @responsetype_poll
 Feature: Users should be able to complete courses
-  In order to for me to complete a course
+  In order for me to complete a course
   As a student
-  I need to have my answers mark its activities as completed
+  I need to have my response mark the activity as completed
 
   Background:
     Given the following "courses" exist:
@@ -26,7 +26,7 @@ Feature: Users should be able to complete courses
     And I log out
 
   @javascript
-  Scenario: Student completes activity inline (no reflection step), marked completed
+  Scenario: Student completes activity inline (no reflection step), marked completed.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -56,7 +56,7 @@ Feature: Users should be able to complete courses
     And the "The weather" "response" activity with "auto" completion should be marked as complete
 
   @javascript
-  Scenario: Student completes not inline (no reflection step), marked completed
+  Scenario: Student completes activity not inline (no reflection step), marked completed.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -84,7 +84,7 @@ Feature: Users should be able to complete courses
     And the "The weather" "response" activity with "auto" completion should be marked as complete
 
   @javascript
-  Scenario: Student completes activity inline (reflection step), marked completed
+  Scenario: Student completes activity inline (reflection step), marked completed.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -117,7 +117,7 @@ Feature: Users should be able to complete courses
     And the "The weather" "response" activity with "auto" completion should be marked as complete
 
   @javascript
-  Scenario: Student completes not inline (reflection step), marked completed
+  Scenario: Student completes activity not inline (reflection step), marked completed.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

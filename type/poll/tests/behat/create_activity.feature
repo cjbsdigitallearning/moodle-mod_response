@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: In a course, students can see and respond to a question and see others' responses
-  In order to pose a question
+Feature: In a course, teacher can pose a poll question
+  In order for me to pose a question
   As a teacher
   I need to create an activity
 
@@ -18,17 +18,18 @@ Feature: In a course, students can see and respond to a question and see others'
       | student1 | C1 | student |
 
   @javascript
-  Scenario: Prepare creation of an activity and check the selection system works
+  Scenario: Prepare creation of an activity and check the selection system works.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Response type" to "Poll"
     Then I should see "Response - Poll"
-    And I should not see "Response - Text"
+    And I should see "Choice 1"
+    And I should not see "Response - Free text"
 
   @javascript
-  Scenario: Create an activity without a reflection step
+  Scenario: Create an activity without a reflection step.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -47,14 +48,16 @@ Feature: In a course, students can see and respond to a question and see others'
     # Seeing it on course view.
     Then I should see "The weather"
     And I should see "What is the weather like outside?"
+    And I should see "Sunny"
     And I follow "The weather"
     # Seeing it in its own view.
     And I should see "The weather"
     And I should see "What is the weather like outside?"
+    And I should see "Sunny"
     And I log out
 
   @javascript
-  Scenario: Create an activity with a reflection step
+  Scenario: Create an activity with a reflection step.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -85,7 +88,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I log out
 
   @javascript
-  Scenario: Create an activity with a reflection step with wordcount
+  Scenario: Create an activity with a reflection step with wordcount.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

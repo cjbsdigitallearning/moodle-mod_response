@@ -1,8 +1,8 @@
 @mod @mod_response @responsetype @responsetype_poll
 Feature: Users might choose to withdraw and submit a new answer
-  In order to for me to submit a newer, better answer
+  In order for me to submit a newer, better response
   As a student
-  I need to remove my existing answer to an activity
+  I need to remove my existing response to an activity
 
   Background:
     Given the following "courses" exist:
@@ -35,7 +35,7 @@ Feature: Users might choose to withdraw and submit a new answer
     And I log out
 
   @javascript
-  Scenario: A user with suitable capabilities can delete their response
+  Scenario: A user with the delete permission allowed can delete their response.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I follow "The weather"
@@ -50,7 +50,7 @@ Feature: Users might choose to withdraw and submit a new answer
     And I should not see "You answered"
 
   @javascript
-  Scenario: A user without suitable capabilities cannot delete their response
+  Scenario: A user without the delete permission allowed cannot delete their response.
     When I log in as "student1"
     And I follow "Course 1"
     And I follow "The weather"

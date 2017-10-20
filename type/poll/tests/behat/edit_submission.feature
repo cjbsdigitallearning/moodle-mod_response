@@ -1,7 +1,7 @@
 @mod @mod_response @responsetype @responsetype_poll
 Feature: Users should be able to edit their answers if permitted
-  In order to for me to fix typos I notice in my answer
-  As a student
+  In order for me to fix typos I notice in my answer
+  As a user with the relevant permission
   I need to edit my answer and save the corrected version
 
   Background:
@@ -60,6 +60,8 @@ Feature: Users should be able to edit their answers if permitted
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
+    And I follow "Course 1"
+
     And I follow "Course 1"
     And I should see "The weather"
     And I click on "Cloudy" "radio"
