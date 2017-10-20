@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_text
 Feature: Users might choose to withdraw and submit a new answer
-  In order to for me to submit a newer, better answer
+  In order for me to submit a newer, better answer
   As a student
   I need to remove my existing answer to an activity
 
@@ -31,7 +31,7 @@ Feature: Users might choose to withdraw and submit a new answer
     And I log out
 
   @javascript
-  Scenario: A user with suitable capabilities can delete their response
+  Scenario: A user with suitable capabilities can delete their response.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I follow "The weather"
@@ -46,7 +46,7 @@ Feature: Users might choose to withdraw and submit a new answer
     And I should not see "You wrote"
 
   @javascript
-  Scenario: A user without suitable capabilities cannot delete their response
+  Scenario: A user without suitable capabilities cannot delete their response.
     When I log in as "student1"
     And I follow "Course 1"
     And I follow "The weather"

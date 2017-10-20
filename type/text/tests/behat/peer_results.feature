@@ -63,7 +63,7 @@ Feature: Students should see others' responses, filtered by group or not
     And I should not see "What is the weather like outside?"
 
   @javascript
-  Scenario: Making sure an activity's responses are visible inside a group but not outside
+  Scenario: Making sure an activity's responses are visible inside a group but not outside.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -106,7 +106,7 @@ Feature: Students should see others' responses, filtered by group or not
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
 
   @javascript
-  Scenario: Making sure the group toggle functions correctly between group and all
+  Scenario: Making sure the group toggle functions correctly between group and all.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -140,20 +140,23 @@ Feature: Students should see others' responses, filtered by group or not
     Then ".group" "css_element" in the "div.display-completion" "css_element" should be visible
     And ".all" "css_element" in the "div.display-completion" "css_element" should not be visible
     And "img[title='Student 1']" "css_element" in the "div.display-completion .group" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion .group" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
     And I click on "All" "button"
     And ".group" "css_element" in the "div.display-completion" "css_element" should not be visible
     And ".all" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 1']" "css_element" in the "div.display-completion .all" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion .all" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
     And I click on "Group" "button"
     And ".group" "css_element" in the "div.display-completion" "css_element" should be visible
     And ".all" "css_element" in the "div.display-completion" "css_element" should not be visible
     And "img[title='Student 1']" "css_element" in the "div.display-completion .group" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion .group" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
 
   @javascript
-  Scenario: Making sure the group toggle functions correctly in the teacher summary
+  Scenario: Making sure the group toggle functions correctly in the teacher summary.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

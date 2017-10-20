@@ -20,7 +20,7 @@ Feature: Students should see others' responses
       | student2 | C1 | student |
 
   @javascript
-  Scenario: Showing students nothing about completion status as configured at activity level.
+  Scenario: Not showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -47,7 +47,7 @@ Feature: Students should see others' responses
     And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should not be visible
 
   @javascript
-  Scenario: Showing students others' completion status as configured at activity level.
+  Scenario: Showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -82,7 +82,7 @@ Feature: Students should see others' responses
     And I should see "Overcast outside."
 
   @javascript
-  Scenario: Showing students nothing about completion status because of a lack of permission.
+  Scenario: Not showing students answers of other students because of a lack of permission.
     When the following "permission overrides" exist:
       | capability | permission | role | contextlevel | reference |
       | mod/response:viewother | Prevent | student | Course | C1 |
@@ -188,25 +188,25 @@ Feature: Students should see others' responses
     And I log out
     Then I log in as "student1"
     And I follow "Course 1"
-    And "+1 other" "button" in the "#section-1" "css_element" should be visible 
+    And "+1 other" "button" in the "#section-1" "css_element" should be visible
     And "Show less..." "button" in the "#section-1" "css_element" should not be visible
     And "+1 other" "button" in the "#section-2" "css_element" should be visible
     And "Show less..." "button" in the "#section-2" "css_element" should not be visible
     # Press the first activity's button.
     And I press "+1 other"
-    And "+1 other" "button" in the "#section-1" "css_element" should not be visible 
+    And "+1 other" "button" in the "#section-1" "css_element" should not be visible
     And "Show less..." "button" in the "#section-1" "css_element" should be visible
     And "+1 other" "button" in the "#section-2" "css_element" should be visible
     And "Show less..." "button" in the "#section-2" "css_element" should not be visible
     # Then the second.
     And I click on "#section-2 div.plus-x-others button.plus-x-other" "css_element"
-    And "+1 other" "button" in the "#section-1" "css_element" should not be visible 
+    And "+1 other" "button" in the "#section-1" "css_element" should not be visible
     And "Show less..." "button" in the "#section-1" "css_element" should be visible
     And "+1 other" "button" in the "#section-2" "css_element" should not be visible
     And "Show less..." "button" in the "#section-2" "css_element" should be visible
     # And the first again.
     And I press "Show less..."
-    And "+1 other" "button" in the "#section-1" "css_element" should be visible 
+    And "+1 other" "button" in the "#section-1" "css_element" should be visible
     And "Show less..." "button" in the "#section-1" "css_element" should not be visible
     And "+1 other" "button" in the "#section-2" "css_element" should not be visible
     And "Show less..." "button" in the "#section-2" "css_element" should be visible

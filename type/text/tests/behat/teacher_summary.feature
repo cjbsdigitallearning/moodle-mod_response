@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_text
 Feature: Teachers need to be able to review all answers
-  In order to for me to guide my class and discuss things with them
+  In order for me to guide my class and discuss things with them
   As a teacher
   I need to see all their answers together at once
 
@@ -29,7 +29,7 @@ Feature: Teachers need to be able to review all answers
     And I log out
 
   @javascript
-  Scenario: Two students complete an activity, and the admin can see both.
+  Scenario: Two students complete an activity, and the teacher can see both.
     # First student completing the activity.
     When I log in as "student1"
     And I follow "Course 1"

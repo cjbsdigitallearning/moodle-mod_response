@@ -18,7 +18,7 @@ Feature: In a course, students can see and respond to a question and see others'
       | student1 | C1 | student |
 
   @javascript
-  Scenario: Prepare creation of an activity and check the selection system works
+  Scenario: Prepare creation of an activity and check the selection system works.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -28,7 +28,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I should not see "Response - Poll"
 
   @javascript
-  Scenario: Create an activity without a wordcount
+  Scenario: Create an activity with default values.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -50,7 +50,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I log out
 
   @javascript
-  Scenario: Create an activity with a wordcount
+  Scenario: Create an activity with a wordcount.
     When I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on

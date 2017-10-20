@@ -1,6 +1,6 @@
 @mod @mod_response @responsetype @responsetype_text
 Feature: Not all students can participate in a course - but it should still be visible
-  In order to for me to decide to enrol in a course
+  In order for me to decide to enrol in a course
   As a student
   I need to see the activities in it but not be able to complete them
 
@@ -27,14 +27,14 @@ Feature: Not all students can participate in a course - but it should still be v
     And I log out
 
   @javascript
-  Scenario: A user without suitable permissions cannot participate in the activity inline
+  Scenario: A user without suitable permissions cannot participate in the activity inline.
     When I log in as "teacher2"
     And I follow "Course 1"
     Then I should see "The weather"
     And the "Submit" "button" should be disabled
 
   @javascript
-  Scenario: A user without suitable permissions cannot participate in the activity non-inline
+  Scenario: A user without suitable permissions cannot participate in the activity non-inline.
     When I log in as "teacher2"
     And I follow "Course 1"
     And I follow "The weather"
