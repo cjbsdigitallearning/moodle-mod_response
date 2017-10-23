@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use pix_icon;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -63,6 +64,7 @@ class output extends abstractoutput implements renderable, templatable {
         $data->fullpage = !empty($this->data->fullpage);
         $data->contextid = !empty($this->data->contextid) ? $this->data->contextid : false;
 
+        $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
         if (empty($this->data->viewing_id)) {
             $this->data->viewing_id = $USER->id;
             $this->data->viewing_other = false;
