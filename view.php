@@ -81,6 +81,10 @@ $instance->load_form($response, $USER->id);
 if (!empty($response->form)) {
     // We need to set the page specifically to the course here so autosave works consistently between course/individual views.
     $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $PAGE->course->id)));
+
+    if (!has_capability('mod/response:participate', $context)) {
+        $response->form->disable_form(get_string('cannotparticipate', 'response'));
+    }
 }
 
 // There might be some aggregate data to load, e.g. group stuff.
