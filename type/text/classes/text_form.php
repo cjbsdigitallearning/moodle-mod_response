@@ -48,7 +48,7 @@ class text_form extends abstractform {
         $mform = $this->_form;
         $mform->disable_form_change_checker();
 
-        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id);
+        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'));
 
         // Is there a word count prompt on this activity?
         // If so we need to pass the language string to the client and load our counting JS.

@@ -79,3 +79,4 @@ $string['togglepeerresultsstudygroup'] = 'Study group';
 $string['viewallresponses'] = 'View all responses';
 $string['viewcoursesummary'] = 'View course summary';
 $string['viewincontext'] = 'View in context';
+$string['youranswer'] = 'Your answer';
