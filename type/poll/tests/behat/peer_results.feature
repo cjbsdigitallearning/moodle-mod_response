@@ -46,7 +46,11 @@ Feature: Students should see others' responses, filtered by group or not
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
-      | Response type | Free text |
+      | Response type | Poll |
+      | Choice 1 | Sunny |
+      | Choice 2 | Cloudy |
+      | Choice 3 | Raining |
+      | Add a reflection step | No |
     And I expand all fieldsets
     And I click on "Add restriction..." "button"
     And I click on "Group" "button"
@@ -61,6 +65,39 @@ Feature: Students should see others' responses, filtered by group or not
     And I log in as "student3"
     And I follow "Course 1"
     And I should not see "What is the weather like outside?"
+
+  @javascript
+  Scenario: An activity has a group restriction and should be visible outside the group - but only completable by group members.
+    When I log in as "teacher1"
+    And I follow "Course 1"
+    And I turn editing mode on
+    And I add a "Learning Response" to section "1"
+    And I set the following fields to these values:
+      | Activity title | The weather |
+      | Activity question | What is the weather like outside? |
+      | Response type | Poll |
+      | Choice 1 | Sunny |
+      | Choice 2 | Cloudy |
+      | Choice 3 | Raining |
+      | Add a reflection step | No |
+    And I expand all fieldsets
+    And I click on "Add restriction..." "button"
+    And I click on "Group" "button"
+    And I set the field with xpath "//span[@class='availability-group']/select" to "Group 1"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I follow "Course 1"
+    Then I should see "What is the weather like outside?"
+    And the "Submit" "button" should be enabled
+    And I should not see "Not available unless"
+    And I log out
+    And I log in as "student3"
+    And I follow "Course 1"
+    And I should see "What is the weather like outside?"
+    And the "Submit" "button" should be disabled
+    And I should see "Not available unless: You belong to"
+    And I should see "Group 1" in the "#section-1 .availabilityinfo" "css_element"
 
   @javascript
   Scenario: Making sure an activity's responses are visible inside a group but not outside.
