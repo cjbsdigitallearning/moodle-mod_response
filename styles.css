@@ -48,10 +48,24 @@
 .user-response .display-completion .plus-x-others {
     padding-left: 5px;
     vertical-align:middle;
+    font-size: 90%;
 }
 .user-response .display-completion .plus-x-others .btn {
     margin-left: 0;
     margin-right: 5px;
+}
+.user-response .display-completion .btn.plus-x-other {
+    background: #999999;
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 12px;
+    font-size: 90%;
+    line-height: 20px;
+    font-weight:bold;
+}
+.user-response .display-completion > .btn.plus-x-other {
+    padding: 2px 8px;
+    font-size: 81%;
 }
 .user-response .display-completion .others.hide {
     display: none;
