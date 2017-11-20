@@ -280,8 +280,14 @@ function response_cm_info_view(cm_info $cm) {
         $data->contextid = $context->id;
     }
 
-    if (!empty($data->form) && !has_capability('mod/response:participate', $context)) {
-        $data->form->disable_form(get_string('cannotparticipate', 'response'));
+    if (!empty($data->form)) {
+        $canparticipate = $cm->uservisible;
+        if (!has_capability('mod/response:participate', $context)) {
+            $canparticipate = false;
+        }
+        if (!$canparticipate) {
+            $data->form->disable_form(get_string('cannotparticipate', 'response'));
+        }
     }
 
     $data->showdescription = !empty($cm->showdescription);
