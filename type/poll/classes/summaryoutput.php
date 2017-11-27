@@ -73,7 +73,10 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
         $data->template = 'summaryoutput';
         if ($this->data->view_in_course) {
             $courseid = $this->data->course_id;
-            $data->context_link = new moodle_url('/course/view.php', array('id' => $courseid), 'module-' . $this->data->cm_id);
+            $data->context_link = course_get_url($courseid, $this->data->section_id);
+            if ($data->context_link) {
+                $data->context_link->set_anchor('module-' . $this->data->cm_id);
+            }
         } else {
             $data->context_link = new moodle_url('/mod/response/view.php', array('id' => $this->data->cm_id));
         }

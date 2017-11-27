@@ -137,6 +137,14 @@ function get_response_data($course, $response, $userid, $renderer = null) {
 
     $return->cm_id = $cm->id;
     $return->course_id = $course->id;
+    $return->section_id = null;
+
+    $sections = course_get_format($course->id)->get_sections();
+    foreach ($sections as $sectionobj) {
+        if ($sectionobj->id == $cm->section) {
+            $return->section_id = $sectionobj->section;
+        }
+    }
 
     // When showing in context, the link varies depending on course format.
     $return->view_in_course = !empty($course->format) && $course->format != 'singleactivity';
