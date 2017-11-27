@@ -183,6 +183,8 @@ class renderer extends plugin_renderer_base {
         $data->can_see_all = !empty($cm->customdata->can_see_all);
         $data->viewall_url = !empty($cm->customdata->viewall_url) ? $cm->customdata->viewall_url : '';
 
+        $data->summary_url = new \moodle_url('mod/response/index.php', array('id' => $rawdata->course));
+
         return parent::render_from_template('response/courseinline', $data);
     }
 
