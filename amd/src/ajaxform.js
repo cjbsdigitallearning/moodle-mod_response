@@ -29,7 +29,7 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates'], funct
                         var btnname = formdata[i].value;
                         params[btnname] = $(this).find('input[name="' + btnname + '"]').val();
                     } else {
-                        params[formdata[i].name] = formdata[i].value;
+                        params[encodeURIComponent(formdata[i].name)] = encodeURIComponent(formdata[i].value);
                     }
                 }
 
