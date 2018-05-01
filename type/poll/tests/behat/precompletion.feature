@@ -32,8 +32,7 @@ Feature: Students should see some incentive to reply
   @javascript
   Scenario: Showing students nothing about completion status.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -47,20 +46,19 @@ Feature: Students should see some incentive to reply
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should not see "completed this activity"
     # This phrasing covers both alternate forms of presentation.
 
   @javascript
   Scenario: Showing students the number of other completions.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -74,19 +72,18 @@ Feature: Students should see some incentive to reply
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "1 person has completed this activity"
 
   @javascript
   Scenario: Showing students full completions.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -100,20 +97,19 @@ Feature: Students should see some incentive to reply
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "has completed this activity"
     And I should not see "1 person has completed this activity"
 
   @javascript
   Scenario: Showing students full completions when there is more than the minimum number of people.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -127,37 +123,37 @@ Feature: Students should see some incentive to reply
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student3"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student4"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student5"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student6"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student7"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "have completed this activity"
     And I should see "+1 other"
     # Each of the user portraits has the student's name as a title.

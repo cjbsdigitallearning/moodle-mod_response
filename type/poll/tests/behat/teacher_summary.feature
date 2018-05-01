@@ -22,8 +22,7 @@ Feature: Teachers need to be able to review all answers
   @javascript
   Scenario: Two students complete an activity without reflection step, the teacher can see both.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -35,17 +34,17 @@ Feature: Teachers need to be able to review all answers
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Sunny." "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy." "radio"
     And I press "Submit"
     And I log out
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     Then I should see "What is the weather like outside?"
@@ -57,8 +56,7 @@ Feature: Teachers need to be able to review all answers
   @javascript
   Scenario: Two students complete an activity with reflection step, the teacher can see both.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -72,7 +70,7 @@ Feature: Teachers need to be able to review all answers
     And I log out
     # First student completing the activity.
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Sunny." "radio"
     And I press "Next"
     And I set the field "Your answer" to "The sun is shining right now."
@@ -80,7 +78,7 @@ Feature: Teachers need to be able to review all answers
     And I log out
     # Second student completing the activity.
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy." "radio"
     And I press "Next"
     And I set the field "Your answer" to "All bleak and overcast right now."
@@ -88,7 +86,7 @@ Feature: Teachers need to be able to review all answers
     And I log out
     # Viewing the summary.
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     Then I should see "What is the weather like outside?"

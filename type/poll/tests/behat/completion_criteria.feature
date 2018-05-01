@@ -17,8 +17,7 @@ Feature: Users should be able to complete courses
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
       | Enable completion tracking | Yes |
@@ -28,8 +27,7 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes activity inline (no reflection step), marked completed.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -44,7 +42,7 @@ Feature: Users should be able to complete courses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I click on "Cloudy" "radio"
     And I press "Submit"
@@ -58,8 +56,7 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes activity not inline (no reflection step), marked completed.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -74,11 +71,11 @@ Feature: Users should be able to complete courses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I click on "Cloudy" "radio"
     And I press "Submit"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "You answered"
     And I should see "Cloudy"
     And the "The weather" "response" activity with "auto" completion should be marked as complete
@@ -86,8 +83,7 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes activity inline (reflection step), marked completed.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -103,7 +99,7 @@ Feature: Users should be able to complete courses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I click on "Cloudy" "radio"
     And I press "Next"
@@ -119,8 +115,7 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes activity not inline (reflection step), marked completed.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -136,13 +131,13 @@ Feature: Users should be able to complete courses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I click on "Cloudy" "radio"
     And I press "Next"
     And I set the field "Your answer" to "Cloudy outside, but not raining."
     And I press "Submit"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "You answered"
     And I should see "Cloudy outside"
     And the "The weather" "response" activity with "auto" completion should be marked as complete

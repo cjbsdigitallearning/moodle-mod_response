@@ -22,8 +22,7 @@ Feature: Teachers should be able to remove inappropriate answers
       | capability | permission | role | contextlevel | reference |
       | mod/response:viewall | Allow | student | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -36,12 +35,12 @@ Feature: Teachers should be able to remove inappropriate answers
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Sunny" "radio"
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I click on "Cloudy" "radio"
     And I press "Submit"
     And I log out
@@ -51,7 +50,7 @@ Feature: Teachers should be able to remove inappropriate answers
   @javascript
   Scenario: A user with a relevant permission allowed can see all responses, but cannot see the delete button.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     Then I should see "Student answered"
@@ -63,14 +62,14 @@ Feature: Teachers should be able to remove inappropriate answers
   @javascript
   Scenario: A teacher can delete an answer that is not theirs.
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     And I should see "Student answered"
     And I should see "Delete response"
     And I follow "Delete response"
     And I press "Continue"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "View all responses"
     And I should see "Student answered"
     And I should see "Delete response"

@@ -17,8 +17,7 @@ Feature: Not all users can participate in a response activity - but it should st
       | teacher1 | C1 | editingteacher |
       | teacher2 | C1 | teacher |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -33,14 +32,14 @@ Feature: Not all users can participate in a response activity - but it should st
   @javascript
   Scenario: A user without suitable permissions cannot participate in the activity inline.
     When I log in as "teacher2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "The weather"
     And the "Submit" "button" should be disabled
 
   @javascript
   Scenario: A user without suitable permissions cannot participate in the activity non-inline.
     When I log in as "teacher2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     Then I should see "The weather"
     And the "Submit" "button" should be disabled

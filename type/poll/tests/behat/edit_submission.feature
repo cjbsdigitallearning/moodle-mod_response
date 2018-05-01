@@ -20,8 +20,7 @@ Feature: Users should be able to edit their answers if permitted
   @javascript
   Scenario: Student cannot edit their answer.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -34,7 +33,7 @@ Feature: Users should be able to edit their answers if permitted
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I click on "Cloudy" "radio"
     And I press "Submit"
@@ -46,8 +45,7 @@ Feature: Users should be able to edit their answers if permitted
       | capability | permission | role | contextlevel | reference |
       | mod/response:editown | Allow | student | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -60,9 +58,7 @@ Feature: Users should be able to edit their answers if permitted
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
-
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I click on "Cloudy" "radio"
     And I press "Submit"
@@ -78,8 +74,7 @@ Feature: Users should be able to edit their answers if permitted
       | capability | permission | role | contextlevel | reference |
       | mod/response:editown | Allow | student | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -93,7 +88,7 @@ Feature: Users should be able to edit their answers if permitted
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I click on "Cloudy" "radio"
     And I press "Next"

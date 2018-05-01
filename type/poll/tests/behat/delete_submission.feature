@@ -21,8 +21,7 @@ Feature: Users might choose to withdraw and submit a new answer
       | mod/response:participate | Allow | editingteacher | Course | C1 |
       | mod/response:deleteown | Allow | editingteacher | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -37,7 +36,7 @@ Feature: Users might choose to withdraw and submit a new answer
   @javascript
   Scenario: A user with the delete permission allowed can delete their response.
     When I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I should see "The weather"
     And I click on "Sunny." "radio"
@@ -52,7 +51,7 @@ Feature: Users might choose to withdraw and submit a new answer
   @javascript
   Scenario: A user without the delete permission allowed cannot delete their response.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I should see "The weather"
     And I click on "Sunny." "radio"

@@ -17,8 +17,7 @@ Feature: Users should be able to reflect on their answers
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     # Make a simple poll.
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
@@ -57,7 +56,7 @@ Feature: Users should be able to reflect on their answers
   @javascript
   Scenario: A user completes two activities and views them on one page.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     # Completing the first activity.
     And I should see "The weather"
     And I click on "Sunny." "radio"
@@ -82,7 +81,7 @@ Feature: Users should be able to reflect on their answers
   @javascript
   Scenario: A user completes three activities, one with a reflection step, and views them all on one page.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     # Completing the first activity.
     And I should see "The weather"
     And I click on "Sunny." "radio"
