@@ -19,8 +19,7 @@ Feature: Teachers need to be able to review all answers
       | student1 | C1 | student |
       | student2 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -32,19 +31,19 @@ Feature: Teachers need to be able to review all answers
   Scenario: Two students complete an activity, and the teacher can see both.
     # First student completing the activity.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "It is sunny here at the beach."
     And I press "Submit"
     And I log out
     # Second student completing the activity.
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "All overcast and dreary outside."
     And I press "Submit"
     And I log out
     # Viewing the summary.
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     Then I should see "What is the weather like outside?"

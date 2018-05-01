@@ -17,8 +17,7 @@ Feature: Users should be able to edit their answers if permitted
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
       | Enable completion tracking | Yes |
@@ -34,7 +33,7 @@ Feature: Users should be able to edit their answers if permitted
   @javascript
   Scenario: Student cannot edit their answer.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
@@ -46,7 +45,7 @@ Feature: Users should be able to edit their answers if permitted
       | capability | permission | role | contextlevel | reference |
       | mod/response:editown | Allow | student | Course | C1 |
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"

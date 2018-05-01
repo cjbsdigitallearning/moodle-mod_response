@@ -17,8 +17,7 @@ Feature: Users should be able to complete courses
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
       | Enable completion tracking | Yes |
@@ -36,7 +35,7 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes activity inline, marked completed.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
@@ -50,11 +49,11 @@ Feature: Users should be able to complete courses
   @javascript
   Scenario: Student completes not inline, marked completed.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     Then I should see "You wrote"
     And I should see "overcast and bleak"
     And the "The weather" "response" activity with "auto" completion should be marked as complete

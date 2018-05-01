@@ -20,8 +20,7 @@ Feature: In a course, students can see and respond to a question and see others'
   @javascript
   Scenario: Student can complete activity inline.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -29,7 +28,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "The weather"
     And I set the field "Your answer" to "This is my response."
     And I press "Submit"
@@ -39,8 +38,7 @@ Feature: In a course, students can see and respond to a question and see others'
   @javascript
   Scenario: Student can complete activity not-inline.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -48,7 +46,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "The weather"
     And I should see "The weather"
     And I set the field "Your answer" to "This is my response."

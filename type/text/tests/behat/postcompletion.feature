@@ -22,8 +22,7 @@ Feature: Students should see others' responses
   @javascript
   Scenario: Not showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -34,12 +33,12 @@ Feature: Students should see others' responses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Miserable outside."
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Overcast outside."
     And I press "Submit"
     Then I should see "You wrote"
@@ -49,8 +48,7 @@ Feature: Students should see others' responses
   @javascript
   Scenario: Showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -61,13 +59,13 @@ Feature: Students should see others' responses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Miserable outside."
     And I press "Submit"
     Then "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Overcast outside."
     And I press "Submit"
     And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
@@ -87,8 +85,7 @@ Feature: Students should see others' responses
       | capability | permission | role | contextlevel | reference |
       | mod/response:viewother | Prevent | student | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -99,13 +96,13 @@ Feature: Students should see others' responses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Miserable outside."
     And I press "Submit"
     And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should not be visible
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Overcast outside."
     And I press "Submit"
     Then I should see "You wrote"
@@ -127,8 +124,7 @@ Feature: Students should see others' responses
       | student5 | C1 | student |
       | student6 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -145,49 +141,49 @@ Feature: Students should see others' responses
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Cloudy but slowly clearing."
     And I press "Submit"
     And I set the field "Your answer" to "Love some well-seasoned sausages."
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Miserable and overcast."
     And I press "Submit"
     And I set the field "Your answer" to "Some properly cooked bacon."
     And I press "Submit"
     And I log out
     And I log in as "student3"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Breezy and overcast."
     And I press "Submit"
     And I set the field "Your answer" to "Some well-cooked toast with jam."
     And I press "Submit"
     And I log out
     And I log in as "student4"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Overcast with occasional breaks in the cloud."
     And I press "Submit"
     And I set the field "Your answer" to "Fried eggs, plain and simple."
     And I press "Submit"
     And I log out
     And I log in as "student5"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Patchy but the clouds are moving quickly."
     And I press "Submit"
     And I set the field "Your answer" to "I hate fried food. A nice croissant for me!"
     And I press "Submit"
     And I log out
     And I log in as "student6"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Clearing up, hope to get some autumn sunshine."
     And I press "Submit"
     And I set the field "Your answer" to "I like some mushrooms as part of my breakfast."
     And I press "Submit"
     And I log out
     Then I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And "+1 other" "button" in the "#section-1" "css_element" should be visible
     And "Show less..." "button" in the "#section-1" "css_element" should not be visible
     And "+1 other" "button" in the "#section-2" "css_element" should be visible

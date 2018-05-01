@@ -22,8 +22,7 @@ Feature: Teachers should be able to remove answers
       | capability | permission | role | contextlevel | reference |
       | mod/response:viewall | Allow | student | Course | C1 |
     And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Learning Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
@@ -32,12 +31,12 @@ Feature: Teachers should be able to remove answers
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Cloudy outside."
     And I press "Submit"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I set the field "Your answer" to "Sunny outside."
     And I press "Submit"
     And I log out
@@ -45,7 +44,7 @@ Feature: Teachers should be able to remove answers
   @javascript
   Scenario: A user (here a student) that can see all responses cannot see the delete button.
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
     Then I should see "Student wrote"
@@ -56,16 +55,18 @@ Feature: Teachers should be able to remove answers
 
   @javascript
   Scenario: A user can delete an answer that is not theirs.
-    When I log in as "student1"
-    And I follow "Course 1"
-    And I set the field "Your answer" to "Cloudy outside."
-    And I press "Submit"
-    And I log out
-    And I log in as "teacher1"
-    And I follow "Course 1"
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
     And I should see "View all responses"
     And I follow "View all responses"
+    And I should see "Student 1"
+    And I should see "Student 2"
     And I should see "Student wrote"
+    And I should see "Delete response"
+    # There are two responses to delete.
+    And I follow "Delete response"
+    And I press "Continue"
+    And I follow "View all responses"
     And I should see "Delete response"
     And I follow "Delete response"
     And I press "Continue"
