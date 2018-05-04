@@ -7,36 +7,56 @@
     border: 1px solid #e5e5e5;
     background: #f5f5f5;
 }
-
+.activity.modtype_response .activityinstance a:hover {
+    text-decoration: none;
+}
+.activity.modtype_response .activityinstance a {
+    cursor: default;
+}
 .activity.modtype_response .instancename {
     font-size: 17px;
     font-weight: 600;
     line-height: 23px;
-    display: inline-block;
     margin: 0 0 5px;
     color: #171717;
-    cursor: default;
+}
+.user-response .mform > .form-group.fullwidtheditor {
+    margin-left: -15px;
+}
+.user-response .fullwidtheditor .col-md-3 {
+    display: none;
+}
+.user-response .fullwidtheditor .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.user-response .fullwidtheditor .col-md-9 > div {
+    width: 100%;
 }
 
-.activity.modtype_response .has-form .femptylabel .felement,
-.activity.modtype_response .has-form .fitem_fgroup .felement,
-.activity.modtype_response .has-form .felement.feditor,
-.user-response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .felement.fgroup {
-    margin: 0;
+/* Fixing the Atto editor */
+.user-response .fullwidtheditor div.editor_atto_toolbar {
+    padding: 0;
+    border-bottom: none;
+    min-height: 0;
 }
-
-.activity.modtype_response .user-response [id^="fgroup_id_buttonar"] {
-    padding: 15px 0 0;
+.user-response .editor_atto_content {
+    resize: none;
+    min-height: 200px !important;
+    height: 200px !important;
 }
 
 /* Styles for the student completing the activity. */
 .response-activity .question {
     margin-bottom: 20px;
 }
-.user-response [id^=fgroup_id_buttonar] input {
-    float: right;
+.user-response .fdescription.required {
+    display: none;
 }
-.user-response [id^=fgroup_id_buttonar] .display-completion {
+.user-response .form-group .text-nowrap > abbr {
+    display: none;
+}
+.user-response [data-groupname^=buttonar] .display-completion {
     display: inline-block;
     max-width: 75%;
 }
@@ -75,21 +95,38 @@
     height: 30px;
     margin-bottom: 4px;
 }
-
-.user-response [id^=fgroup_id_buttonar] {
-    padding: 19px 20px 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+.mform > .form-group[data-groupname^=buttonar] {
+    margin: 20px 0 0;
+}
+.user-response [data-groupname^=buttonar] {
+    padding: 19px 0 20px 0;
+    margin: 20px 0;
     background-color: #f5f5f5;
     border-top: 1px solid #e5e5e5;
-    padding-left: 0;
+}
+.user-response [data-groupname^=buttonar].femptylabel > .col-md-3 {
+    display: none;
+    flex: 0 0 0%;
+}
+.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+}
+.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:first-of-type {
+    margin-left: auto;
+}
+.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:last-of-type {
+    margin-right: 0;
+}
+.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .display-completion + .form-group {
+    margin-left: auto;
 }
 
-@media screen and (max-width: 1500px) {
-    #region-main .user-response.has-form .mform:not(.unresponsive) .femptylabel .felement.feditor {
-        margin-left: 5%;
-        width: 90%;
-    }
+
+.user-response.has-form .maximumwordsprompt {
+    text-align: right;
+    margin-bottom: 20px;
 }
 
 /* Styles for showing the answers to students. */
@@ -101,10 +138,10 @@
 .response .mod_response_postcompletion {
     display: none;
 }
-.user-response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .fitemtitle {
+.user-response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     width: 20px;
 }
-.activity.modtype_response .mod_response_postcompletion [id^="fgroup_id_buttonar"] .fitemtitle {
+.activity.modtype_response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     display: none;
 }
 .user-response .profiles img[data-id] {

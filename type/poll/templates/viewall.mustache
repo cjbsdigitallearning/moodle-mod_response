@@ -76,8 +76,8 @@
 
     {{# all_responses }}
     <div class="view-all-response">
-        <div class="row-fluid">
-            <div class="span3 user-profile text-center">
+        <div class="row">
+            <div class="col-md-3 user-profile text-center">
                 <div class="profile-picture">
                     {{{profile_picture}}}
                 </div>
@@ -85,7 +85,7 @@
                     {{first_name}} {{last_name}}
                 </div>
             </div>
-            <div class="span9">
+            <div class="col-md-9">
                 <div class="user-wrote">
                     {{# str }} theyanswered, responsetype_poll, { "person": {{# quote }}{{first_name}}{{/ quote}}, "answer": {{# quote }}<div class="user-answer">{{{choicetext}}}</div>{{^reflection_text}}.{{/reflection_text}}{{/ quote }} } {{/ str }}{{#reflection_text}}<div class="user-reflection">: {{{reflection_text}}}</div>{{/reflection_text}}
 

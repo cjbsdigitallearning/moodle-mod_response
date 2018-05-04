@@ -21,7 +21,7 @@
     response from the user - in the case of polls in particular, show a chart as well.
 
     Classes required for JS:
-    * span8, span4 (for defloat behaviour), aggregate (for chart behaviour)
+    * col-md-8, col-md-4 (for defloat behaviour), aggregate (for chart behaviour)
     * user-container
 
     Data attributes required for JS:
@@ -56,28 +56,30 @@
 {{< mod_response/response}}
 {{$content}}
     <div class="user-response responsetype-poll" data-response="{{{response_id}}}">
-        <div class="row-fluid">
-            <div class="span8">
-                <div class="user-container">
-                    <div class="user-profile">
-                        {{{profile_picture}}}
-                    </div>
-                    <div class="user-wrote">
-                        {{# viewing_other }}
-                            {{# str }} theyanswered, responsetype_poll, { "person": {{# quote}}{{profile_name}}{{/ quote}}, "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
-                        {{/ viewing_other }}
-                        {{^ viewing_other }}
-                            {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
-                        {{/ viewing_other }}
-                    </div>
-                    {{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="user-wrapper">
+                    <div class="user-container">
+                        <div class="user-profile">
+                            {{{profile_picture}}}
+                        </div>
+                        <div class="user-wrote">
+                            {{# viewing_other }}
+                                {{# str }} theyanswered, responsetype_poll, { "person": {{# quote}}{{profile_name}}{{/ quote}}, "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                            {{/ viewing_other }}
+                            {{^ viewing_other }}
+                                {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
+                            {{/ viewing_other }}
+                        </div>
+                        {{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
 
-                    <div class="response-time">
-                        {{{user_response_time}}}
+                        <div class="response-time">
+                            {{{user_response_time}}}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="span4 aggregate">
+            <div class="col-md-4 aggregate">
                 <div class="aggregate-container">
                     <canvas></canvas>
                 </div>

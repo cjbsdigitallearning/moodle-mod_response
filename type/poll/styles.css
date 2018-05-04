@@ -1,45 +1,4 @@
 /* Styles for the student completing the activity. */
-.responsetype-poll.has-form .femptylabel .fitemtitle {
-    display: none;
-}
-.responsetype-poll.has-form .femptylabel .felement {
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.responsetype-poll.has-form .fitem_feditor .fitemtitle {
-    display: none;
-}
-.responsetype-poll.has-form .felement.feditor {
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.responsetype-poll.has-form .fitem_fgroup .felement {
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.responsetype-poll.has-form .felement.feditor {
-    margin-top: 30px;
-}
-.responsetype-poll.has-form div.editor_atto_toolbar {
-    padding: 0;
-    border-bottom: none;
-    min-height: 0;
-}
-.responsetype-poll.has-form .editor_atto_content {
-    resize: none;
-    min-height: 200px !important;
-    height: 200px !important;
-}
-.responsetype-poll.has-form .maximumwordsprompt {
-    text-align: right;
-    margin-top: 40px;
-    margin-bottom: 20px;
-    padding-right: 50px;
-}
-.responsetype-poll.has-form .fdescription.required {
-    display: none;
-}
-
 .responsetype-poll.has-form .user-choice {
     font-weight: 600;
 }
@@ -47,6 +6,30 @@
 .activity.modtype_response .responsetype-poll.has-form .maximumwordsprompt {
     margin: 0;
     padding: 0;
+}
+.user-response .form-group[data-groupname^="poll_choices"] .form-inline {
+    flex: 0 0 100%;
+    width: 100%;
+    display: block;
+}
+.user-response .form-group[data-groupname^="poll_choices"] label {
+    align-items: normal;
+    justify-content: left;
+}
+.user-response.responsetype-poll .mform > .form-group {
+    margin-left: 0;
+}
+.user-response.responsetype-poll .mform .form-inline .form-check-input {
+    margin-top: 4px;
+    margin-right: 5px;
+}
+.user-response.responsetype-poll .mform .femptylabel .col-md-3 {
+    flex: 0 0 0%;
+    max-width: 0;
+}
+.user-response.responsetype-poll .mform .femptylabel .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
 }
 
 /* Styles for showing the answers to students. */
@@ -75,7 +58,7 @@
     font-style: italic;
     text-align:right;
     margin-top:15px;
-    margin-bottom:15px
+    margin-bottom:15px;
 }
 
 /* Styles for the overall summary. */
@@ -91,20 +74,20 @@
  .activity-course .responsetype-poll .user-reflection p:first-of-type {
     display: inline;
 }
-
-.user-response.responsetype-poll .row-fluid {
+.user-response.responsetype-poll .row {
     margin-bottom: 15px;
 }
-.user-response.responsetype-poll .row-fluid [class*="span"] {
-    padding: 10px 10px 0;
-}
-.user-response.responsetype-poll .row-fluid [class*="span"]:first-of-type {
+.user-response.responsetype-poll .row .user-wrapper {
     background: #ffffff;
     border-radius: 6px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3)
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    padding: 10px 10px 0;
 }
-.user-response.responsetype-poll .row-fluid .aggregate {
+.user-response.responsetype-poll .row .aggregate {
     margin-bottom: 15px;
+}
+.user-response.responsetype-poll .aggregate-container canvas {
+    height: 1px;
 }
 
 /* Styles for the teacher summary. */

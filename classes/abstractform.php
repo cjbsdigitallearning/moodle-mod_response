@@ -105,8 +105,11 @@ abstract class abstractform extends moodleform {
             'enable_filemanagement' => false,
             'atto:toolbar' => '',
         );
+        $styles = array(
+            'class' => 'fullwidtheditor',
+        );
         $mform = $this->_form;
-        $mform->addElement('simpleeditor', $elementname, $elementlabel, null, $editoroptions);
+        $mform->addElement('simpleeditor', $elementname, $elementlabel, $styles, $editoroptions);
         $mform->setType($elementname, PARAM_RAW);
     }
 
