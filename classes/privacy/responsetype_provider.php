@@ -42,4 +42,21 @@ interface responsetype_provider extends subplugin_provider {
      * @param int $userid The user whose data to export
      */
     public static function export_user_data(approved_contextlist $contextlist, array $responseidstocmids, int $userid);
+
+    /**
+     * Delete all user data which matches the specified context.
+     *
+     * @param context $context The module context.
+     * @param int $responseid A response ID to clean up
+     */
+    public static function delete_data_for_all_users_in_context(\context $context, int $responseid);
+
+    /**
+     * Delete all user data for the specified user, in the specified contexts.
+     *
+     * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
+     * @param array $responseidstocmids An array of response/course module mappings (to avoid requerying)
+     * @param int $userid
+     */
+    public static function delete_data_for_user(approved_contextlist $contextlist, array $responseidstocmids, int $userid);
 }

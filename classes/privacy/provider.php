@@ -56,7 +56,6 @@ class provider implements metadataprovider, pluginprovider {
      * @return  collection     A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
-
         // The core plugin only has one table with user data.
         $responseuser = [
             'userid' => 'privacy:metadata:userid',
@@ -78,7 +77,6 @@ class provider implements metadataprovider, pluginprovider {
      * @return contextlist an object with the contexts related to a userid.
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
-
         $contextlist = new contextlist();
         $sql = "
             SELECT DISTINCT ctx.id
@@ -162,12 +160,26 @@ class provider implements metadataprovider, pluginprovider {
     }
 
     /**
-     * Delete all use data which matches the specified context.
+     * Delete all user data which matches the specified context.
      *
      * @param context $context The module context.
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
-        // Left blank for now.
+        global $DB;
+
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return;
+        }
+
+        // So we have a context, let's get the response id itself.
+        $responseid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
+
+        // First pass it to the subplugins in case they've declared foreign keys.
+        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
+                'delete_data_for_all_users_in_context', [$context, $responseid]);
+
+        // Then delete what's left.
+        $DB->delete_records('response_user', ['id' => $responseid]);
     }
 
     /**
@@ -176,7 +188,32 @@ class provider implements metadataprovider, pluginprovider {
      * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
-        // Left blank for now.
+        global $DB;
+
+        $user = $contextlist->get_user();
+        $userid = $user->id;
+        $cmids = array_reduce($contextlist->get_contexts(), function($carry, $context) {
+            if ($context->contextlevel == CONTEXT_MODULE) {
+                $carry[] = $context->instanceid;
+            }
+            return $carry;
+        }, []);
+        if (empty($cmids)) {
+            return;
+        }
+
+        // Get the response IDs.
+        $responseidstocmids = static::get_response_ids_to_cmids_from_cmids($cmids);
+
+        // First pass it to the subplugins in case they've declared foreign keys.
+        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
+                'delete_data_for_user', [$contextlist, $responseidstocmids, $userid]);
+
+        // Then delete what's left.
+        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        $params = array_merge($inresponseparams, ['userid' => $userid]);
+        $sql = "userid = :userid AND response $inresponsesql";
+        $DB->delete_records_select("response_user", $sql, $params);
     }
 
     /**
@@ -213,7 +250,6 @@ class provider implements metadataprovider, pluginprovider {
      */
     public static function recordset_loop_and_export(\moodle_recordset $recordset, $splitkey, $initial,
             callable $reducer, callable $export) {
-
         $data = $initial;
         $lastid = null;
 

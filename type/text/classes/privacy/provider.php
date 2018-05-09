@@ -53,7 +53,6 @@ class provider implements metadataprovider, subplugin_provider {
      * @return  collection     A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
-
         // The core plugin only has one table with user data.
         $responsetextuser = [
             'response' => 'privacy:metadata:response',
@@ -92,5 +91,33 @@ class provider implements metadataprovider, subplugin_provider {
             $context = context_module::instance($responseidstocmids[$responseid]->cmid);
             writer::with_context($context)->export_related_data([], 'answer_text', $data);
         });
+    }
+
+    /**
+     * Delete all user data which matches the specified context.
+     *
+     * @param context $context The module context.
+     * @param int $responseid A response ID to clean up
+     */
+    public static function delete_data_for_all_users_in_context(\context $context, int $responseid) {
+        global $DB;
+
+        $DB->delete_records('responsetype_text_user', ['response' => $responseid]);
+    }
+
+    /**
+     * Delete all user data for the specified user, in the specified contexts.
+     *
+     * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
+     * @param array $responseidstocmids An array of response/course module mappings (to avoid requerying)
+     * @param int $userid
+     */
+    public static function delete_data_for_user(approved_contextlist $contextlist, array $responseidstocmids, int $userid) {
+        global $DB;
+
+        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        $params = array_merge($inresponseparams, ['userid' => $userid]);
+        $sql = "userid = :userid AND response $inresponsesql";
+        $DB->delete_records_select("responsetype_text_user", $sql, $params);
     }
 }
