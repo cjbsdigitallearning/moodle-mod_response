@@ -291,7 +291,7 @@ function response_cm_info_view(cm_info $cm) {
     }
 
     $data->showdescription = !empty($cm->showdescription);
-    $cm->set_content($renderer->render_courseinline($data));
+    $cm->set_content($renderer->render_courseinline($data), true);
 }
 
 /**
