@@ -24,5 +24,10 @@
 $string['maximumwords_default'] = 'This sets the default advised word count. If given as 0, the field will be disabled by default.';
 $string['nothingwritten'] = 'Please provide an answer.';
 $string['pluginname'] = 'Free text';
+$string['privacy:metadata:response'] = 'The ID of the response activity the user is providing answer for';
+$string['privacy:metadata:responsetext'] = 'The textual response from the user (edit history is kept if not displayed)';
+$string['privacy:metadata:responsetype_text_user'] = 'Storage for "Free Text" learning responses from users';
+$string['privacy:metadata:timesubmitted'] = 'The time the response was submitted';
+$string['privacy:metadata:userid'] = 'The ID of the user who completed the response activity';
 $string['theywrote'] = '{$a} wrote:';
 $string['youwrote'] = 'You wrote:';
