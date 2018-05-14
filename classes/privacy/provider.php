@@ -179,7 +179,7 @@ class provider implements metadataprovider, pluginprovider {
                 'delete_data_for_all_users_in_context', [$context, $responseid]);
 
         // Then delete what's left.
-        $DB->delete_records('response_user', ['id' => $responseid]);
+        $DB->delete_records('response_user', ['response' => $responseid]);
     }
 
     /**

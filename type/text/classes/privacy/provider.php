@@ -66,6 +66,16 @@ class provider implements metadataprovider, subplugin_provider {
     }
 
     /**
+     * Returns all of the contexts that has information relating to the userid.
+     *
+     * @param  int $userid The user ID.
+     * @return contextlist an object with the contexts related to a userid.
+     */
+    public static function get_contexts_for_userid(int $userid) : contextlist {
+        return responseprovider::get_contexts_for_userid($userid);
+    }
+
+    /**
      * Export the user data from a subplugin specific context.
      *
      * @param approved_contextlist $contextlist The approved context list to export
