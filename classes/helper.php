@@ -126,12 +126,12 @@ class helper {
         $subplugins = self::get_type_subplugins();
         // This is an unknown plugin.
         if (!isset($subplugins[$plugin])) {
-            throw new coding_exception('Unknown learning response subplugin ' . $plugin);
+            throw new coding_exception('Unknown response subplugin ' . $plugin);
         }
 
         $classname = $subplugins[$plugin]->classpath . '\\' . $class;
         if (!file_exists($subplugins[$plugin]->path . '/classes/' . $class . '.php')) {
-            throw new coding_exception('Learning response subplugin ' . $plugin . ' is missing its ' . $class . ' class');
+            throw new coding_exception('Response subplugin ' . $plugin . ' is missing its ' . $class . ' class');
         }
         require_once($subplugins[$plugin]->path . '/classes/' . $class . '.php');
 

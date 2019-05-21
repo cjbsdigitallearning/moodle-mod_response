@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Delete a response to a learning response activity.
+ * Delete a response to a response activity.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>

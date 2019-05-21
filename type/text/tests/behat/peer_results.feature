@@ -41,7 +41,7 @@ Feature: Students should see others' responses, filtered by group or not
   Scenario: An activity has a group restriction and only members of that group can see it.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -65,7 +65,7 @@ Feature: Students should see others' responses, filtered by group or not
   Scenario: An activity has a group restriction and should be visible outside the group - but only completable by group members.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -93,7 +93,7 @@ Feature: Students should see others' responses, filtered by group or not
   Scenario: Making sure an activity's responses are visible inside a group but not outside.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -136,7 +136,7 @@ Feature: Students should see others' responses, filtered by group or not
   Scenario: Making sure the group toggle functions correctly between group and all.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -186,7 +186,7 @@ Feature: Students should see others' responses, filtered by group or not
   Scenario: Making sure the group toggle functions correctly in the teacher summary.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |

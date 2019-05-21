@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Submitting a learning response activity.
+ * Submitting a response activity.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>

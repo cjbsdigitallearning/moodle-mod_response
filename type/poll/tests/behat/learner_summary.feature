@@ -19,7 +19,7 @@ Feature: Users should be able to reflect on their answers
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     # Make a simple poll.
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -29,7 +29,7 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Add a reflection step" to "No"
     And I press "Save and return to course"
     # Make a second simple poll.
-    And I add a "Learning Response" to section "2"
+    And I add a "Response" to section "2"
     And I set the field "Activity title" to "Fried breakfasts"
     And I set the field "Activity question" to "What is your favourite part of a fried breakfast?"
     And I set the field "Response type" to "Poll"
@@ -40,7 +40,7 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Add a reflection step" to "No"
     And I press "Save and return to course"
     # Make a third poll, this time with a reflection step.
-    And I add a "Learning Response" to section "3"
+    And I add a "Response" to section "3"
     And I set the field "Activity title" to "Working beverages"
     And I set the field "Activity question" to "What do you drink most of while working?"
     And I set the field "Response type" to "Poll"
@@ -68,7 +68,7 @@ Feature: Users should be able to reflect on their answers
     # Viewing the summary.
     And I should see "View course summary"
     And I follow "View course summary"
-    Then I should see "Learning Responses"
+    Then I should see "Responses"
     And I should see "Topic 1"
     And I should see "Topic 2"
     And I should see "The weather"
@@ -101,7 +101,7 @@ Feature: Users should be able to reflect on their answers
     # Viewing the summary.
     And I should see "View course summary"
     And I follow "View course summary"
-    Then I should see "Learning Responses"
+    Then I should see "Responses"
     And I should see "Topic 1"
     And I should see "Topic 2"
     And I should see "Topic 3"

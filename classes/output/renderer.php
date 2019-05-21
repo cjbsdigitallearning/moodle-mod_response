@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Rendering a learning response activity.
+ * Rendering a response activity.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
@@ -30,7 +30,7 @@ use stdClass;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Rendering a learning response activity.
+ * Rendering a response activity.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>

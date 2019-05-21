@@ -31,7 +31,7 @@ define('RESPONSE_PEER_RESULTS_GROUP', 0x01);
 define('RESPONSE_PEER_RESULTS_ALL', 0x02);
 
 /**
- * Outlines features supported by the learning response activity.
+ * Outlines features supported by the response activity.
  *
  * @param int $feature A number which corresponds to a FEATURE_ constant
  * @return bool Whether the listed feature is supported by this activity

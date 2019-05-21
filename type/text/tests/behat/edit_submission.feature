@@ -22,7 +22,7 @@ Feature: Users should be able to edit their answers if permitted
     And I set the following fields to these values:
       | Enable completion tracking | Yes |
     And I press "Save and display"
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |

@@ -21,7 +21,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Prepare creation of an activity and check the selection system works.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Response type" to "Free text"
     Then I should see "Response - Free text"
     And I should not see "Response - Poll"
@@ -30,7 +30,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with default values.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
@@ -51,7 +51,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with a wordcount.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"

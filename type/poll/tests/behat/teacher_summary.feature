@@ -23,7 +23,7 @@ Feature: Teachers need to be able to review all answers
   Scenario: Two students complete an activity without reflection step, the teacher can see both.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -57,7 +57,7 @@ Feature: Teachers need to be able to review all answers
   Scenario: Two students complete an activity with reflection step, the teacher can see both.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"

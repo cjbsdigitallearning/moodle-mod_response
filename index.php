@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Viewing all learning response activities in a course.
+ * Viewing all response activities in a course.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>

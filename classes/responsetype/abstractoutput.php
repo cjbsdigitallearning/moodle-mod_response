@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Generic configuration API for learning response activity subplugins.
+ * Generic configuration API for response activity subplugins.
  *
  * @package   mod_response
  * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Defines the response information API that subplugins are expected to follow.
  *
- * Any subplugin that defines a type of response for the learning response activity
+ * Any subplugin that defines a type of response for the response activity
  * will need to load data for displaying it to users, as well as loading users'
  * responses. All such subplugins should define a configuration class that extends
  *  this one.

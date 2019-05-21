@@ -28,7 +28,7 @@ Feature: Users should be able to complete courses
   Scenario: Student completes activity inline (no reflection step), marked completed.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -57,7 +57,7 @@ Feature: Users should be able to complete courses
   Scenario: Student completes activity not inline (no reflection step), marked completed.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -84,7 +84,7 @@ Feature: Users should be able to complete courses
   Scenario: Student completes activity inline (reflection step), marked completed.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -116,7 +116,7 @@ Feature: Users should be able to complete courses
   Scenario: Student completes activity not inline (reflection step), marked completed.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |

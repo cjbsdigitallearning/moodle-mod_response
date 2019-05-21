@@ -21,7 +21,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete no-reflection activity inline.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -43,7 +43,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete no-reflection activity non-inline.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -66,7 +66,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete reflection activity inline.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -95,7 +95,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete reflection activity non-inline.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -125,7 +125,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete reflection activity inline after changing their mind mid-way.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -157,7 +157,7 @@ Feature: In a course, students can see and respond to a question
   Scenario: Student can complete reflection activity non-inline after changing their mind mid-way.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Learning Response" to section "1"
+    And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
