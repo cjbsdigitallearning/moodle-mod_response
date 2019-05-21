@@ -84,7 +84,7 @@ class configuration extends abstractconfig {
         $mform->disabledIf('poll_maximumwords', 'poll_maximumwords_enabled');
         $mform->disabledIf('poll_maximumwords', 'poll_reflectionstep', 'neq', 1);
         $mform->disabledIf('poll_maximumwords_enabled', 'poll_reflectionstep', 'neq', 1);
-        $mform->setDefault('poll_maximumwords', $responseconfig->defaultwords);
+        $mform->setDefault('poll_maximumwords', !empty($responseconfig->defaultwords) ? $responseconfig->defaultwords : 0);
         $mform->setDefault('poll_maximumwords_enabled', !empty($responseconfig->defaultwords) ? 1 : 0);
     }
 

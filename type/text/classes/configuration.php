@@ -57,7 +57,7 @@ class configuration extends abstractconfig {
         $mform->addGroup($maxwords, 'text_maximumwords_group', get_string('maximumwords', 'response'), ' ', false);
         $mform->setType('text_maximumwords', PARAM_INT);
         $mform->disabledIf('text_maximumwords', 'text_maximumwords_enabled');
-        $mform->setDefault('text_maximumwords', $responseconfig->defaultwords);
+        $mform->setDefault('text_maximumwords', !empty($responseconfig->defaultwords) ? $responseconfig->defaultwords : 0);
         $mform->setDefault('text_maximumwords_enabled', !empty($responseconfig->defaultwords) ? 1 : 0);
     }
 
