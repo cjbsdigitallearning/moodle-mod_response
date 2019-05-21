@@ -46,9 +46,9 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Group mode | Separate groups |
     And I expand all fieldsets
-    And I click on "Add restriction..." "button"
-    And I click on "Group" "button"
+    And I click on "Add group/grouping access restriction" "button"
     And I set the field with xpath "//span[@class='availability-group']/select" to "Group 1"
     And I click on ".availability-item .availability-eye img" "css_element"
     And I press "Save and return to course"
@@ -70,9 +70,9 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Group mode | Separate groups |
     And I expand all fieldsets
-    And I click on "Add restriction..." "button"
-    And I click on "Group" "button"
+    And I click on "Add group/grouping access restriction" "button"
     And I set the field with xpath "//span[@class='availability-group']/select" to "Group 1"
     And I press "Save and return to course"
     And I log out
@@ -100,6 +100,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Response type | Free text |
       | Study group | 1 |
       | All | 0 |
+      | Group mode | Separate groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -142,6 +143,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Response type | Free text |
       | Study group | 1 |
       | All | 1 |
+      | Group mode | Separate groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
