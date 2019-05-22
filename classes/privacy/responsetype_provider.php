@@ -28,11 +28,13 @@ namespace mod_response\privacy;
 
 use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\plugin\subplugin_provider;
+use \core_privacy\local\request\shared_userlist_provider;
 use \core_privacy\local\request\approved_contextlist;
+use context;
 
 defined('MOODLE_INTERNAL') || die();
 
-interface responsetype_provider extends subplugin_provider {
+interface responsetype_provider extends subplugin_provider, shared_userlist_provider {
 
     /**
      * Export the user data from a subplugin specific context.
@@ -59,4 +61,13 @@ interface responsetype_provider extends subplugin_provider {
      * @param int $userid
      */
     public static function delete_data_for_user(approved_contextlist $contextlist, array $responseidstocmids, int $userid);
+
+    /**
+     * Delete data for specified users in a specified context.
+     *
+     * @param context $context The context to limit deletions to
+     * @param int $responseid The repsonse ID (should match context, but kept for performance)
+     * @param array $userids An array of user IDs to delete data for within the limited context
+     */
+    public static function delete_data_for_users(context $context, int $responseid, array $userids);
 }

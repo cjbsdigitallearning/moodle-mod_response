@@ -37,6 +37,8 @@ use \core_privacy\local\request\transform;
 use \core_privacy\local\request\writer;
 use \stdClass;
 use \moodle_url;
+use \core_privacy\local\request\userlist;
+use \core_privacy\local\request\approved_userlist;
 
 /**
  * Privacy class for requesting user data.
@@ -231,6 +233,76 @@ class responsetype_poll_privacy_testcase extends provider_testcase {
         // And assert they are both for User 2.
         foreach ($recordsusertext as $record) {
             $this->assertEquals($record->userid, $u2->id);
+        }
+    }
+
+    /**
+     * Verify that multiple users' data is removed from multiple contexts.
+     */
+    public function test_delete_data_for_users() {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $gen = $this->getDataGenerator();
+        $c1 = $gen->create_course();
+        $c2 = $gen->create_course();
+
+        $u1 = $gen->create_user();
+        $u2 = $gen->create_user();
+        $u3 = $gen->create_user();
+
+        // Create an activity in one course.
+        $text1 = $this->create_poll($gen, $c1, 'Question 1?', 2, 'User answer?');
+        $text1ctx = context_module::instance($text1->cmid);
+
+        $this->respond_to_activity($text1->id, $u1->id, 1, 'User 1 answer to Response 1');
+        $this->respond_to_activity($text1->id, $u2->id, 1, 'User 2 answer to Response 1');
+        $this->respond_to_activity($text1->id, $u3->id, 1, 'User 3 answer to Response 1');
+
+        // Create an activity in a second course.
+        $text2 = $this->create_poll($gen, $c1, 'Question 2?', 2, 'User answer?');
+        $text2ctx = context_module::instance($text2->cmid);
+
+        $this->respond_to_activity($text2->id, $u1->id, 2, 'User 1 answer to Response 2');
+        $this->respond_to_activity($text2->id, $u2->id, 2, 'User 2 answer to Response 2');
+        $this->respond_to_activity($text2->id, $u3->id, 2, 'User 3 answer to Response 2');
+
+        // Now, delete things. We call the parent because the API will too, and verify the results.
+        $userlist = new approved_userlist($text1ctx, 'mod_response', [$u1->id, $u2->id]);
+        parentprovider::delete_data_for_users($userlist);
+
+        // Now let's get the user answers.
+        $recordsuser = $DB->get_records('response_user');
+        // There should be 4 answers: user 3 in response 1, users 1, 2, 3 in response 2.
+        $this->assertEquals(4, count($recordsuser));
+
+        // And the records that are there should match the activity we know we're dealing with.
+        $matches = [
+            $text1->id . '-' . $u3->id,
+            $text2->id . '-' . $u1->id,
+            $text2->id . '-' . $u2->id,
+            $text2->id . '-' . $u3->id,
+        ];
+
+        // Now the specific responses.
+        $recordsusertext = $DB->get_records('responsetype_poll_user');
+        // There are two records per poll response when there's a reflection step.
+        $this->assertEquals(8, count($recordsusertext));
+        $results = [];
+        foreach ($recordsusertext as $record) {
+            $recordcode = $record->response . '-' . $record->userid;
+            $results[] = $recordcode;
+        }
+        $results = array_unique($results);
+
+        // Verify everything we expect to find did come out of the list.
+        foreach ($matches as $match) {
+            $this->assertContains($match, $results);
+        }
+        // Verify everything we got matches our original list too.
+        foreach ($results as $match) {
+            $this->assertContains($match, $matches);
         }
     }
 

@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 use \core_privacy\local\metadata\collection;
 use \core_privacy\local\metadata\provider as metadataprovider;
 use \core_privacy\local\request\plugin\provider as pluginprovider;
+use \core_privacy\local\request\core_userlist_provider as userlist_provider;
+use \core_privacy\local\request\userlist;
+use \core_privacy\local\request\approved_userlist;
 use \core_privacy\local\request\contextlist;
 use \context_module;
 use \core_privacy\local\request\approved_contextlist;
@@ -44,7 +47,7 @@ use \core_privacy\manager;
  * @copyright 2018 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements metadataprovider, pluginprovider {
+class provider implements metadataprovider, pluginprovider, userlist_provider {
 
     /** Interface for all response type sub-plugins. */
     const RESPONSETYPE_INTERFACE = 'mod_response\privacy\responsetype_provider';
@@ -101,6 +104,43 @@ class provider implements metadataprovider, pluginprovider {
         $contextlist->add_from_sql($sql, $params);
 
         return $contextlist;
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     *
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+
+        $sql = "
+                SELECT DISTINCT ru.userid
+                  FROM {response} r
+                  JOIN {modules} m
+                    ON m.name = :response
+                  JOIN {course_modules} cm
+                    ON cm.instance = r.id
+                   AND cm.module = m.id
+                  JOIN {context} ctx
+                    ON ctx.instanceid = cm.id
+                   AND ctx.contextlevel = :modulelevel
+                  JOIN {response_user} ru
+                    ON ru.response = r.id
+                 WHERE ctx.id = :contextid";
+
+        $params = [
+            'response' => 'response',
+            'modulelevel' => CONTEXT_MODULE,
+            'contextid' => $context->id,
+        ];
+
+        $userlist->add_from_sql('userid', $sql, $params);
     }
 
     /**
@@ -172,7 +212,11 @@ class provider implements metadataprovider, pluginprovider {
         }
 
         // So we have a context, let's get the response id itself.
-        $responseid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
+        $cm = get_coursemodule_from_id('response', $context->instanceid);
+        if (!$cm) {
+            return;
+        }
+        $responseid = $cm->instance;
 
         // First pass it to the subplugins in case they've declared foreign keys.
         manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
@@ -180,6 +224,45 @@ class provider implements metadataprovider, pluginprovider {
 
         // Then delete what's left.
         $DB->delete_records('response_user', ['response' => $responseid]);
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist    $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+        $responseid = static::get_response_id_from_context($context);
+        $userids = $userlist->get_userids();
+
+        if (empty($responseid)) {
+            return;
+        }
+
+        // First pass it to the subplugins in case they've declared foreign keys.
+        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
+                'delete_data_for_users', [$context, $responseid, $userids]);
+
+        // Delete the response for the users.
+        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        $inparams['responseid'] = $responseid;
+        $sql = "response = :responseid AND userid {$insql}";
+
+        $DB->delete_records_select('response_user', $sql, $inparams);
+    }
+
+    /**
+     * Get a response ID from its context.
+     *
+     * @param context_module $context The module context.
+     * @return int The instance id
+     */
+    protected static function get_response_id_from_context(context_module $context) {
+        $cm = get_coursemodule_from_id('response', $context->instanceid);
+        return $cm ? (int) $cm->instance : 0;
     }
 
     /**

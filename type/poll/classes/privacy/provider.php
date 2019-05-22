@@ -36,6 +36,7 @@ use \mod_response\privacy\provider as responseprovider;
 use \core_privacy\local\request\helper;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\transform;
+use \context;
 
 /**
  * Privacy class for requesting user data.
@@ -127,6 +128,22 @@ class provider implements metadataprovider, subplugin_provider {
         list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $params = array_merge($inresponseparams, ['userid' => $userid]);
         $sql = "userid = :userid AND response $inresponsesql";
+        $DB->delete_records_select("responsetype_poll_user", $sql, $params);
+    }
+
+    /**
+     * Delete data for specified users in a specified context.
+     *
+     * @param context $context The context to limit deletions to
+     * @param int $responseid The repsonse ID (should match context, but kept for performance)
+     * @param array $userids An array of user IDs to delete data for within the limited context
+     */
+    public static function delete_data_for_users(context $context, int $responseid, array $userids) {
+        global $DB;
+
+        list($inuserssql, $inusersparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        $params = array_merge($inusersparams, ['response' => $responseid]);
+        $sql = "userid $inuserssql AND response = :response";
         $DB->delete_records_select("responsetype_poll_user", $sql, $params);
     }
 }
