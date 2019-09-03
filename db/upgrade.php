@@ -18,14 +18,30 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @copyright 2019 Matt Whelan <matt.whelan@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2019090301;
-$plugin->release   = '1.0.0';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->maturity  = MATURITY_ALPHA;
+function xmldb_response_upgrade($oldversion) {
+    global $CFG, $DB;
+
+    $dbmanager = $DB->get_manager();
+
+    if ($oldversion < 2019090301) {
+
+        $table = new xmldb_table('response');
+        $field = new xmldb_field('responsedisplay');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'responsetype');
+
+        // Add new 'responsedisplay' field to 'response' table.
+        if (!$dbmanager->field_exists($table, $field)) {
+            $dbmanager->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2019090301, 'mod', 'response');
+    }
+
+    return true;
+}

@@ -158,7 +158,18 @@ class helper {
      */
     public static function package_modform_data($moduleinstance) {
         $newinstance = new stdClass();
-        foreach (array('course', 'name', 'intro', 'introformat', 'responsetype', 'question', 'displaycompletion') as $field) {
+
+        $fields = array('course',
+                        'name',
+                        'intro',
+                        'introformat',
+                        'responsetype',
+                        'responsedisplay',
+                        'question',
+                        'displaycompletion'
+                    );
+
+        foreach ($fields as $field) {
             $newinstance->$field = $moduleinstance->$field;
         }
         $newinstance->timemodified = time();

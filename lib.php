@@ -222,6 +222,14 @@ function response_get_coursemodule_info($cm) {
  * @param cm_info $cm Course module instance
  */
 function response_cm_info_dynamic(cm_info $cm) {
+
+    $customdata = $cm->customdata;
+
+    // If the default (separate page) view is set, render this view instead.
+    if ($customdata->responsedisplay == 0) {
+        return;
+    }
+
     // If users don't have the relevant capability, they can't even see it.
     $context = context_module::instance($cm->id);
     if (!has_capability('mod/response:view', $context)) {
@@ -237,8 +245,14 @@ function response_cm_info_dynamic(cm_info $cm) {
 function response_cm_info_view(cm_info $cm) {
     global $PAGE, $USER, $CFG;
 
-    // Before we go any further, we need to work out if the user has completed this instance.
     $customdata = $cm->customdata;
+
+    // If the default (separate page) view is set, render this view instead.
+    if ($customdata->responsedisplay == 0) {
+        return;
+    }
+
+    // Before we go any further, we need to work out if the user has completed this instance.
     $instance = helper::instance_factory($customdata->responsetype, 'information');
     $usercompletion = $instance->load_response_for_users($customdata, array($USER->id));
     $customdata->user_responses = $usercompletion;

@@ -111,6 +111,12 @@ class mod_response_mod_form extends moodleform_mod {
 
         $mform->addElement('select', 'responsetype', get_string('responsetype', 'response'), $subplugins);
 
+        // Now the display options.
+        $displayoptions = array('0' => get_string('displayresponseownpage', 'response'),
+                                '1' => get_string('displayresponseinline', 'response')
+                            );
+        $mform->addElement('select', 'responsedisplay', get_string('responsedisplay', 'response'), $displayoptions);
+
         // Now actually add the subplugins' items.
         foreach ($this->subplugins as $name => $subplugin) {
             // First, add a group for this plugin and make it expanded.
