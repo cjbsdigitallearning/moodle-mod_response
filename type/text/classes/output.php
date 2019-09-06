@@ -56,6 +56,7 @@ class output extends abstractoutput implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         global $USER, $OUTPUT;
+
         $data = new stdClass();
 
         // Whatever we're exporting, we want the title and question. (And support multilang by default).
@@ -63,6 +64,21 @@ class output extends abstractoutput implements renderable, templatable {
         $data->question = format_string($this->data->question);
         $data->fullpage = !empty($this->data->fullpage);
         $data->contextid = !empty($this->data->contextid) ? $this->data->contextid : false;
+        $data->viewownpagedescription = !empty($this->data->viewownpagedescription);
+
+        // If we are rendering for an individual course module, we also want the course module object, with intro (description).
+        if (isset($this->data->cm)) {
+            $data->cm = $this->data->cm;
+            $data->cm->intro = $this->data->intro;
+            $data->cm->introformat = $this->data->introformat;
+
+            // Export the description only if settings are for 'full page' and 'view description'.
+            if ($data->fullpage && $data->viewownpagedescription) {
+                $data->description = format_module_intro('response', $data->cm, $data->cm->id, false);
+            } else {
+                $data->description = '';
+            }
+        }
 
         $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
         if (empty($this->data->viewing_id)) {

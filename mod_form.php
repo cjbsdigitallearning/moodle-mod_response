@@ -113,9 +113,15 @@ class mod_response_mod_form extends moodleform_mod {
 
         // Now the display options.
         $displayoptions = array('0' => get_string('displayresponseownpage', 'response'),
-                                '1' => get_string('displayresponseinline', 'response')
-                            );
+                                '1' => get_string('displayresponseinline', 'response'));
+
         $mform->addElement('select', 'responsedisplay', get_string('responsedisplay', 'response'), $displayoptions);
+
+        $mform->addElement('advcheckbox', 'viewownpagedescription', '', get_string('viewownpagedescription', 'response'),
+                            null, array('0', '1'));
+
+        // Hide the viewownpagedescription checkbox if displayresponseinline selected.
+        $mform->disabledIf('viewownpagedescription', 'responsedisplay', 'eq', 1);
 
         // Now actually add the subplugins' items.
         foreach ($this->subplugins as $name => $subplugin) {

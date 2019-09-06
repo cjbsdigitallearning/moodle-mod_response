@@ -64,6 +64,21 @@ class output extends abstractoutput implements renderable, templatable {
         $data->fullpage = !empty($this->data->fullpage);
         $data->response_id = $this->data->activity->id;
         $data->contextid = !empty($this->data->contextid) ? $this->data->contextid : false;
+        $data->viewownpagedescription = !empty($this->data->viewownpagedescription);
+
+        // If we are rendering for an individual course module, we also want the course module object, with intro (description).
+        if (isset($this->data->cm)) {
+            $data->cm = $this->data->cm;
+            $data->cm->intro = $this->data->intro;
+            $data->cm->introformat = $this->data->introformat;
+
+            // Export the description only if settings are for 'full page' and 'view description'.
+            if ($data->fullpage && $data->viewownpagedescription) {
+                $data->description = format_module_intro('response', $data->cm, $data->cm->id, false);
+            } else {
+                $data->description = '';
+            }
+        }
 
         if (empty($this->data->viewing_id)) {
             $this->data->viewing_id = $USER->id;

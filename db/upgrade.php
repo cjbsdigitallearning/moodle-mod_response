@@ -29,18 +29,25 @@ function xmldb_response_upgrade($oldversion) {
 
     $dbmanager = $DB->get_manager();
 
-    if ($oldversion < 2019090301) {
+    if ($oldversion < 2019091100) {
 
         $table = new xmldb_table('response');
-        $field = new xmldb_field('responsedisplay');
-        $field->set_attributes(XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'responsetype');
+        $responsedisplay = new xmldb_field('responsedisplay');
+        $viewownpagedescription = new xmldb_field('viewownpagedescription');
+        $responsedisplay->set_attributes(XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'responsetype');
+        $viewownpagedescription->set_attributes(XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'responsedisplay');
 
         // Add new 'responsedisplay' field to 'response' table.
-        if (!$dbmanager->field_exists($table, $field)) {
-            $dbmanager->add_field($table, $field);
+        if (!$dbmanager->field_exists($table, $responsedisplay)) {
+            $dbmanager->add_field($table, $responsedisplay);
         }
 
-        upgrade_plugin_savepoint(true, 2019090301, 'mod', 'response');
+        // Add new 'viewownpagedescription' field to 'response' table.
+        if (!$dbmanager->field_exists($table, $viewownpagedescription)) {
+            $dbmanager->add_field($table, $viewownpagedescription);
+        }
+
+        upgrade_plugin_savepoint(true, 2019091100, 'mod', 'response');
     }
 
     return true;

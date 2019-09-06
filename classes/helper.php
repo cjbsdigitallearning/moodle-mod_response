@@ -165,6 +165,7 @@ class helper {
                         'introformat',
                         'responsetype',
                         'responsedisplay',
+                        'viewownpagedescription',
                         'question',
                         'displaycompletion'
                     );

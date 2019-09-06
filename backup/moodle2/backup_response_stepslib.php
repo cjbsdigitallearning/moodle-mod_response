@@ -47,8 +47,8 @@ class backup_response_activity_structure_step extends backup_activity_structure_
         // The most core table.
         $response = new backup_nested_element('response', array('id'), array(
             'name', 'intro', 'introformat', 'responsetype', 'responsedisplay',
-            'question', 'timemodified', 'displaypeerresults', 'displaycompletion',
-            'requiresubmission',
+            'viewownpagedescription', 'question', 'timemodified', 'displaypeerresults',
+            'displaycompletion', 'requiresubmission'
         ));
         $response->set_source_table('response', array('id' => backup::VAR_ACTIVITYID));
 

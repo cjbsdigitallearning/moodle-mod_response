@@ -212,6 +212,11 @@ function response_get_coursemodule_info($cm) {
         $info->customdata = $response;
     }
 
+    // If the response display is inline, the activity icon should not be displayed.
+    if (!empty($info->customdata->responsedisplay)) {
+        $info->iconurl = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    }
+
     return $info;
 }
 
