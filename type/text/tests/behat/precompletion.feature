@@ -38,6 +38,7 @@ Feature: Students should see some incentive to reply
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Display completions before response? | Show nothing |
     And I press "Save and return to course"
     And I log out
@@ -60,6 +61,7 @@ Feature: Students should see some incentive to reply
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Display completions before response? | Show the number of completions |
     And I press "Save and return to course"
     And I log out
@@ -81,6 +83,7 @@ Feature: Students should see some incentive to reply
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Display completions before response? | Show full completions |
     And I press "Save and return to course"
     And I log out
@@ -103,6 +106,7 @@ Feature: Students should see some incentive to reply
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Display completions before response? | Show full completions |
     And I press "Save and return to course"
     And I log out

@@ -27,6 +27,7 @@ Feature: Users should be able to complete courses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Completion tracking | Show activity as complete when conditions are met |
       | Student must submit an answer to complete this activity | 1 |
     And I press "Save and return to course"

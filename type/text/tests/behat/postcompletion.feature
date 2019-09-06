@@ -28,6 +28,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 0 |
       | All | 0 |
     And I press "Save and return to course"
@@ -54,6 +55,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 0 |
       | All | 1 |
     And I press "Save and return to course"
@@ -91,6 +93,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 0 |
       | All | 1 |
     And I press "Save and return to course"
@@ -130,6 +133,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | All | 1 |
     And I press "Save and return to course"
     And I add a "Response" to section "2"
@@ -137,6 +141,7 @@ Feature: Students should see others' responses
       | Activity title | Fried breakfasts |
       | Activity question | What is your favourite part of a fried breakfast? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | All | 1 |
     And I press "Save and return to course"
     And I log out

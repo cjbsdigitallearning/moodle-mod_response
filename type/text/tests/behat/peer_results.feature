@@ -46,6 +46,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Group mode | Separate groups |
     And I expand all fieldsets
     And I click on "Add group/grouping access restriction" "button"
@@ -70,6 +71,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Group mode | Separate groups |
     And I expand all fieldsets
     And I click on "Add group/grouping access restriction" "button"
@@ -98,6 +100,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 1 |
       | All | 0 |
       | Group mode | Separate groups |
@@ -141,6 +144,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 1 |
       | All | 1 |
       | Group mode | Separate groups |
@@ -191,6 +195,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
       | Study group | 1 |
       | All | 1 |
       | Group mode | Visible groups |

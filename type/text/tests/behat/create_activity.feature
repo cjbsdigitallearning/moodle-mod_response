@@ -27,7 +27,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I should not see "Response - Poll"
 
   @javascript
-  Scenario: Create an activity with default values.
+  Scenario: Create an activity with default values (separate page view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "Response" to section "1"
@@ -40,15 +40,15 @@ Feature: In a course, students can see and respond to a question and see others'
     And I am on "Course 1" course homepage
     # Seeing it on course view.
     Then I should see "The weather"
-    And I should see "What is the weather like outside?"
+    And I should not see "What is the weather like outside?"
     And I follow "The weather"
-    # Seeing it in its own view.
-    And I should see "The weather"
+    # Seeing it on separate page view.
     And I should see "What is the weather like outside?"
+
     And I log out
 
   @javascript
-  Scenario: Create an activity with a wordcount.
+  Scenario: Create an activity with a wordcount (separate page view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "Response" to section "1"
@@ -61,14 +61,85 @@ Feature: In a course, students can see and respond to a question and see others'
     And I log out
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    # Seeing it in course view.
-    And I should see "The weather"
+    # Seeing it on course view.
+    Then I should see "The weather"
+    And I should not see "What is the weather like outside?"
+    And I follow "The weather"
+    # Seeing it on separate page view.
     And I should see "What is the weather like outside?"
     And I wait "2" seconds
     Then I should see "[0/42]"
+
+    And I log out
+
+  @javascript
+  Scenario: Create an activity with a description and a wordcount (separate page view).
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the field "Activity title" to "The weather"
+    And I set the field "Activity description" to "Describe the weather"
+    And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Response type" to "Free text"
+    And I click on "#id_viewownpagedescription" "css_element"
+    And I click on "#id_text_maximumwords_enabled" "css_element"
+    And I set the field "text_maximumwords" to "42"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    # Seeing it on course view.
+    Then I should see "The weather"
+    And I should not see "What is the weather like outside?"
+    And I should not see "Describe the weather"
     And I follow "The weather"
-    # Seeing it in its own view.
-    And I should see "The weather"
+    # Seeing it on separate page view.
+    Then I should see "The weather"
+    And I should see "What is the weather like outside?"
+    And I should see "Describe the weather"
+    And I wait "2" seconds
+    Then I should see "[0/42]"
+
+    And I log out
+
+  @javascript
+  Scenario: Create an activity (inline view).
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the field "Activity title" to "The weather"
+    And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    # Seeing it on course view (inline).
+    Then I should see "The weather"
+    And I should see "What is the weather like outside?"
+
+    And I log out
+
+  @javascript
+  Scenario: Create an activity with a wordcount (inline view).
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the field "Activity title" to "The weather"
+    And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
+    And I click on "#id_text_maximumwords_enabled" "css_element"
+    And I set the field "text_maximumwords" to "42"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    # Seeing it on course view (inline).
+    Then I should see "The weather"
     And I should see "What is the weather like outside?"
     And I wait "2" seconds
-    And I should see "[0/42]"
+    Then I should see "[0/42]"
+
+    And I log out

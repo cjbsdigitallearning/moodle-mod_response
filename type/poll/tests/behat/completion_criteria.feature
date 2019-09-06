@@ -33,6 +33,7 @@ Feature: Users should be able to complete courses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -62,6 +63,7 @@ Feature: Users should be able to complete courses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -89,6 +91,7 @@ Feature: Users should be able to complete courses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -121,6 +124,7 @@ Feature: Users should be able to complete courses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |

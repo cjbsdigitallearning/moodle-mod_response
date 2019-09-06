@@ -28,6 +28,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -58,6 +59,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -99,6 +101,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -130,6 +133,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -166,6 +170,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -215,6 +220,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -264,6 +270,7 @@ Feature: Students should see others' responses
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
@@ -278,6 +285,7 @@ Feature: Students should see others' responses
       | Activity title | Fried breakfasts |
       | Activity question | What is your favourite part of a fried breakfast? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sausages |
       | Choice 2 | Bacon |
       | Choice 3 | Toast |

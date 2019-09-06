@@ -23,12 +23,14 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     # Second response.
     And I add a "Response" to section "2"
     And I set the field "Activity title" to "Fried breakfasts"
     And I set the field "Activity question" to "What is your favourite part of a fried breakfast?"
     And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     And I log out
 

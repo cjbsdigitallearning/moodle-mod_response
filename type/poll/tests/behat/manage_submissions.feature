@@ -28,6 +28,7 @@ Feature: Teachers should be able to remove inappropriate answers
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Poll |
+      | Response display | Inline - within the module section |
       | Choice 1 | Sunny |
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |

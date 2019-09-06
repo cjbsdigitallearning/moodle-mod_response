@@ -28,6 +28,7 @@ Feature: Teachers should be able to remove answers
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"

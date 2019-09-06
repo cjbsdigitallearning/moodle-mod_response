@@ -25,6 +25,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -43,6 +44,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
+    And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"

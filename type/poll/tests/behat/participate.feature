@@ -22,6 +22,7 @@ Feature: Not all users can participate in a response activity - but it should st
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
+    And I set the field "Response display" to "Inline - within the module section"
     And I set the field "Choice 1" to "Sunny."
     And I set the field "Choice 2" to "Cloudy."
     And I set the field "Choice 3" to "Raining."

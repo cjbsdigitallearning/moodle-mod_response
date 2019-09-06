@@ -27,6 +27,7 @@ Feature: Users should be able to edit their answers if permitted
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
+      | Response display | Inline - within the module section |
     And I press "Save and return to course"
     And I log out
 
