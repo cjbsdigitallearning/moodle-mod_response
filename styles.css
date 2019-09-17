@@ -7,18 +7,10 @@
     border: 1px solid #e5e5e5;
     background: #f5f5f5;
 }
-.activity.modtype_response .activityinstance a:hover {
-    text-decoration: none;
-}
-.activity.modtype_response .activityinstance a {
+.displayresponseinline .activityinstance a, .displayresponseinline .activityinstance a:hover {
+    color: #373a3c;
     cursor: default;
-}
-.activity.modtype_response .instancename {
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 23px;
-    margin: 0 0 5px;
-    color: #171717;
+    text-decoration: none;
 }
 .user-response .mform > .form-group.fullwidtheditor {
     margin-left: -15px;
