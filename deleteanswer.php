@@ -38,6 +38,8 @@ $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
+$PAGE->set_url('/mod/response/deleteanswer.php', array('id' => $cm->id, 'u' => $userid));
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 
@@ -83,7 +85,6 @@ if ($confirm && confirm_sesskey()) {
 }
 
 // Set up and show the form plus the original response.
-$PAGE->set_url('/mod/response/deleteanswer.php', array('id' => $cm->id, 'u' => $userid));
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
 

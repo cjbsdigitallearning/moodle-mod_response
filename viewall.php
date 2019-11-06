@@ -44,6 +44,8 @@ if ($r) {
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
+$PAGE->set_url('/mod/response/viewall.php', array('id' => $cm->id));
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/response:viewall', $context);
@@ -52,7 +54,6 @@ $response->cm = $cm;
 $response->course = $course;
 
 // Set up and show the form.
-$PAGE->set_url('/mod/response/viewall.php', array('id' => $cm->id));
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
 
