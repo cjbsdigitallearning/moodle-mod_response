@@ -80,6 +80,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity description" to "Describe the weather"
     And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Caption for Response" to "Thoughts on the Weather"
     And I set the field "Response type" to "Free text"
     And I click on "#id_viewownpagedescription" "css_element"
     And I click on "#id_text_maximumwords_enabled" "css_element"
@@ -96,6 +97,8 @@ Feature: In a course, students can see and respond to a question and see others'
     # Seeing it on separate page view.
     Then I should see "The weather"
     And I should see "What is the weather like outside?"
+    And I should see "Thoughts on the Weather"
+    And I should not see "Share your thoughts"
     And I should see "Describe the weather"
     And I wait "2" seconds
     Then I should see "[0/42]"
@@ -111,6 +114,7 @@ Feature: In a course, students can see and respond to a question and see others'
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
     And I set the field "Response display" to "Inline - within the module section"
+    And I set the field "Caption for Response" to "Thoughts on the Weather"
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -118,7 +122,8 @@ Feature: In a course, students can see and respond to a question and see others'
     # Seeing it on course view (inline).
     Then I should see "The weather"
     And I should see "What is the weather like outside?"
-
+    And I should see "Thoughts on the Weather"
+    And I should not see "Share your thoughts"
     And I log out
 
   @javascript
