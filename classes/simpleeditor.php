@@ -83,5 +83,5 @@ class simpleeditor extends MoodleQuickForm_editor {
         $CFG->texteditors = $systemconfig;
         return $html;
     }
-    // @codingStandardsIgnoreLine
+    // @codingStandardsIgnoreEnd
 }
