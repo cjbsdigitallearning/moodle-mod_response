@@ -50,5 +50,18 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019091100, 'mod', 'response');
     }
 
+    if ($oldversion < 2019091800) {
+
+        $table = new xmldb_table('response');
+        $caption = new xmldb_field('caption', XMLDB_TYPE_CHAR, '255');
+
+        // Add new 'caption' field to 'response' table.
+        if (!$dbmanager->field_exists($table, $caption)) {
+            $dbmanager->add_field($table, $caption);
+        }
+
+        upgrade_plugin_savepoint(true, 2019091800, 'mod', 'response');
+    }
+
     return true;
 }

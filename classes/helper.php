@@ -167,7 +167,8 @@ class helper {
                         'responsedisplay',
                         'viewownpagedescription',
                         'question',
-                        'displaycompletion'
+                        'displaycompletion',
+                        'caption',
                     );
 
         foreach ($fields as $field) {

@@ -72,6 +72,10 @@ class mod_response_mod_form extends moodleform_mod {
         // Now split the items up so the response-specific stuff is in a response section.
         $mform->addElement('header', 'general', get_string('response', 'response'));
 
+        // Add the caption.
+        $mform->addElement('text', 'caption', get_string('caption', 'response'), array('size' => '64'));
+        $mform->setType('caption', PARAM_TEXT);
+
         // And add the question for the activity.
         $mform->addElement('text', 'question', get_string('activityquestion', 'response'), array('size' => '64'));
         $mform->addRule('question', null, 'required', null, 'client');
