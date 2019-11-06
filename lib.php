@@ -232,11 +232,13 @@ function response_get_coursemodule_info($cm) {
  * @param cm_info $cm Course module instance
  */
 function response_cm_info_dynamic(cm_info $cm) {
+    global $PAGE;
 
     $customdata = $cm->customdata;
+    $customdata->fullpage = strpos($PAGE->url->get_path(), '/mod/response/view.php') === 0;
 
     // If the default (separate page) view is set, render this view instead.
-    if ($customdata->responsedisplay == 0) {
+    if ($customdata->responsedisplay == 0 && !$customdata->fullpage) {
         return;
     }
 
@@ -257,8 +259,10 @@ function response_cm_info_view(cm_info $cm) {
 
     $customdata = $cm->customdata;
 
+    $customdata->fullpage = strpos($PAGE->url->get_path(), '/mod/response/view.php') === 0;
+
     // If the default (separate page) view is set, render this view instead.
-    if ($customdata->responsedisplay == 0) {
+    if ($customdata->responsedisplay == 0 && !$customdata->fullpage) {
         return;
     }
 
@@ -273,12 +277,18 @@ function response_cm_info_view(cm_info $cm) {
     $data->course_module = $cm;
     $data->course = $data->course_module->course;
     $data->user_completion = !empty($usercompletion[$USER->id]) ? $usercompletion[$USER->id] : false;
+    $data->fullpage = $customdata->fullpage;
 
     // Can they see all the responses?
     $context = context_module::instance($cm->id);
     helper::check_can_see_all_responses($customdata, $context, $cm);
 
-    if ($data->user_completion && $data->user_completion->timecompleted) {
+    $instance->load_form($customdata, $USER->id);
+    if (!empty($customdata->form)) {
+        $data->form = $customdata->form;
+
+        $data->contextid = $context->id;
+    } else if ($data->user_completion && $data->user_completion->timecompleted) {
         $instance->load_aggregate_data($customdata, $USER->id);
 
         // Can they delete their own answer?
@@ -297,11 +307,6 @@ function response_cm_info_view(cm_info $cm) {
 
         $renderable = helper::instance_factory($customdata->responsetype, 'output', array($customdata, $instance));
         $data->user_answer = $renderer->render($renderable);
-    } else {
-        $instance->load_form($customdata, $USER->id);
-        $data->form = $customdata->form;
-
-        $data->contextid = $context->id;
     }
 
     if (!empty($data->form)) {
@@ -314,7 +319,11 @@ function response_cm_info_view(cm_info $cm) {
         }
     }
 
-    $data->showdescription = !empty($cm->showdescription);
+    if (!empty($customdata->postcompletion)) {
+        $data->postcompletion = $customdata->postcompletion->render();
+    }
+
+    $data->showdescription = !empty($cm->showdescription) || !empty($customdata->showdescription);
     $cm->set_content($renderer->render_courseinline($data), true);
 }
 
@@ -352,6 +361,7 @@ function mod_response_output_fragment_form($args) {
     $r = isset($args['r']) ? (int) $args['r'] : 0; // Response instance ID.
     $back = !empty($args['back']); // Whether to go back a step.
     $forward = isset($args['forward']) ? (int) $args['forward'] : 0; // Whether to re-go forward a step.
+    $editing = isset($args['editing']) ? (int) $args['editing'] : 0; // Whether editing or not.
 
     if ($r) {
         if (!$response = $DB->get_record('response', array('id' => $r))) {
@@ -365,6 +375,7 @@ function mod_response_output_fragment_form($args) {
         $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
     }
 
+    $response->cm = $cm;
     $response->going_back = !empty($back);
     $response->going_forward = !empty($forward);
     $response->in_course = false;
@@ -374,6 +385,8 @@ function mod_response_output_fragment_form($args) {
     $context = context_module::instance($cm->id);
     require_capability('mod/response:participate', $context);
 
+    $response->is_editing = $editing && has_capability('mod/response:editown', $context) ? $editing : 0;
+
     $instance = helper::instance_factory($response->responsetype, 'information');
     $instance->load_activity($response);
     $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
@@ -381,6 +394,7 @@ function mod_response_output_fragment_form($args) {
     // Before we pass everything to the form, clean out the context because that breaks the form system otherwise.
     $argsclone = $args;
     unset ($argsclone['context']);
+    unset ($argsclone['editing']);
     $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $cm->course)));
     $instance->load_form($response, $USER->id, $argsclone);
 
@@ -414,8 +428,6 @@ function mod_response_output_fragment_form($args) {
 
         // Force a reload of whatever form state.
         $response->form = false;
-        $response->going_back = false;
-        $response->going_forward = false;
         $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
         $instance->load_form($response, $USER->id);
         if (!empty($response->user_responses[$USER->id]->timecompleted)) {

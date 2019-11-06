@@ -221,6 +221,12 @@ class information extends abstractinfo {
         }
         $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
 
+        // Make sure we don't try to do anything funky with back/forwards when editing.
+        // When we save, there's no additional steps we can be going back/forward to.
+        $response->going_forward = false;
+        $response->going_back = false;
+        $response->is_editing = false;
+
         // Redirect back to whence we came.
         if ($response->in_course) {
             return $response->in_course_url;

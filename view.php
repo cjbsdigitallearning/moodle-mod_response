@@ -74,44 +74,14 @@ $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
 
-$instance = helper::instance_factory($response->responsetype, 'information');
-$instance->load_activity($response);
-$response->user_responses = $instance->load_response_for_users($response, array($USER->id));
-$instance->load_form($response, $USER->id);
+$modinfo = get_fast_modinfo($cm->course, $USER->id);
+$cminfo = $modinfo->instances['response'][$response->id];
+$customdata =& $cminfo->customdata;
+$customdata->showdescription = !empty($response->viewownpagedescription);
+$customdata->going_back = $response->going_back;
+$customdata->is_editing = $response->is_editing;
+response_cm_info_dynamic($cminfo);
 
-if (!empty($response->form)) {
-    // We need to set the page specifically to the course here so autosave works consistently between course/individual views.
-    $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $PAGE->course->id)));
-
-    if (!has_capability('mod/response:participate', $context)) {
-        $response->form->disable_form(get_string('cannotparticipate', 'response'));
-    }
-}
-
-// There might be some aggregate data to load, e.g. group stuff.
-if (!empty($response->user_responses[$USER->id]->timecompleted)) {
-    $instance->load_aggregate_data($response, $USER->id);
-
-    require_once($CFG->libdir . '/formslib.php');
-    $responseclone = clone $response;
-    $responseclone->context = $context;
-    $response->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
-}
-
-// Can they delete their own answer?
-helper::check_user_delete_own_response($response, $context, $cm);
-
-// Can they see all the responses?
-helper::check_can_see_all_responses($response, $context, $cm);
-
-// Can they edit their response?
-helper::check_can_edit_own_response($response, $context, $cm);
-
-// The renderer is very much up to the plugin to identify what it is rendering.
-
-$response->fullpage = true;
-$renderable = helper::instance_factory($response->responsetype, 'output', array($response, $instance));
-
-echo $output->render($renderable);
+echo $cminfo->content;
 
 echo $output->footer();

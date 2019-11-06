@@ -55,47 +55,41 @@
         "form": { a string that contains a rendered Moodle form's HTML }
     }
 }}
-{{# fullpage }}
-    <section class="response-activity">
-    <h2> {{{icon}}} {{heading}}</h2>
-    {{# description }}<div class="description">{{{description}}}</div>{{/ description }}
-    <div class="question">{{{question}}}</div>
-{{/ fullpage }}
-
 <div class="response"{{#contextid}} data-context="{{contextid}}"{{/contextid}}>
-{{$content}}Default content{{/content}}
+    {{$content}}Default content{{/content}}
+
+    {{#contextid}}{{#js}}
+    require(['mod_response/ajaxform'], function(form) {
+        form.init('div.response[data-context={{contextid}}]');
+    });
+    {{/js}}{{/contextid}}
+
+    {{^form}}
+            <div class="manage-links">
+                {{# can_see_all }}
+                <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
+                    |
+                {{/ can_see_all }}
+                <a href="{{{summary_url}}}">{{# str }} viewcoursesummary, response{{/ str }}</a>
+                {{# can_edit }}
+                    |
+                    <a href="{{{edit_url}}}">{{# str }} editresponse, response{{/ str }}</a>
+                {{/ can_edit }}
+                {{# can_delete }}
+                    |
+                    <a href="{{{delete_url}}}">{{# str }} deleteresponse, response{{/ str }}</a>
+                {{/ can_delete }}
+            </div>
+    {{/form}}
+    {{#form}}
+        {{#can_see_all}}
+            <div class="manage-links">
+                <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
+            </div>
+        {{/can_see_all}}
+    {{/form}}
 </div>
 
-{{#contextid}}{{#js}}
-require(['mod_response/ajaxform'], function(form) {
-    form.init('div.response[data-context={{contextid}}]');
-});
-{{/js}}{{/contextid}}
-
-{{^form}}
-        <div class="manage-links">
-            {{# can_see_all }}
-            <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
-                |
-            {{/ can_see_all }}
-            <a href="{{{summary_url}}}">{{# str }} viewcoursesummary, response{{/ str }}</a>
-            {{# can_edit }}
-                |
-                <a href="{{{edit_url}}}">{{# str }} editresponse, response{{/ str }}</a>
-            {{/ can_edit }}
-            {{# can_delete }}
-                |
-                <a href="{{{delete_url}}}">{{# str }} deleteresponse, response{{/ str }}</a>
-            {{/ can_delete }}
-        </div>
-{{/form}}
-{{#form}}
-    {{#can_see_all}}
-        <div class="manage-links">
-            <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
-        </div>
-    {{/can_see_all}}
-{{/form}}
 {{# fullpage }}
     </section>
 {{/ fullpage }}

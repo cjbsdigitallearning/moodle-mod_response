@@ -327,6 +327,8 @@ class information extends abstractinfo {
         $pollid = 'poll_choice' . $response->id;
         $textid = 'responsetype_poll_' . $response->id;
 
+        $response->going_forward = false;
+
         // There are multiple possibilities here.
         // 1. We could be saving a choice without a reflection step.
         // 2. We could be saving a choice with a reflection step.
@@ -335,17 +337,6 @@ class information extends abstractinfo {
 
         // Is there a reflection step in this activity?
         if ($response->activity->reflection_step) {
-            // Are we handling an inline course?
-            if (!empty($response->in_course)) {
-                $reflectiontext = !empty($data->{$textid}['text']) ? $data->{$textid}['text'] : '';
-                $responseidentifier = $this->save_new_answer($response->id, $userid, $data->{$pollid}, $reflectiontext);
-
-                $response->has_just_completed = !empty($reflectiontext);
-
-                $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
-                return $redirect;
-            }
-
             // So it's just a case of working out if we had a user-choice made already or not.
             if (empty($response->user_responses[$userid])) {
                 // We haven't had a user choice already.
@@ -358,6 +349,7 @@ class information extends abstractinfo {
 
             // Are we heading back to the first step? This is where we don't progress to step 2.
             if (!empty($data->back)) {
+                $response->going_back = false;
                 return new moodle_url('/mod/response/view.php', array('r' => $response->id, 'back' => 1));
             }
 
@@ -371,7 +363,10 @@ class information extends abstractinfo {
 
             if (!empty($response->is_editing) && $response->is_editing == 1) {
                 // Mark that we want to redirect to step 2.
+                $response->is_editing = 2;
                 $redirect = new moodle_url('/mod/response/view.php', array('id' => $response->cm->id, 'editing' => 2));
+            } else {
+                $response->is_editing = false;
             }
         } else {
             // So there's no step, we're just saving the user's poll choice.
@@ -384,6 +379,12 @@ class information extends abstractinfo {
             }
 
             $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
+
+            // Make sure we don't try to do anything funky with back/forwards when editing.
+            // When we save, there's no additional steps we can be going back/forward to.
+            $response->going_forward = false;
+            $response->going_back = false;
+            $response->is_editing = false;
         }
 
         return $redirect;

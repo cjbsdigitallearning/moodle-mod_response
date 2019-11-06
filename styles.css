@@ -3,10 +3,16 @@
     width: 95%;
     display: table;
     table-layout: fixed;
-    padding: 15px 15px 0;
-    border: 1px solid #e5e5e5;
-    background: #f5f5f5;
 }
+
+.card.response .card-footer:empty {
+    display:none;
+}
+
+.card.response .card-footer .form-group {
+    margin-bottom: 0;
+}
+
 .displayresponseinline .activityinstance a, .displayresponseinline .activityinstance a:hover {
     color: #373a3c;
     cursor: default;
@@ -48,25 +54,25 @@
 .user-response .form-group .text-nowrap > abbr {
     display: none;
 }
-.user-response [data-groupname^=buttonar] .display-completion {
+.card.response [data-groupname^=buttonar] .display-completion {
     display: inline-block;
     max-width: 75%;
 }
-.user-response .display-completion .first-x,
-    .user-response .display-completion .others,
-    .user-response .display-completion .plus-x-others {
+.card.response .display-completion .first-x,
+    .card.response .display-completion .others,
+    .card.response .display-completion .plus-x-others {
     display: inline;
 }
-.user-response .display-completion .plus-x-others {
+.card.response .display-completion .plus-x-others {
     padding-left: 5px;
     vertical-align:middle;
     font-size: 90%;
 }
-.user-response .display-completion .plus-x-others .btn {
+.card.response .display-completion .plus-x-others .btn {
     margin-left: 0;
     margin-right: 5px;
 }
-.user-response .display-completion .btn.plus-x-other {
+.card.response .display-completion .btn.plus-x-other {
     background: #999999;
     color: #fff;
     padding: 2px 7px;
@@ -75,14 +81,14 @@
     line-height: 20px;
     font-weight:bold;
 }
-.user-response .display-completion > .btn.plus-x-other {
+.card.response .display-completion > .btn.plus-x-other {
     padding: 2px 8px;
     font-size: 81%;
 }
-.user-response .display-completion .others.hide {
+.card.response .display-completion .others.hide {
     display: none;
 }
-.user-response .display-completion img {
+.card.response .display-completion img {
     width: auto;
     height: 30px;
     margin-bottom: 4px;
@@ -90,28 +96,22 @@
 .mform > .form-group[data-groupname^=buttonar] {
     margin: 20px 0 0;
 }
-.user-response [data-groupname^=buttonar] {
-    padding: 19px 0 20px 0;
-    margin: 20px 0;
-    background-color: #f5f5f5;
-    border-top: 1px solid #e5e5e5;
-}
-.user-response [data-groupname^=buttonar].femptylabel > .col-md-3 {
+.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-3 {
     display: none;
     flex: 0 0 0%;
 }
-.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 {
+.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 {
     width: 100%;
     max-width: 100%;
     flex: 0 0 100%;
 }
-.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:first-of-type {
+.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:first-of-type {
     margin-left: auto;
 }
-.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:last-of-type {
+.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 > .form-group:last-of-type {
     margin-right: 0;
 }
-.user-response [data-groupname^=buttonar].femptylabel > .col-md-9 > .display-completion + .form-group {
+.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 > .display-completion + .form-group {
     margin-left: auto;
 }
 
@@ -130,16 +130,16 @@
 .response .mod_response_postcompletion {
     display: none;
 }
-.user-response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
+.card.response .card-footer .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     width: 20px;
 }
 .activity.modtype_response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     display: none;
 }
-.user-response .profiles img[data-id] {
+.card.response .profiles img[data-id] {
     cursor: pointer;
 }
-.user-response button.hide {
+.card.response button.hide {
     display: none;
 }
 

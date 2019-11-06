@@ -93,7 +93,7 @@ class output extends abstractoutput implements renderable, templatable {
 
         // And we need to inform the renderer which response type and template to load.
         $data->responsetype = $this->data->responsetype;
-        $data->response_id = $this->data->activity->id;
+        $data->response_id = $this->data->activity->response;
 
         if (!empty($this->data->form)) {
             // Showing the form, so render the form and select that template.

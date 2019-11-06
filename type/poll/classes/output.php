@@ -62,7 +62,7 @@ class output extends abstractoutput implements renderable, templatable {
         $data->heading = format_string($this->data->name);
         $data->question = format_string($this->data->question);
         $data->fullpage = !empty($this->data->fullpage);
-        $data->response_id = $this->data->activity->id;
+        $data->response_id = $this->data->activity->response;
         $data->contextid = !empty($this->data->contextid) ? $this->data->contextid : false;
         $data->viewownpagedescription = !empty($this->data->viewownpagedescription);
 

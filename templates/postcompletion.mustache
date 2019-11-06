@@ -105,11 +105,3 @@
         </div>
     {{/ number_group }}
 </div>
-{{#js}}
-require(['mod_response/precompletion'], function(precompletion) {
-    precompletion();
-});
-require(['mod_response/postcompletion'], function(postcompletion) {
-    postcompletion.init('#mod_response_form_{{response_id}}');
-});
-{{/js}}

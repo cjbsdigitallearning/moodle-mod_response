@@ -91,6 +91,10 @@
 {{/content}}
 {{/ mod_response/response}}
 {{#js}}
+require(['mod_response/precompletion', 'mod_response/postcompletion'], function(precompletion, postcompletion) {
+    precompletion();
+    postcompletion.init('#mod_response_form_{{{response_id}}}') 
+});
 require(['responsetype_poll/viewchart'], function(viewchart) {
     viewchart.init({{{response_id}}}, {
         data: {{{aggregate}}},

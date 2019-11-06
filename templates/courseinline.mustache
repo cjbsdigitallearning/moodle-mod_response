@@ -45,29 +45,54 @@
         "form": { a string that contains a rendered Moodle form's HTML }
     }
 }}
+
+    {{# fullpage }}
+        <section class="response-activity">
+        <h2>{{activity_title}}</h2>
+        {{# description }}
+            <div id="intro" class="box generalbox py-3">
+                <div class="no-overflow">{{{description}}}</div>
+            </div>
+            <br>
+        {{/ description }}
+    {{/ fullpage }}
+
+    {{^ fullpage }}
     {{#description}}
         <div class="no-overflow">{{{description}}}</div>
     {{/description}}
-    <div class="no-overflow">
-        <p>{{{question}}}</p>
-    </div>
-    {{# form }}
-        <div class="response" data-context="{{contextid}}">
-            <div class="user-response responsetype-{{responsetype}} has-form">
-                {{{form}}}
-            </div>
-            {{#can_see_all}}
-                <div class="manage-links">
-                    <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
-                </div>
-            {{/can_see_all}}
+    {{/ fullpage }}
+    <div class="card response">
+        <div class="card-header">
+            {{{caption}}}
         </div>
-        {{#js}}
-        require(['mod_response/ajaxform'], function(form) {
-            form.init('div.response[data-context={{contextid}}]');
-        });
-        {{/js}}
-    {{/ form }}
-    {{# user_answer }}
-        {{{user_answer}}}
-    {{/ user_answer }}
+        <div class="card-body">
+            <div class="card-title">
+                {{{question}}}
+            </div>
+            {{# form }}
+                <div class="response" data-context="{{contextid}}">
+                    <div class="user-response responsetype-{{responsetype}} has-form">
+                        {{{form}}}
+                        {{#can_see_all}}
+                            <div class="manage-links">
+                                <a href="{{{viewall_url}}}">{{# str }} viewallresponses, response{{/ str }}</a>
+                            </div>
+                        {{/can_see_all}}
+                    </div>
+                </div>
+            {{/ form }}
+            {{# user_answer }}
+                {{{user_answer}}}
+            {{/ user_answer }}
+        </div>
+        <div class="card-footer"></div>
+    </div>
+
+{{# form }}
+{{#js}}
+require(['jquery', 'mod_response/ajaxform'], function($, ajaxform) {
+    ajaxform.init('div.response[data-context={{contextid}}]');
+});
+{{/js}}
+{{/ form }}

@@ -162,6 +162,7 @@ class renderer extends plugin_renderer_base {
     public function render_courseinline($rawdata) {
         $cm = $rawdata->course_module;
         $data = new stdClass();
+        $data->fullpage = !empty($rawdata->fullpage);
         $data->contextid = !empty($rawdata->contextid) ? $rawdata->contextid : '';
         $data->icon_url = $cm->get_icon_url();
         $data->activity_title = $cm->get_formatted_name();
@@ -171,6 +172,11 @@ class renderer extends plugin_renderer_base {
             $data->description = '';
         }
         $data->question = format_string($cm->customdata->question);
+        if (!empty($cm->customdata->caption)) {
+            $data->caption = format_string($cm->customdata->caption);
+        } else {
+            $data->caption = get_string('shareyourthoughts', 'response');
+        }
         $data->responsetype = $cm->customdata->responsetype;
         if (!empty($rawdata->form)) {
             $data->form = $rawdata->form->render();
