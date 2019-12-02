@@ -110,4 +110,12 @@ class restore_response_activity_structure_step extends restore_activity_structur
 
         $DB->insert_record('response_user', $new);
     }
+
+    /**
+     * Make sure to process uploaded images/etc after a restore.
+     */
+    protected function after_execute() {
+        // Add response related files, no need to match by itemname (just internally handled context)
+        $this->add_related_files('mod_response', 'intro', null);
+    }
 }
