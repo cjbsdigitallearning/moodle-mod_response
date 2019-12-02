@@ -86,7 +86,7 @@ class restore_response_activity_structure_step extends restore_activity_structur
         $new->displaypeerresults = $data['displaypeerresults'];
         $new->requiresubmission = $data['requiresubmission'];
 
-        $newitemid = $DB->insert_record('response', $data);
+        $newitemid = $DB->insert_record('response', $new);
         $this->apply_activity_instance($newitemid);
     }
 

@@ -63,5 +63,25 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019091800, 'mod', 'response');
     }
 
+    if ($oldversion < 2019120200) {
+        // This is to fix instances that were broken during restoration with an invalid course id.
+        $sql = "
+            SELECT r.id, cm.course
+              FROM {response} r
+              JOIN {course_modules} cm ON (r.id = cm.instance)
+              JOIN {modules} m ON (cm.module = m.id)
+             WHERE m.name = ?
+               AND r.course = ?";
+        $params = ['response', 0];
+
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $record) {
+            // Conveniently this is already in the right format to fix it.
+            $DB->update_record('response', $record);
+        }
+
+        upgrade_plugin_savepoint(true, 2019120200, 'mod', 'response');
+    }
+
     return true;
 }
