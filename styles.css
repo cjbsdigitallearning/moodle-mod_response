@@ -5,6 +5,11 @@
     table-layout: fixed;
 }
 
+/* Hide the activity icon if displaying inline. */
+.modtype_response.displayresponseinline .activityicon[src*="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"] {
+    display: none;
+}
+
 .card.response .card-footer:empty {
     display:none;
 }
