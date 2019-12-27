@@ -1,5 +1,5 @@
-define(['jquery', 'mod_response/Chart', 'mod_response/percentify', 'mod_response/defloat'],
-    function($, Chart, percentify, defloat) {
+define(['jquery', 'mod_response/Chart', 'mod_response/percentify'],
+    function($, Chart, percentify) {
         return {
             make_window: function(cm) {
                 if (!window.hasOwnProperty('responsetype_poll_chart')) {
@@ -71,7 +71,6 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify', 'mod_response
 
                 if (!window.responsetype_poll_chart[cm].chart) {
                     // Rendering fresh.
-                    defloat($('div.user-response[data-response=' + cm + ']').find('canvas').parent());
                     var ctx = $('div.user-response[data-response=' + cm + ']').find('canvas')[0].getContext('2d');
                     window.responsetype_poll_chart[cm].chart = new Chart(ctx, {
                         type: 'horizontalBar',

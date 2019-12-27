@@ -21,7 +21,7 @@
     response from the user - in the case of polls in particular, show a chart as well.
 
     Classes required for JS:
-    * col-md-8, col-md-4 (for defloat behaviour), aggregate (for chart behaviour)
+    * aggregate (for chart behaviour)
     * user-container
 
     Data attributes required for JS:
@@ -57,7 +57,7 @@
 {{$content}}
     <div class="user-response responsetype-poll" data-response="{{{response_id}}}">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col">
                 <div class="user-wrapper">
                     <div class="user-container">
                         <div class="user-profile">
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 aggregate">
+            <div class="col-lg-5 aggregate">
                 <div class="aggregate-container">
                     <canvas></canvas>
                 </div>

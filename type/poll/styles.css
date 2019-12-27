@@ -32,6 +32,14 @@
     max-width: 100%;
 }
 
+.user-response.responsetype-poll .col-lg-5.aggregate {
+    min-width:400px;
+}
+
+.user-response.responsetype-poll > .row > .col {
+    min-width:400px
+}
+
 /* Styles for showing the answers to students. */
 .user-response.responsetype-poll .user-profile {
     float:left;

@@ -1,8 +1,7 @@
 define(
-    ['jquery', 'mod_response/Chart', 'mod_response/percentify', 'mod_response/defloat'],
-    function($, Chart, percentify, defloat) {
+    ['jquery', 'mod_response/Chart', 'mod_response/percentify'],
+    function($, Chart, percentify) {
         return function (response, aggregate, colours, pclabel) {
-            defloat('[data-response=' + response + '] .aggregate');
 
             var set = '';
             if (aggregate.hasOwnProperty('group')) {

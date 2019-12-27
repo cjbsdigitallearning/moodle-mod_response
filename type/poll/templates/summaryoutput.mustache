@@ -21,7 +21,7 @@
     all their responses, or at least a specific instance inside the summary view.
 
     Classes required for JS:
-    * col-md-8, col-md-4 (for defloat behaviour), aggregate (for chart behaviour)
+    * aggregate (for chart behaviour)
 
     Data attributes required for JS:
     * response
@@ -58,7 +58,7 @@
     <h5>{{{activity_question}}}</h5>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col">
             <div class="user-wrote">
                 {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}{{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
 
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 aggregate">
+        <div class="col-lg-5 aggregate">
 
         </div>
     </div>
