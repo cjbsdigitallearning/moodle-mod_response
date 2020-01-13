@@ -15,10 +15,10 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates'], funct
                 $(this).removeClass('btn-default').addClass('btn-primary');
                 $(this).blur();
                 $form.find('.profiles').hide();
-                var peer = $(this).attr('name');
+                var peer = $(this).data('completion');
                 $form.find('.profiles.' + peer).show();
                 $form.find('.user-response[data-response]').data('response_peer', peer)
-                     .trigger('peer_change.response', { display: peer});
+                     .trigger('peer_change.response', { display: peer });
             });
             $form.find('.card-footer input:last-of-type').trigger('click');
 
