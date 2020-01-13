@@ -1,4 +1,20 @@
-define(['jquery', 'core/notification', 'core/fragment', 'core/templates', 'mod_response/precompletion', 'mod_response/postcompletion'], function($, notification, fragment, template, precompletion, postcompletion) {
+define(
+[
+    'jquery',
+    'core/notification',
+    'core/fragment',
+    'core/templates',
+    'mod_response/precompletion',
+    'mod_response/postcompletion'
+],
+function(
+    $,
+    notification,
+    fragment,
+    template,
+    precompletion,
+    postcompletion
+) {
     return {
         init: function(selector) {
             var responseselector = selector || '.modtype_response .response .user-response.has-form';
@@ -8,8 +24,6 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates', 'mod_r
         },
 
         bindForm: function(selector) {
-            var that = this;
-
             var btnselector = 'input[type=submit], input[type=button], button:not(.plus-x-other)';
 
             // Make a hidden element for our form so we know which button was pressed.
@@ -22,7 +36,6 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates', 'mod_r
                 $(selector + ' [id^=fgroup_id_buttonar]').each(function() {
                     var $response = $(this).closest('.card.response');
                     var content = $(this);
-                    var $form = $response.find('form');
                     var destination = $response.find('.card-footer');
                     destination.empty().html(content);
 
