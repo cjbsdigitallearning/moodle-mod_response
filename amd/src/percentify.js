@@ -31,5 +31,23 @@ define([], function() {
         }];
     };
 
+    percentify.percentlabels = function() {
+        return [{
+            ticks: {
+                callback: function(value) {
+                    if (value.length >= 52) {
+                        return value.substr(0, 50) + '...';
+                    } else {
+                        return value;
+                    }
+                }
+            }
+        }];
+    };
+
+    percentify.getpixelheight = function(datasets) {
+        return 60 * datasets + 60;
+    };
+
     return percentify;
 });

@@ -1,6 +1,6 @@
 /* Styles for the course layout itself. */
 .activity.modtype_response div.user-response {
-    width: 95%;
+    width: 99.9%;
     display: table;
     table-layout: fixed;
 }

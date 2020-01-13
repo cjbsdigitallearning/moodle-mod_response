@@ -59,6 +59,11 @@
 
     <div class="row">
         <div class="col">
+            <div class="aggregate"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <div class="user-wrote">
                 {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}{{#user_response}}<div class="user-reflection">: {{{user_response}}}</div>{{/user_response}}
 
@@ -68,9 +73,6 @@
                     <a class="btn btn-default" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-5 aggregate">
-
         </div>
     </div>
 </div>

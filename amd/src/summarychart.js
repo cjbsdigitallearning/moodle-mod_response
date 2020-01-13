@@ -16,6 +16,7 @@ define(
             data = percentify.convert(data);
 
             var element = $('[data-response=' + response + '] .aggregate');
+            element.height(percentify.getpixelheight(data.length));
             var ctx = element.append('<canvas></canvas>').find('canvas')[0].getContext('2d');
             return new Chart(ctx, {
                 type: 'horizontalBar',
@@ -23,7 +24,7 @@ define(
                     labels: aggregate[set].labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: colours
+                        backgroundColor: colours,
                     }]
                 },
                 options: {
@@ -31,7 +32,8 @@ define(
                         display: false
                     },
                     scales: {
-                        xAxes: percentify.percentaxis()
+                        xAxes: percentify.percentaxis(),
+                        yAxes: percentify.percentlabels()
                     },
                     title: {
                         display: true,
@@ -39,11 +41,16 @@ define(
                     },
                     tooltips: {
                         callbacks: {
+                            title: function(tooltipItems, data) {
+                                var idx = tooltipItems[0].index;
+                                return data.labels[idx];
+                            },
                             label: function(tooltipItem) {
                                 return pclabel.replace('{pc}', tooltipItem.xLabel + '%');
                             }
                         }
-                    }
+                    },
+                    maintainAspectRatio: false
                 }
             });
         };

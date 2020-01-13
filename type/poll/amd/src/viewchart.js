@@ -43,6 +43,9 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'],
                 if (set.hasOwnProperty('group')) {
                     this.draw(cm, 'group');
                 }
+                if (!set.hasOwnProperty('all') && !set.hasOwnProperty('group')) {
+                    $('div.user-response[data-response=' + cm + '] .aggregate').hide();
+                }
             },
             draw: function(cm, set) {
                 var aggregate = window.responsetype_poll_chart[cm].data;
@@ -54,7 +57,8 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'],
                         display: false
                     },
                     scales: {
-                        xAxes: percentify.percentaxis()
+                        xAxes: percentify.percentaxis(),
+                        yAxes: percentify.percentlabels()
                     },
                     title: {
                         display: true,
@@ -62,15 +66,22 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'],
                     },
                     tooltips: {
                         callbacks: {
+                            title: function(tooltipItems, data) {
+                                var idx = tooltipItems[0].index;
+                                return data.labels[idx];
+                            },
                             label: function(tooltipItem) {
                                 return window.responsetype_poll_chart[cm].tooltip.replace('{pc}', tooltipItem.xLabel + '%');
                             }
                         }
-                    }
+                    },
+                    maintainAspectRatio: false
                 };
 
                 if (!window.responsetype_poll_chart[cm].chart) {
                     // Rendering fresh.
+                    var pixelheight = percentify.getpixelheight(data.length);
+                    $('div.user-response[data-response=' + cm + '] canvas:first-of-type').parent().height(pixelheight);
                     var ctx = $('div.user-response[data-response=' + cm + ']').find('canvas')[0].getContext('2d');
                     window.responsetype_poll_chart[cm].chart = new Chart(ctx, {
                         type: 'horizontalBar',

@@ -9,6 +9,7 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'], function($, 
         data = percentify.convert(data.slice(0));
 
         var element = $('#viewall_chart');
+        element.height(percentify.getpixelheight(data.length));
         var ctx = element.append('<canvas></canvas>').find('canvas')[0].getContext('2d');
         return new Chart(ctx, {
             type: 'horizontalBar',
@@ -25,7 +26,8 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'], function($, 
                 },
                 maintainAspectRatio: false,
                 scales: {
-                    xAxes: percentify.percentaxis()
+                    xAxes: percentify.percentaxis(),
+                    yAxes: percentify.percentlabels()
                 },
                 tooltips: {
                     callbacks: {

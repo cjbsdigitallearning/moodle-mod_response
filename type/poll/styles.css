@@ -32,14 +32,6 @@
     max-width: 100%;
 }
 
-.user-response.responsetype-poll .col-lg-5.aggregate {
-    min-width:400px;
-}
-
-.user-response.responsetype-poll > .row > .col {
-    min-width:400px
-}
-
 /* Styles for showing the answers to students. */
 .user-response.responsetype-poll .user-profile {
     float:left;
@@ -82,17 +74,18 @@
  .activity-course .responsetype-poll .user-reflection p:first-of-type {
     display: inline;
 }
-.user-response.responsetype-poll .row {
-    margin-bottom: 15px;
+.activity-title.responsetype-poll .row:nth-of-type(2) {
+    margin-top: 40px;
 }
-.user-response.responsetype-poll .row .user-wrapper {
-    background: #ffffff;
-    border-radius: 6px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+.user-response.responsetype-poll .user-wrapper {
+    background: #fff;
     padding: 10px 10px 0;
-}
-.user-response.responsetype-poll .row .aggregate {
     margin-bottom: 15px;
+}
+.user-response.responsetype-poll .aggregate {
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #ddd;
 }
 .user-response.responsetype-poll .aggregate-container canvas {
     height: 1px;
