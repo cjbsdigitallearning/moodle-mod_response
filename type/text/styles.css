@@ -1,7 +1,7 @@
 /* Styles for showing the answers to students. */
-.user-response.responsetype-text .user-profile {
-    float: left;
-    margin-right: 20px;
+.user-response.responsetype-text .col-sm-1.text-center {
+    min-width: 100px;
+    margin-bottom: 20px;
 }
 .user-response.responsetype-text .user-wrote {
     font-weight: bold;
@@ -18,9 +18,6 @@
     text-align:right;
     margin-top: 15px;
     margin-bottom: 15px;
-}
-.user-response.responsetype-text .user-answer p {
-    padding-left: 70px;
 }
 .user-response.responsetype-text .user-answer p:first-of-type {
     margin-top: 0;

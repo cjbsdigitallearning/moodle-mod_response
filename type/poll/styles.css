@@ -33,12 +33,9 @@
 }
 
 /* Styles for showing the answers to students. */
-.user-response.responsetype-poll .user-profile {
-    float:left;
-    margin-right:20px;
-}
-.user-response.responsetype-poll .user-wrote {
-    float:left;
+.user-response.responsetype-poll .col-sm-1.text-center {
+    min-width: 100px;
+    margin-bottom: 20px;
 }
 .user-response.responsetype-poll .user-answer {
     display:inline;
@@ -46,11 +43,8 @@
 }
 .user-response.responsetype-poll .user-reflection, .activity-course .responsetype-poll .user-reflection {
     display: block;
-    margin-left: 70px;
 }
-.user-response.responsetype-poll .user-reflection::before, .activity-course .responsetype-poll .user-reflection::before {
-    content: ":";
-}
+
 .user-response.responsetype-poll .response-time {
     clear:both;
     font-size: 0.85em;
@@ -94,10 +88,6 @@
 .view-all.responsetype-poll .view-all-response .user-answer {
     display:inline;
     font-weight: 600;
-}
-.view-all.responsetype-poll .view-all-response .user-reflection,
- .view-all.responsetype-poll .view-all-response .user-reflection p:first-of-type {
-    display: inline;
 }
 .view-all #viewall_chart {
     margin-top: 30px;

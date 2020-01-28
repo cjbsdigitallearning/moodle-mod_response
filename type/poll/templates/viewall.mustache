@@ -87,7 +87,7 @@
             </div>
             <div class="col-md-9">
                 <div class="user-wrote">
-                    {{# str }} theyanswered, responsetype_poll, { "person": {{# quote }}{{first_name}}{{/ quote}}, "answer": {{# quote }}<div class="user-answer">{{{choicetext}}}</div>{{^reflection_text}}.{{/reflection_text}}{{/ quote }} } {{/ str }}{{#reflection_text}}<div class="user-reflection">: {{{reflection_text}}}</div>{{/reflection_text}}
+                    {{# str }} theyanswered, responsetype_poll, { "person": {{# quote }}{{first_name}}{{/ quote}}, "answer": {{# quote }}<div class="user-answer">{{{choicetext}}}</div>{{#reflection_text}}:{{/reflection_text}}{{^reflection_text}}.{{/reflection_text}}{{/ quote }} } {{/ str }}{{#reflection_text}}<div class="user-reflection">{{{reflection_text}}}</div>{{/reflection_text}}
 
                     <div class="clearfix"></div>
                 </div>

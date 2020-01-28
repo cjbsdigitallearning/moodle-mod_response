@@ -42,19 +42,25 @@
         "user_response_time": "01/10/17 13:28",
     }
 }}
-            <div class="user-profile">
-                {{{profile_picture}}}
-            </div>
-            <div class="user-wrote">
-                {{# viewing_own }}
-                    {{# str }} youwrote, responsetype_text {{/ str }}
-                {{/ viewing_own }}
-                {{^ viewing_own }}
-                    {{# str }} theywrote, responsetype_text, {{profile_name}} {{/ str }}
-                {{/ viewing_own }}
-            </div>
-            <div class="user-answer">
-                {{{user_response}}}
+            <div class="row">
+                <div class="col-sm-1 text-center">
+                    <div class="user-profile">
+                        {{{profile_picture}}}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="user-wrote">
+                        {{# viewing_own }}
+                            {{# str }} youwrote, responsetype_text {{/ str }}
+                        {{/ viewing_own }}
+                        {{^ viewing_own }}
+                            {{# str }} theywrote, responsetype_text, {{profile_name}} {{/ str }}
+                        {{/ viewing_own }}
+                    </div>
+                    <div class="user-answer">
+                        {{{user_response}}}
+                    </div>
+                </div>
             </div>
 
             <div class="response-time">
