@@ -29,7 +29,7 @@
 
     Context variables required for this template:
     * profile_picture - HTML for a given user's profile picture
-    * viewing_other - boolean as to whether a user is viewing a response that isn't theirs
+    * viewing_own - boolean as to whether a user is viewing a response that is their own
     * profile_name - the name of the user whose response this is
     * user_choice - the text of the poll choice given by the user
     * user_response - reflection text for a poll response, if given
@@ -42,7 +42,7 @@
     Example context (json):
     {
         "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">',
-        "viewing_other": false,
+        "viewing_own": true,
         "profile_name": "Joe",
         "user_choice": "Sunny",
         "user_response": "It's sunny outside, I like it like that.",
@@ -64,22 +64,7 @@
 
         <div class="user-wrapper">
             <div class="user-container">
-                <div class="user-profile">
-                    {{{profile_picture}}}
-                </div>
-                <div class="user-wrote">
-                    {{# viewing_other }}
-                        {{# str }} theyanswered, responsetype_poll, { "person": {{# quote}}{{profile_name}}{{/ quote}}, "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
-                    {{/ viewing_other }}
-                    {{^ viewing_other }}
-                        {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}
-                    {{/ viewing_other }}
-                </div>
-                {{#user_response}}<div class="user-reflection"> {{{user_response}}}</div>{{/user_response}}
-
-                <div class="response-time">
-                    {{{user_response_time}}}
-                </div>
+                {{> responsetype_poll/inlinesubmission }}
             </div>
         </div>
 

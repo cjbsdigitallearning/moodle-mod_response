@@ -82,10 +82,10 @@ class output extends abstractoutput implements renderable, templatable {
 
         if (empty($this->data->viewing_id)) {
             $this->data->viewing_id = $USER->id;
-            $this->data->viewing_other = false;
+            $this->data->viewing_own = true;
         }
         $data->viewing_id = $this->data->viewing_id;
-        $data->viewing_other = $this->data->viewing_other;
+        $data->viewing_own = $this->data->viewing_own;
 
         $data->can_see_all = !empty($this->data->can_see_all);
         $data->viewall_url = !empty($this->data->viewall_url) ? $this->data->viewall_url : '';

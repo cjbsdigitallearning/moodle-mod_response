@@ -58,7 +58,7 @@ if (empty($response->user_responses[$userid]->timecompleted)) {
     print_error('deleteresponsenotcomplete', 'response');
 }
 
-$response->viewing_other = $USER->id != $userid;
+$response->viewing_own = $USER->id == $userid;
 $response->viewing_id = $userid;
 
 $response->response = $response->user_responses[$userid];
@@ -68,7 +68,7 @@ $response->user_wrote = array(
 );
 
 // Now, if we're deleting our own response, we check that we have that capability.
-if (!$response->viewing_other) {
+if ($response->viewing_own) {
     // We're looking to delete our own.
     require_capability('mod/response:deleteown', $context);
 } else {

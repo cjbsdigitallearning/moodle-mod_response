@@ -28,7 +28,7 @@
 
     Context variables required for this template:
     * profile_picture - HTML for a given user's profile picture
-    * viewing_other - boolean as to whether a user is viewing a response that isn't theirs
+    * viewing_own - boolean as to whether a user is viewing a response that is theirs
     * profile_name - the name of the user whose response this is
     * user_response - response given by the user
     * user_response_time - the date/time the response was given
@@ -38,7 +38,7 @@
     Example context (json):
     {
         "profile_picture": "<img src=\"http://your.moodle.here/pluginfile.php/...\">',
-        "viewing_other": false,
+        "viewing_own": true,
         "profile_name": "Joe",
         "user_response": "It's sunny outside, I like it like that.",
         "user_response_time": "01/10/17 13:28",
@@ -50,23 +50,7 @@
 {{$content}}
     <div class="user-response responsetype-text" data-response="{{{response_id}}}">
         <div class="user-container">
-            <div class="user-profile">
-                {{{profile_picture}}}
-            </div>
-            {{# viewing_other}}
-            <div class="user-wrote">{{# str }} theywrote, responsetype_text, {{profile_name}} {{/ str }}</div>
-            {{/ viewing_other}}
-            {{^ viewing_other}}
-            <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
-            {{/ viewing_other}}
-
-            <div class="user-answer">
-                {{{user_response}}}
-            </div>
-
-            <div class="response-time">
-                {{{user_response_time}}}
-            </div>
+            {{> responsetype_text/inlinesubmission}}
         </div>
 
         {{{postcompletion}}}
