@@ -53,14 +53,21 @@
             <div id="intro" class="box generalbox py-3">
                 <div class="no-overflow">{{{description}}}</div>
             </div>
-            <br>
         {{/ description }}
+        {{# contenttext }}
+            <div id="content" class="box generalbox py-3">
+                <div class="no-overflow">{{{contenttext}}}</div>
+            </div>
+        {{/ contenttext }}
     {{/ fullpage }}
 
     {{^ fullpage }}
     {{#description}}
         <div class="no-overflow">{{{description}}}</div>
     {{/description}}
+    {{#contenttext}}
+        <div class="no-overflow">{{{contenttext}}}</div>
+    {{/contenttext}}
     {{/ fullpage }}
     <div class="card response">
         <div class="card-header">

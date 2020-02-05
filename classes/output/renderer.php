@@ -24,6 +24,7 @@
 
 namespace mod_response\output;
 
+use context_module;
 use plugin_renderer_base;
 use stdClass;
 
@@ -171,6 +172,22 @@ class renderer extends plugin_renderer_base {
         } else {
             $data->description = '';
         }
+        // Render page content.
+        $context = context_module::instance($cm->id);
+        $content = file_rewrite_pluginfile_urls(
+            $cm->customdata->content,
+            'pluginfile.php',
+            $context->id,
+            'mod_response',
+            'content',
+            0
+        );
+        $formatoptions = new stdClass;
+        $formatoptions->noclean = true;
+        $formatoptions->overflowdiv = true;
+        $formatoptions->context = $context;
+        $data->contenttext = format_text($content, $cm->customdata->contentformat, $formatoptions);
+
         $data->question = format_string($cm->customdata->question);
         if (!empty($cm->customdata->caption)) {
             $data->caption = format_string($cm->customdata->caption);

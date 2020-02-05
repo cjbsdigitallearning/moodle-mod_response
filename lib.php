@@ -69,6 +69,25 @@ function response_add_instance($moduleinstance, $mform = null) {
 
     $newinstance->id = $DB->insert_record('response', $newinstance);
 
+    // Add any files added to WYSIWYG editor.
+    // Done after insert_record as we need an id for the context.
+    if ($mform and !empty($moduleinstance->page['itemid'])) {
+        $cmid = $moduleinstance->coursemodule;
+        $DB->set_field('course_modules', 'instance', $newinstance->id, ['id' => $cmid]);
+        $context = context_module::instance($cmid);
+        $draftitemid = $moduleinstance->responsecontent['itemid'];
+        $newinstance->content = file_save_draft_area_files(
+            $draftitemid,
+            $context->id,
+            'mod_response',
+            'content',
+            0,
+            helper::get_editor_options($context),
+            $newinstance->content
+        );
+        $DB->update_record('response', $newinstance);
+    }
+
     // We've handled instances of the parent record, now we need to save subplugin data.
     $subplugin = helper::instance_factory($moduleinstance->responsetype, 'configuration');
     // But we don't want to taint the module instance object with new data.
@@ -95,7 +114,25 @@ function response_update_instance($moduleinstance, $mform = null) {
     $newinstance = helper::package_modform_data($moduleinstance);
 
     $newinstance->id = $moduleinstance->instance;
+
     $DB->update_record('response', $newinstance);
+
+    // Update files added to the WYSIWYG editor.
+    $draftitemid = $moduleinstance->responsecontent['itemid'];
+    if ($draftitemid) {
+        $cmid = $moduleinstance->coursemodule;
+        $context = context_module::instance($cmid);
+        $newinstance->content = file_save_draft_area_files(
+            $draftitemid,
+            $context->id,
+            'mod_response',
+            'content',
+            0,
+            helper::get_editor_options($context),
+            $newinstance->content
+        );
+        $DB->update_record('response', $newinstance);
+    }
 
     // We've handled instances of the parent record, now we need to save subplugin data.
     $subplugin = helper::instance_factory($moduleinstance->responsetype, 'configuration');
@@ -181,6 +218,41 @@ function response_delete_response($course, $cm, $userid) {
     }
 
     return true;
+}
+
+/**
+ * Serves the response files.
+ *
+ * @package  mod_response
+ * @category files
+ * @param stdClass $course course object
+ * @param stdClass $cm course module object
+ * @param stdClass $context context object
+ * @param string $filearea file area
+ * @param array $args extra arguments
+ * @param bool $forcedownload whether or not force download
+ * @param array $options additional options affecting the file serving
+ * @return bool false if file not found, does not return if found - just send the file
+ */
+function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    if ($filearea !== 'content') {
+        // Intro is handled automatically in pluginfile.php.
+        return false;
+    }
+    $fs = get_file_storage();
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/mod_response/$filearea/$relativepath";
+
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
+        send_file_not_found();
+    }
+    // Send the file.
+    send_stored_file($file, null, 0, $forcedownload, $options);
 }
 
 /**

@@ -176,6 +176,9 @@ class helper {
         }
         $newinstance->timemodified = time();
 
+        $newinstance->content = $moduleinstance->responsecontent['text'];
+        $newinstance->contentformat = $moduleinstance->responsecontent['format'];
+
         // Toggle peer results is two things in the UI and needs to be one here.
         $newinstance->displaypeerresults = 0;
         if ($moduleinstance->togglepeerresults['studygroup']) {
@@ -193,6 +196,29 @@ class helper {
         }
 
         return $newinstance;
+    }
+
+    /**
+     * Returns an array of options for the Atto WYSIWYG editor.
+     *
+     * @param context_module $context Context the editor is being added to.
+     *
+     * @return array An array of options.
+     */
+    public static function get_editor_options($context) {
+        global $CFG;
+
+        $editoroptions = [
+            'subdirs' => true,
+            'maxbytes' => $CFG->maxbytes,
+            'maxfiles' => EDITOR_UNLIMITED_FILES,
+            'changeformat' => true,
+            'context' => $context,
+            'noclean' => true,
+            'trusttext' => false
+        ];
+
+        return $editoroptions;
     }
 
     /**

@@ -69,6 +69,13 @@ class mod_response_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements(get_string('activitydescription', 'response'));
 
+        // Add the activity content.
+        $mform->addElement('header', 'contentsection', get_string('contentheader', 'response'));
+        $mform->setExpanded('contentsection');
+        $mform->addElement('editor', 'responsecontent',
+            get_string('content', 'response'),
+            null, helper::get_editor_options($this->context));
+
         // Now split the items up so the response-specific stuff is in a response section.
         $mform->addElement('header', 'general', get_string('response', 'response'));
 
@@ -177,6 +184,14 @@ class mod_response_mod_form extends moodleform_mod {
             if ($defaultvalues['displaypeerresults'] & RESPONSE_PEER_RESULTS_ALL) {
                 $defaultvalues['togglepeerresults']['all'] = 1;
             }
+        }
+
+        if ($this->current->instance) {
+            $draftitemid = file_get_submitted_draft_itemid('responsecontent');
+            $defaultvalues['responsecontent']['format'] = $defaultvalues['contentformat'];
+            $defaultvalues['responsecontent']['text']   = file_prepare_draft_area($draftitemid, $this->context->id, 'mod_response',
+                    'content', 0, helper::get_editor_options($this->context), $defaultvalues['content']);
+            $defaultvalues['responsecontent']['itemid'] = $draftitemid;
         }
 
         foreach ($this->subplugins as $subplugin) {

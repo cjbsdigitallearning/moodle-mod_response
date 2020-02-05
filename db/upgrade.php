@@ -83,5 +83,37 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019120200, 'mod', 'response');
     }
 
+    if ($oldversion < 20200020400) {
+
+        $table = new xmldb_table('response');
+        $content = new xmldb_field('content', XMLDB_TYPE_TEXT);
+        $contentformat = new xmldb_field('contentformat', XMLDB_TYPE_INTEGER, 4, null, true, null, 0);
+
+        // Add new 'content' field to 'response' table.
+        if (!$dbmanager->field_exists($table, $content)) {
+            $dbmanager->add_field($table, $content);
+        }
+
+        // Add new 'contentformat' field to 'response' table.
+        if (!$dbmanager->field_exists($table, $contentformat)) {
+            $dbmanager->add_field($table, $contentformat);
+        }
+
+        upgrade_plugin_savepoint(true, 20200020400, 'mod', 'response');
+    }
+
+    if ($oldversion < 20200020401) {
+
+        $table = new xmldb_table('response');
+        $contentformat = new xmldb_field('contentformat', XMLDB_TYPE_INTEGER, 4, null, true, null, 1);
+
+        // Change the default value to 1 to ensure we always get WYSIWYG.
+        if ($dbmanager->field_exists($table, $contentformat)) {
+            $dbmanager->change_field_default($table, $contentformat);
+        }
+
+        upgrade_plugin_savepoint(true, 20200020401, 'mod', 'response');
+    }
+
     return true;
 }
