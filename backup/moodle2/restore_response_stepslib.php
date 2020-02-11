@@ -76,6 +76,8 @@ class restore_response_activity_structure_step extends restore_activity_structur
         $new->name = $data['name'];
         $new->intro = $data['intro'];
         $new->introformat = $data['introformat'];
+        $new->content = $data['content'];
+        $new->contentformat = $data['contentformat'];
         $new->responsetype = $data['responsetype'];
         $new->responsedisplay = $data['responsedisplay'];
         $new->viewownpagedescription = $data['viewownpagedescription'];
