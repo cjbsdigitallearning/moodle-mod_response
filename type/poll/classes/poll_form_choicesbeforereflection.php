@@ -53,6 +53,7 @@ class poll_form_choicesbeforereflection extends abstractform {
             $choices[] = $mform->createElement('radio', 'poll_choice' . $id, '', $choice->choice, $choice->responsenum);
         }
         $mform->addGroup($choices, 'poll_choices' . $id, '', array('<br />'), false);
+        $mform->addRule('poll_choices' . $id, get_string('poll_choice_required', 'responsetype_poll'), 'required');
         if (!empty($this->_customdata->user_responses[$USER->id])) {
             $userchoice = $this->_customdata->user_responses[$USER->id]->choice;
             $mform->setDefault('poll_choice' . $id, $userchoice);
