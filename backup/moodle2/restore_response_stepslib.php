@@ -119,5 +119,6 @@ class restore_response_activity_structure_step extends restore_activity_structur
     protected function after_execute() {
         // Add response related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_response', 'intro', null);
+        $this->add_related_files('mod_response', 'content', null);
     }
 }

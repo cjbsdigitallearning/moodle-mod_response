@@ -66,6 +66,7 @@ class backup_response_activity_structure_step extends backup_activity_structure_
         }
 
         $response->annotate_files('mod_response', 'intro', null);
+        $response->annotate_files('mod_response', 'content', null);
 
         return $this->prepare_activity_structure($response);
     }
