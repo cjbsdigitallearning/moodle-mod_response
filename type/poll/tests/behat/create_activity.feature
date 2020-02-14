@@ -175,3 +175,75 @@ Feature: In a course, teacher can pose a poll question
     And "Next" "button" should be visible
 
     And I log out
+
+  @javascript
+  Scenario: Create an activity with text page content and a reflection step (inline view).
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the field "Activity title" to "The weather"
+    And I set the field "Activity Content" to "Describe the weather"
+    And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Response type" to "Poll"
+    And I set the field "Response display" to "Inline - within the module section"
+    And I set the field "Choice 1" to "Sunny."
+    And I set the field "Choice 2" to "Cloudy."
+    And I set the field "Choice 3" to "Raining."
+    And I set the field "Add a reflection step" to "Yes"
+    And I set the field "Reflection text" to "You chose {choice}, how does that make you feel?"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    # Seeing it on course view.
+    Then I should see "The weather"
+    And I should see "Describe the weather"
+    And I should see "What is the weather like outside?"
+    And I click on "Sunny." "radio"
+    And I press "Next"
+    And I wait "2" seconds
+    And I should see "Describe the weather"
+
+    And I log out
+
+  @javascript @_file_upload
+  Scenario: Create an activity with a page content image and a reflection step (inline view).
+    When I log in as "teacher1"
+    # Upload the image
+    And I follow "Manage private files..."
+    And I upload "lib/editor/atto/tests/fixtures/moodle-logo.png" file to "Files" filemanager
+    And I click on "Save changes" "button"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the field "Activity title" to "The weather"
+    And I click on "Insert or edit image" "button" in the "Content" "fieldset"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "moodle-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "It's the Moodle"
+    # Wait for the page to "settle".
+    And I wait until the page is ready
+    And I click on "Save image" "button"
+    And I set the field "Activity question" to "What is the weather like outside?"
+    And I set the field "Response type" to "Poll"
+    And I set the field "Response display" to "Inline - within the module section"
+    And I set the field "Choice 1" to "Sunny."
+    And I set the field "Choice 2" to "Cloudy."
+    And I set the field "Choice 3" to "Raining."
+    And I set the field "Add a reflection step" to "Yes"
+    And I set the field "Reflection text" to "You chose {choice}, how does that make you feel?"
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    # Seeing it on course view.
+    Then I should see "The weather"
+    And "//img[contains(@src, 'moodle-logo.png')]" "xpath_element" should exist
+    And I should see "What is the weather like outside?"
+    And I click on "Sunny." "radio"
+    And I press "Next"
+    And I wait "2" seconds
+    And "//img[contains(@src, 'moodle-logo.png')]" "xpath_element" should exist
+
+    And I log out
