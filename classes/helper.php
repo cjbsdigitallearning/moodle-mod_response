@@ -231,7 +231,9 @@ class helper {
     public static function display_completion_options() {
         return array(
             'full' => get_string('displaycompletionfull', 'response'),
+            'fullgrp' => get_string('displaycompletionfullgroup', 'response'),
             'number' => get_string('displaycompletionnumber', 'response'),
+            'numbergrp' => get_string('displaycompletionnumbergroup', 'response'),
             'none' => get_string('displaycompletionnone', 'response'),
         );
     }

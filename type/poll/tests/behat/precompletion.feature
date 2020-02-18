@@ -28,6 +28,15 @@ Feature: Students should see some incentive to reply
       | student5 | C1 | student |
       | student6 | C1 | student |
       | student7 | C1 | student |
+    And the following "groups" exist:
+      | name | course | idnumber |
+      | Group 1 | C1 | G1 |
+      | Group 2 | C1 | G2 |
+    And the following "group members" exist:
+      | user | group |
+      | student1 | G1 |
+      | student2 | G2 |
+      | student3 | G1 |
 
   @javascript
   Scenario: Showing students nothing about completion status.
@@ -70,7 +79,7 @@ Feature: Students should see some incentive to reply
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show the number of completions |
+      | Display completions before response? | Show the number of completions - all responders |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -96,7 +105,7 @@ Feature: Students should see some incentive to reply
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show full completions |
+      | Display completions before response? | Show full completions - all responders |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -123,7 +132,7 @@ Feature: Students should see some incentive to reply
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show full completions |
+      | Display completions before response? | Show full completions - all responders |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -167,3 +176,70 @@ Feature: Students should see some incentive to reply
     And "img[title='Student 6']" "css_element" in the "div.display-completion div.others" "css_element" should be visible
     And I click on "Show less..." "button"
     And "img[title='Student 6']" "css_element" in the "div.display-completion div.others" "css_element" should not be visible
+
+  @javascript
+  Scenario: Showing students other completions in their group only.
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the following fields to these values:
+      | Activity title | The weather |
+      | Activity question | What is the weather like outside? |
+      | Response type | Poll |
+      | Response display | Inline - within the module section |
+      | Choice 1 | Sunny |
+      | Choice 2 | Cloudy |
+      | Choice 3 | Raining |
+      | Add a reflection step | No |
+      | Display completions before response? | Show the number of completions - group members |
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    And I click on "Cloudy" "radio"
+    And I press "Submit"
+    And I log out
+    And I log in as "student2"
+    And I am on "Course 1" course homepage
+    And I click on "Cloudy" "radio"
+    And I press "Submit"
+    And I log out
+    And I log in as "student3"
+    # student3 is in the same group as student1.
+    And I am on "Course 1" course homepage
+    Then I should see "1 person has completed this activity"
+    And I should not see "have completed this activity"
+
+  @javascript
+  Scenario: Showing students other completions in their group only (but not a number).
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "Response" to section "1"
+    And I set the following fields to these values:
+      | Activity title | The weather |
+      | Activity question | What is the weather like outside? |
+      | Response type | Poll |
+      | Response display | Inline - within the module section |
+      | Choice 1 | Sunny |
+      | Choice 2 | Cloudy |
+      | Choice 3 | Raining |
+      | Add a reflection step | No |
+      | Display completions before response? | Show full completions - group members |
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    And I click on "Cloudy" "radio"
+    And I press "Submit"
+    And I log out
+    And I log in as "student2"
+    And I am on "Course 1" course homepage
+    And I click on "Cloudy" "radio"
+    And I press "Submit"
+    And I log out
+    And I log in as "student3"
+    # student3 is in the same group as student1.
+    And I am on "Course 1" course homepage
+    Then I should see "has completed this activity"
+    And I should not see "have completed this activity"
+    And I should not see "1 person has completed this activity"

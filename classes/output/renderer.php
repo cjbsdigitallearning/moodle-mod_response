@@ -94,23 +94,23 @@ class renderer extends plugin_renderer_base {
      * completed an activity, e.g. "[] [] (+ 2 others) have completed..."
      *
      * @param object $completion The completion data
+     * @param boolean $all All people or only group
      * @return string The rendered HTML
      */
-    public function render_precompletion($completion) {
+    public function render_precompletion($completion, $all = true) {
+        $sel = $all ? "all" : "group";
         $data = new stdClass();
-        $data->people_all = !empty($completion->people_all) ? $completion->people_all : array();
-        $data->number_all = count($data->people_all);
+        $data->people = !empty($completion->{'people_' . $sel}) ? $completion->{'people_' . $sel} : [];
+        $data->number = count($data->people);
 
-        $data->people_group_other = !empty($completion->people_group_other) ? $completion->people_group_other : array();
-        $data->people_all_other = !empty($completion->people_all_other) ? $completion->people_all_other : array();
-        $data->number_group_other = count($data->people_group_other);
-        $data->number_all_other = count($data->people_all_other);
+        $data->people_other = !empty($completion->{'people_' . $sel . '_other'}) ? $completion->{'people_' . $sel . '_other'} : [];
+        $data->number_other = count($data->people_other);
 
         // We need to do a bit of language juggling that's really not nice for the template.
-        $data->plus_x_other = $data->number_all_other == 1 ? 'other1completed' : 'otherncompleted';
-        $data->plus_x_other_string = get_string($data->plus_x_other, 'response', $data->number_all_other);
+        $data->plus_x_other = $data->number_other == 1 ? 'other1completed' : 'otherncompleted';
+        $data->plus_x_other_string = get_string($data->plus_x_other, 'response', $data->number_other);
 
-        $totalcompletions = ($data->number_all + $data->number_all_other);
+        $totalcompletions = ($data->number + $data->number_other);
         $data->others_completed = $totalcompletions == 1 ? 'hascompletedthisactivity' : 'havecompletedthisactivity';
         $data->others_completed_string = get_string($data->others_completed, 'response');
 

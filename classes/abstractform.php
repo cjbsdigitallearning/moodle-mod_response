@@ -130,22 +130,34 @@ abstract class abstractform extends moodleform {
         $mform = $this->_form;
 
         // If we're displaying all the user data, we have a lot of work to do.
-        if ($this->_customdata->displaycompletion == 'full') {
+        if (strpos($this->_customdata->displaycompletion, 'full') === 0) {
             $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid);
-            if ($completions->number_all > 0) {
+            if ($this->_customdata->displaycompletion == 'full') {
+                $number = $completions->number_all;
+                $all = true;
+            } else {
+                $number = $completions->number_group;
+                $all = false;
+            }
+            if ($number > 0) {
                 $renderer = $PAGE->get_renderer('mod_response');
 
-                $displaystring = $renderer->render_precompletion($completions);
+                $displaystring = $renderer->render_precompletion($completions, $all);
                 $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
             }
         }
 
         // If we're only displaying the number of completions, we only have a little work to do.
-        if ($this->_customdata->displaycompletion == 'number') {
+        if (strpos($this->_customdata->displaycompletion, 'number') === 0) {
             $completions = completions::get_displaycompletion_number($this->_customdata->activity->response, $userid);
-            if ($completions->number_all > 0) {
-                $display = $completions->number_all == 1 ? 'completed1' : 'completedn';
-                $displaystring = get_string($display, 'response', $completions->number_all);
+            if ($this->_customdata->displaycompletion == 'number') {
+                $number = $completions->number_all;
+            } else {
+                $number = $completions->number_group;
+            }
+            if ($number > 0) {
+                $display = $number == 1 ? 'completed1' : 'completedn';
+                $displaystring = get_string($display, 'response', $number);
                 $displaystring = '<div class="display-completion number">' . $displaystring . '</div>';
                 $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
             }
