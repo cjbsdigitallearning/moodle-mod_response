@@ -33,11 +33,11 @@ function(
                 }
 
                 // Move the buttons from the form to the footer.
-                $(selector + ' [id^=fgroup_id_buttonar]').each(function() {
+                $(selector + ' div[id^=fgroup_id_buttonar]').each(function() {
                     var $response = $(this).closest('.card.response');
                     var content = $(this);
                     var destination = $response.find('.card-footer');
-                    destination.empty().html(content);
+                    destination.append(content);
 
                     // On hitting a button, push that to our hidden element.
                     $(destination).find(btnselector).on('click', function() {
