@@ -29,5 +29,6 @@ $string['privacy:metadata:responsetext'] = 'The textual response from the user (
 $string['privacy:metadata:responsetype_text_user'] = 'Storage for "Free Text" responses from users';
 $string['privacy:metadata:timesubmitted'] = 'The time the response was submitted';
 $string['privacy:metadata:userid'] = 'The ID of the user who completed the response activity';
+$string['text:editor_atto__toolbar_config'] = 'Override Atto editor configuration in free-text responses';
 $string['theywrote'] = '{$a} wrote:';
 $string['youwrote'] = 'You wrote:';

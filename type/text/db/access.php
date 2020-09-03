@@ -15,17 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version of the subplugin
+ * Plugin version and other meta-data are defined here.
  *
  * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @copyright 2020 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2020090302;
-$plugin->release = '1.0.0';
-$plugin->requires = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'responsetype_text';
-$plugin->maturity  = MATURITY_ALPHA;
+$capabilities = [
+
+    'responsetype/text:editor_atto__toolbar_config' => [
+        'riskbitmask'  => RISK_XSS,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes'   => [
+            'editingteacher' => CAP_ALLOW,
+            'manager'        => CAP_ALLOW
+        ]
+    ],
+
+];
