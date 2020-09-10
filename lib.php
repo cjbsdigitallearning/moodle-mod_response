@@ -599,6 +599,10 @@ function mod_response_output_fragment_answer($args) {
     $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : array();
     $data->viewing_own = $userid == $USER->id; // Viewing our own item?
 
+    $data->meta = new stdClass;
+    $data->meta->cm = $cm;
+    $data->meta->context = $context;
+
     $renderer = $PAGE->get_renderer('mod_response');
 
     $renderable = helper::instance_factory($response->responsetype, 'inlineoutput', array($data, $instance));

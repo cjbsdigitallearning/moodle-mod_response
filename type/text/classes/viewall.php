@@ -31,6 +31,7 @@ use templatable;
 use mod_response\helper;
 use moodle_url;
 use pix_icon;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -77,7 +78,17 @@ class viewall extends abstractoutput implements renderable, templatable {
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
         foreach ($data->all_responses as $id => $response) {
             $timestamp = $response->timecompleted;
-            $data->all_responses[$id]->response_text = helper::clean_text($response->response_text);
+
+            $response->response_text = file_rewrite_pluginfile_urls(
+                $response->response_text,
+                'pluginfile.php',
+                context_module::instance($this->data->cm->id)->id,
+                'responsetype_text',
+                'response_text',
+                $response->response_user_id
+            );
+
+            $data->all_responses[$id]->response_text = format_text($response->response_text);
             $data->all_responses[$id]->timecompleted_date = userdate($timestamp, $dateformat, 99, false, false);
             $data->all_responses[$id]->timecompleted_datetime = userdate($timestamp, $datetimeformat, 99, false, false);
         }

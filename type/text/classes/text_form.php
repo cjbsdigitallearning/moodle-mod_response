@@ -27,6 +27,7 @@ use mod_response\abstractform;
 use stdClass;
 use mod_response\helper;
 use mod_response\completions;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -48,7 +49,14 @@ class text_form extends abstractform {
         $mform = $this->_form;
         $mform->disable_form_change_checker();
 
-        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'));
+        if (!empty($this->_customdata->activity->overrideeditorconfig)) {
+            $toolbar = $this->_customdata->activity->editorconfig;
+        } else {
+            $toolbar = get_config('responsetype_text', 'editorconfig');
+        }
+        var_dump($this->_customdata->activity);
+
+        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'), $toolbar);
 
         // Is there a word count prompt on this activity?
         // If so we need to pass the language string to the client and load our counting JS.
@@ -77,6 +85,27 @@ class text_form extends abstractform {
 
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));
         $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
+    }
+
+    public function set_data($defaultvalues) {
+
+        // If this is an edit form, we have to edit the existing stuff.
+        if (!empty($this->_customdata->user_responses)) {
+            $existinganswer = reset($this->_customdata->user_responses);
+
+            $draftitemid = file_get_submitted_draft_itemid('responsetype_text_' . $this->_customdata->id);
+            $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
+            $context = context_module::instance($cm->id);
+
+            $element = 'responsetype_text_' . $this->_customdata->id;
+            $defaultvalues[$element]['format'] = FORMAT_HTML;
+            $defaultvalues[$element]['text'] = file_prepare_draft_area($draftitemid, $context->id, 'responsetype_text',
+                'response_text', $existinganswer->response_user_id, helper::get_editor_options($context),
+                $defaultvalues[$element]['text']);
+            $defaultvalues[$element]['itemid'] = $draftitemid;
+        }
+
+        parent::set_data($defaultvalues);
     }
 
     /**

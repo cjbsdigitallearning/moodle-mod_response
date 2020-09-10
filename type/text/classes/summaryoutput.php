@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -63,7 +64,16 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
         $data->activity_question = $this->data->question;
         $data->icon = $OUTPUT->render($this->data->icon);
 
-        $data->user_response = helper::clean_text($this->data->response->response_text);
+        $data->user_response = file_rewrite_pluginfile_urls(
+            $this->data->response->response_text,
+            'pluginfile.php',
+            context_module::instance($this->data->cm_id)->id,
+            'responsetype_text',
+            'response_text',
+            $this->data->response->response_user_id
+        );
+
+        $data->user_response = format_text($data->user_response);
 
         $data->responsetype = $this->data->responsetype;
         $data->template = 'summaryoutput';

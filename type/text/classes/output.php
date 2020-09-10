@@ -31,6 +31,7 @@ use templatable;
 use mod_response\helper;
 use moodle_url;
 use pix_icon;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -78,6 +79,9 @@ class output extends abstractoutput implements renderable, templatable {
             } else {
                 $data->description = '';
             }
+        } else {
+            // We probably want the CM for later.
+            $this->data->cm = get_coursemodule_from_instance('response', $this->data->id);
         }
 
         $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
@@ -112,7 +116,17 @@ class output extends abstractoutput implements renderable, templatable {
                 $data->profile_picture = $OUTPUT->user_picture($USER, array('size' => '50', 'class' => 'profilepicture'));
                 $data->profile_name = ''; // Not needed.
             }
-            $data->user_response = helper::clean_text($this->data->user_responses[$this->data->viewing_id]->response_text);
+
+            $responsetext = $this->data->user_responses[$this->data->viewing_id]->response_text;
+            $responsetext = file_rewrite_pluginfile_urls(
+                $responsetext,
+                'pluginfile.php',
+                context_module::instance($this->data->cm->id)->id,
+                'responsetype_text',
+                'response_text',
+                $this->data->user_responses[$this->data->viewing_id]->response_user_id
+            );
+            $data->user_response = format_text($responsetext);
 
             // This wasn't a template helper until Moodle 3.2...
             $dateformat = get_string('strftimedatetimeshort', 'langconfig');
