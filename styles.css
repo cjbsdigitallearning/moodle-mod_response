@@ -38,7 +38,7 @@
 }
 
 /* Fixing the Atto editor */
-.user-response .fullwidtheditor div.editor_atto_toolbar {
+.user-response .fullwidtheditor.hasnotoolbar div.editor_atto_toolbar {
     padding: 0;
     border-bottom: none;
     min-height: 0;
