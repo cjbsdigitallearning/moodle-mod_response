@@ -45,6 +45,18 @@ class mod_response_generator extends testing_module_generator {
     public function create_instance($record = null, array $options = null) {
         $record = (object) (array) $record;
 
+        if (!isset($record->responsedisplay)) {
+            $record->responsedisplay = 0;
+        }
+        if (!isset($record->viewownpagedescription)) {
+            $record->viewownpagedescription = 0;
+        }
+        if (!isset($record->caption)) {
+            $record->caption = get_string('shareyourthoughts', 'response');
+        }
+        if (!isset($record->responsecontent)) {
+            $record->responsecontent = ['text' => '', 'format' => FORMAT_HTML];
+        }
         if (!isset($record->timemodified)) {
             $record->timemodified = time();
         }

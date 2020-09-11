@@ -314,7 +314,9 @@ class responsetype_text_privacy_testcase extends provider_testcase {
     /**
      * Verify that all appropriate information is exported upon request.
      */
-    public function test_export_data_for_user() {
+    public function test_export_data_for_user() : void {
+        global $PAGE;
+
         $this->resetAfterTest();
 
         $gen = $this->getDataGenerator();
@@ -347,6 +349,11 @@ class responsetype_text_privacy_testcase extends provider_testcase {
         $u2r2 = $this->respond_to_activity($text2->id, $u2->id, 'User 2 answer to Response 2');
 
         $contextlist = new approved_contextlist($u1, 'mod_response', [$text1ctx->id, $text2ctx->id]);
+
+        // Set some global handling for the format_text calls we're about to use.
+        $PAGE->set_context($text2ctx);
+        $PAGE->set_url(new moodle_url('/mod/response/view.php', ['id' => $text2->cmid]));
+
         parentprovider::export_user_data($contextlist);
 
         $data = writer::with_context($text1ctx)->get_data([]);
