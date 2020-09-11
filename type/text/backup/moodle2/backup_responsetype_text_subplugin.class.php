@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all the backup steps that will be used by {@link backup_response_activity_task}
+ * Defines all the backup steps that will be used by {@see backup_response_activity_task}
  *
  * At least the ones specific to text type responses.
  *
@@ -50,7 +50,8 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
         $subplugin = $this->get_subplugin_element();
         $wrapper = new backup_nested_element($this->get_recommended_name());
 
-        $settings = new backup_nested_element('responsetype_text_settings', null, array('maxwords'));
+        $settings = new backup_nested_element('responsetype_text_settings', null,
+                                              ['maxwords', 'overrideeditorconfig', 'editorconfig']);
 
         $settings->set_source_table('responsetype_text', array('response' => backup::VAR_ACTIVITYID));
 

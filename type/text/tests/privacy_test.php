@@ -52,6 +52,11 @@ use \core_privacy\local\request\approved_userlist;
  */
 class responsetype_text_privacy_testcase extends provider_testcase {
 
+    /**
+     * Do initial setup to support this test case.
+     *
+     * @return void Not declared for inheritance.
+     */
     public function setUp() {
         global $CFG;
         require_once($CFG->dirroot . '/mod/response/lib.php');
@@ -60,7 +65,7 @@ class responsetype_text_privacy_testcase extends provider_testcase {
     /**
      * Verify that the contexts fetched for the user are correct.
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid() : void {
         $this->resetAfterTest();
 
         $gen = $this->getDataGenerator();
@@ -105,7 +110,7 @@ class responsetype_text_privacy_testcase extends provider_testcase {
     /**
      * Verify that all user data for a single context is removed upon call.
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context() : void {
         global $DB;
 
         $this->resetAfterTest();
@@ -173,7 +178,7 @@ class responsetype_text_privacy_testcase extends provider_testcase {
     /**
      * Verify that a single user's data is removed from multiple contexts.
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user() : void {
         global $DB;
 
         $this->resetAfterTest();
@@ -233,7 +238,7 @@ class responsetype_text_privacy_testcase extends provider_testcase {
     /**
      * Verify that multiple users' data is removed from multiple contexts.
      */
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users() : void {
         global $DB;
 
         $this->resetAfterTest();
@@ -373,8 +378,9 @@ class responsetype_text_privacy_testcase extends provider_testcase {
      * @param int $response The activity ID
      * @param stdClass $user The user completing the activity
      * @param string $responsetext The textual response going into the activity, a default will be used in absence of actual text
+     * @return stdClass The activity object from the database
      */
-    protected function respond_to_activity($response, $user, $responsetext = '') {
+    protected function respond_to_activity($response, $user, $responsetext = '') : stdClass {
         global $DB;
 
         if (empty($responsetext)) {

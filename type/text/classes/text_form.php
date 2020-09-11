@@ -54,7 +54,6 @@ class text_form extends abstractform {
         } else {
             $toolbar = get_config('responsetype_text', 'editorconfig');
         }
-        var_dump($this->_customdata->activity);
 
         $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'), $toolbar);
 
@@ -87,6 +86,17 @@ class text_form extends abstractform {
         $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
     }
 
+    /**
+     * Process the form's data to include plugin files.
+     *
+     * If editing a response, we need to process the HTML for Atto to include the proper references
+     * to files.
+     *
+     * Not typehinted due to inheritance.
+     *
+     * @param array $defaultvalues The values being submitted for the form.
+     * @return void
+     */
     public function set_data($defaultvalues) {
 
         // If this is an edit form, we have to edit the existing stuff.
