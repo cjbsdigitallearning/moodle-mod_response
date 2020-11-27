@@ -58,6 +58,13 @@ if (empty($responses)) {
 }
 
 $responselist = array();
+
+// Create an object to store the items that don't have a response yet.
+$noresponseobj = (object) [
+    'section_title' => get_string('yettorespond', 'mod_response'),
+    'responses' => [],
+];
+
 if (course_format_uses_sections($course->format)) {
     // This course format uses sections, so we need to arrange for this.
     foreach ($responses as $response) {
@@ -67,8 +74,10 @@ if (course_format_uses_sections($course->format)) {
             $responselist[$response->section]->responses = array();
         }
         $activity = get_response_data($course, $response, $USER->id);
-        if ($activity) {
+        if (isset($activity->response)) {
             $responselist[$response->section]->responses[] = $activity;
+        } else {
+            $noresponseobj->responses[] = $activity;
         }
     }
 } else {
@@ -78,11 +87,14 @@ if (course_format_uses_sections($course->format)) {
     $responselist[0]->responses = array();
     foreach ($responses as $response) {
         $activity = get_response_data($course, $response, $USER->id);
-        if ($activity) {
+        if (isset($activity->response)) {
             $responselist[0]->responses[] = $activity;
+        } else {
+            $noresponseobj->responses[] = $activity;
         }
     }
 }
+$responselist[] = $noresponseobj;
 
 // We already filtered activities that haven't been completed. This might result in empty sections.
 foreach ($responselist as $sectionid => $section) {
@@ -125,11 +137,12 @@ function get_response_data($course, $response, $userid, $renderer = null) {
     $return->activity_title = $cm->name;
     $return->question = $response->question;
     $instance = helper::instance_factory($response->responsetype, 'information');
-    // Before we even load additional data, did the user even complete it?
+
+    // Determine if the user has responded.
     // We actually can't rely on completion status if it wasn't tracked by the completion system, so use ours.
     $response->user_responses = $instance->load_response_for_users($response, array($userid));
-    if (empty($response->user_responses[$userid]) || empty($response->user_responses[$userid]->timecompleted)) {
-        return false;
+    if (!empty($response->user_responses[$userid]) || !empty($response->user_responses[$userid]->timecompleted)) {
+        $return->response = $response->user_responses[$userid];
     }
     $instance->load_activity($response);
 
@@ -152,7 +165,6 @@ function get_response_data($course, $response, $userid, $renderer = null) {
     $return->aggregate = !empty($response->aggregate) ? $response->aggregate : new stdClass();
     $return->activity = $response->activity;
     $return->displaypeerresults = $response->displaypeerresults;
-    $return->response = $response->user_responses[$userid];
     $return->icon = new pix_icon('icon', '', 'responsetype_' . $response->responsetype);
 
     $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', array($return, $instance));

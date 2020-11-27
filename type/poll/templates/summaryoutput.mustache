@@ -65,7 +65,22 @@
     <div class="row">
         <div class="col">
             <div class="user-wrote">
-                {{# str }} youanswered, responsetype_poll, { "answer": {{# quote}}<div class="user-answer">{{{user_choice}}}</div>{{#user_response}}:{{/user_response}}{{^user_response}}.{{/user_response}}{{/ quote}} } {{/ str }}{{#user_response}}<div class="user-reflection">{{{user_response}}}</div>{{/user_response}}
+                {{# user_choice}}
+                    {{# str }} youanswered, responsetype_poll,
+                        { "answer":
+                            {{# quote}}
+                                <div class="user-answer">{{{user_choice}}}</div>{{#user_response}}:{{/user_response}}{{^user_response}}.{{/user_response}}
+                            {{/ quote}}
+                        }
+                    {{/ str }}
+                {{/ user_choice}}
+                {{^ user_choice}}
+                    {{# str }} noresponse, responsetype_poll {{/ str }}
+                {{/ user_choice}}
+
+                {{#user_response}}
+                    <div class="user-reflection">{{{user_response}}}</div>
+                {{/user_response}}
 
                 <div class="clearfix"></div>
                 <div class="context-link text-right">

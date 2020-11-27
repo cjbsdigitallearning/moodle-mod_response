@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['maximumwords_default'] = 'This sets the default advised word count. If given as 0, the field will be disabled by default.';
+$string['noresponse'] = 'You have not responded yet.';
 $string['nothingwritten'] = 'Please provide an answer.';
 $string['pluginname'] = 'Free text';
 $string['privacy:metadata:response'] = 'The ID of the response activity the user is providing answer for';

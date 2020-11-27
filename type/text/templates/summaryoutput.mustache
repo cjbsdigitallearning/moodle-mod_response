@@ -53,7 +53,12 @@
 
     <div class="row">
         <div class="col-md-8">
-            <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
+            {{# user_response}}
+                <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
+            {{/ user_response}}
+            {{^ user_response}}
+                <div class="user-wrote">{{# str }} noresponse, responsetype_text {{/ str }}</div>
+            {{/ user_response}}
             <div class="user-answer">
                 {{{user_response}}}
             </div>

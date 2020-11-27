@@ -63,7 +63,17 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
         $data->activity_question = $this->data->question;
         $data->icon = $OUTPUT->render($this->data->icon);
 
-        $data->user_response = helper::clean_text($this->data->response->response_text);
+        // If there is no userresponse then these fields won't exist.
+        if (isset($this->data->response)) {
+            $data->user_response = helper::clean_text($this->data->response->response_text);
+
+            // Export date+time and date to the template in case people want to change it.
+            $data->timemodified = $this->data->response->timemodified;
+            $dateformat = get_string('strftimedatefullshort', 'langconfig');
+            $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
+            $data->timemodified_date = userdate($data->timemodified, $dateformat, 99, false, false);
+            $data->timemodified_datetime = userdate($data->timemodified, $datetimeformat, 99, false, false);
+        }
 
         $data->responsetype = $this->data->responsetype;
         $data->template = 'summaryoutput';
@@ -76,13 +86,6 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
         } else {
             $data->context_link = new moodle_url('/mod/response/view.php', array('id' => $this->data->cm_id));
         }
-
-        // Export date+time and date to the template in case people want to change it.
-        $data->timemodified = $this->data->response->timemodified;
-        $dateformat = get_string('strftimedatefullshort', 'langconfig');
-        $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
-        $data->timemodified_date = userdate($data->timemodified, $dateformat, 99, false, false);
-        $data->timemodified_datetime = userdate($data->timemodified, $datetimeformat, 99, false, false);
 
         return $data;
     }
