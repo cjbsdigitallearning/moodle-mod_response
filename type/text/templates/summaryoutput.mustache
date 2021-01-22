@@ -52,12 +52,12 @@
     <h5>{{{activity_question}}}</h5>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             {{# user_response}}
                 <div class="user-wrote">{{# str }} youwrote, responsetype_text {{/ str }}</div>
             {{/ user_response}}
             {{^ user_response}}
-                <div class="user-wrote">{{# str }} noresponse, responsetype_text {{/ str }}</div>
+                <div class="user-answer">{{# str }} noresponse, responsetype_text {{/ str }}</div>
             {{/ user_response}}
             <div class="user-answer">
                 {{{user_response}}}

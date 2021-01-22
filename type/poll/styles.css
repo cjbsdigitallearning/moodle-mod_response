@@ -23,11 +23,11 @@
     margin-top: 4px;
     margin-right: 5px;
 }
-.user-response.responsetype-poll .mform .femptylabel .col-md-3 {
+.user-response.responsetype-poll .mform .femptylabel .col-md-4 {
     flex: 0 0 0%;
     max-width: 0;
 }
-.user-response.responsetype-poll .mform .femptylabel .col-md-9 {
+.user-response.responsetype-poll .mform .femptylabel .col-md-8 {
     flex: 0 0 100%;
     max-width: 100%;
 }
