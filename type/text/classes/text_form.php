@@ -131,7 +131,7 @@ class text_form extends abstractform {
 
         if (empty($data['response']) || empty($data['responsetype_text_' . $data['response']])) {
             $errors['responsetype_text'] = get_string('nothingwritten', 'responsetype_text');
-        } else if (!helper::contains_content($data['responsetype_text_' . $data['response']]['text'])) {
+        } else if (!helper::contains_content_or_media($data['responsetype_text_' . $data['response']]['text'])) {
             $errors['responsetype_text'] = get_string('nothingwritten', 'responsetype_text');
         }
 
