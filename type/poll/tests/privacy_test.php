@@ -161,7 +161,7 @@ class responsetype_poll_privacy_testcase extends provider_testcase {
         // Now, delete things. We call the parent because the API will too, and verify the results.
         parentprovider::delete_data_for_all_users_in_context($text1ctx);
 
-        // Let's query what we have. There should be two Response entries total (i.e. this shouldn't be touched)
+        // Let's query what we have. There should be two Response entries total (i.e. this shouldn't be touched).
         $records = $DB->get_records('response');
         $this->assertEquals(2, count($records));
 
