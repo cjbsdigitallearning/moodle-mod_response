@@ -113,7 +113,7 @@ function responsetype_text_pluginfile(stdClass $course,
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/responsetype_text/$filearea/$relativepath";
+    $fullpath = "/$context->id/responsetype_text_user/$filearea/$relativepath";
 
     if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
         send_file_not_found();

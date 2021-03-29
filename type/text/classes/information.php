@@ -221,7 +221,7 @@ class information extends abstractinfo {
             $newinstance->response_text = file_save_draft_area_files(
                 $data->{'responsetype_text_' . $response->id}['itemid'],
                 $context->id,
-                'responsetype_text',
+                'responsetype_text_user',
                 'response_text',
                 $responseidentifier,
                 helper::get_editor_options($context),
@@ -264,7 +264,18 @@ class information extends abstractinfo {
      */
     public function delete_user_response($course, $cm, $userid) {
         global $DB;
+
+        $userresponses = $DB->get_records('responsetype_text_user', ['response' => $cm->instance, 'userid' => $userid]);
         $DB->delete_records('responsetype_text_user', array('response' => $cm->instance, 'userid' => $userid));
+
+        // Delete any attached files.
+        $context = context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_text_user', 'response_text', $response->id);
+            }
+        }
 
         return true;
     }

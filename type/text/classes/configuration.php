@@ -246,6 +246,19 @@ class configuration extends abstractconfig {
         global $DB;
 
         $DB->delete_records('responsetype_text', array('response' => $id));
+
+        $userresponses = $DB->get_records('responsetype_text_user', ['response' => $id]);
+        $DB->delete_records('responsetype_text_user', ['response' => $id]);
+
+        // Having gotten all the user details, delete all the attached files.
+        $cm = get_coursemodule_from_instance('response', $id);
+        $context = context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_text_user', 'response_text', $response->id);
+            }
+        }
     }
 
     /**

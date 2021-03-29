@@ -65,6 +65,10 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
             $answers->set_source_table('responsetype_text_user', array('response' => backup::VAR_ACTIVITYID));
             $answers->annotate_ids('user', 'userid');
             $wrapper->add_child($answers);
+
+            $answers->annotate_files('responsetype_text_user',
+                                     'response_text',
+                                     'id');
         }
 
         return $subplugin;
