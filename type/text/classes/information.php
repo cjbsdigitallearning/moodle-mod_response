@@ -27,6 +27,7 @@ use mod_response\responsetype\abstractinfo;
 use stdClass;
 use moodle_url;
 use mod_response\helper;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -78,7 +79,7 @@ class information extends abstractinfo {
         list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
         $params['response'] = $instance->id;
 
-        $query = "SELECT ru.userid, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
+        $query = "SELECT ru.userid, rtu.id AS response_user_id, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
                     FROM {response_user} ru
                     JOIN {responsetype_text_user} rtu ON (ru.response_identifier = rtu.id)
                    WHERE ru.userid $sql
@@ -112,7 +113,7 @@ class information extends abstractinfo {
         $responses = array();
 
         // First load any responses we actually have.
-        $query = "SELECT ru.userid, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
+        $query = "SELECT ru.userid, rtu.id AS response_user_id, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
                     FROM {response_user} ru
                     JOIN {responsetype_text_user} rtu ON (ru.response_identifier = rtu.id)
                    WHERE ru.response = :response
@@ -212,6 +213,22 @@ class information extends abstractinfo {
         // We don't really care which format it was, it's going through format_text all the same.
 
         $responseidentifier = $DB->insert_record('responsetype_text_user', $newinstance);
+        $newinstance->id = $responseidentifier;
+
+        if (!empty($data->{'responsetype_text_' . $response->id}['itemid'])) {
+            $cmid = $response->cm->id;
+            $context = context_module::instance($cmid);
+            $newinstance->response_text = file_save_draft_area_files(
+                $data->{'responsetype_text_' . $response->id}['itemid'],
+                $context->id,
+                'responsetype_text_user',
+                'response_text',
+                $responseidentifier,
+                helper::get_editor_options($context),
+                $newinstance->response_text
+            );
+            $DB->update_record('responsetype_text_user', $newinstance);
+        }
 
         // We now need to update the response_user table.
         // Was this activity already completed by this user? Or being edited?
@@ -247,7 +264,18 @@ class information extends abstractinfo {
      */
     public function delete_user_response($course, $cm, $userid) {
         global $DB;
+
+        $userresponses = $DB->get_records('responsetype_text_user', ['response' => $cm->instance, 'userid' => $userid]);
         $DB->delete_records('responsetype_text_user', array('response' => $cm->instance, 'userid' => $userid));
+
+        // Delete any attached files.
+        $context = context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_text_user', 'response_text', $response->id);
+            }
+        }
 
         return true;
     }

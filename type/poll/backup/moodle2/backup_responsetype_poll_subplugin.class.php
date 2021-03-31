@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all the backup steps that will be used by {@link backup_response_activity_task}
+ * Defines all the backup steps that will be used by {@see backup_response_activity_task}
  *
  * At least the ones specific to poll type responses.
  *

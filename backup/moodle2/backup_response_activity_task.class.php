@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines {@link backup_response_activity_task} class
+ * Defines {@see backup_response_activity_task} class
  *
  * @package     mod_response
  * @category    backup

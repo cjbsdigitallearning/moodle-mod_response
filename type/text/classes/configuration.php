@@ -23,11 +23,17 @@
  */
 
 namespace mod_response\type\text;
+
+use admin_setting_configtext;
+use editor_atto_toolbar_setting;
+use context_course;
+use context_module;
+use core_plugin_manager;
+use InvalidArgumentException;
+use mod_response\helper;
 use mod_response\responsetype\abstractconfig;
 use MoodleQuickForm;
 use stdClass;
-use mod_response\helper;
-use admin_setting_configtext;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -59,6 +65,22 @@ class configuration extends abstractconfig {
         $mform->disabledIf('text_maximumwords', 'text_maximumwords_enabled');
         $mform->setDefault('text_maximumwords', !empty($responseconfig->defaultwords) ? $responseconfig->defaultwords : 0);
         $mform->setDefault('text_maximumwords_enabled', !empty($responseconfig->defaultwords) ? 1 : 0);
+
+        // Add the configuration for the editor.
+        $mform->addElement('checkbox', 'text_overrideeditorconfig', get_string('overrideeditorconfig', 'responsetype_text'), '');
+        $mform->addElement('textarea', 'text_editorconfig', get_string('editorconfig_instance', 'responsetype_text'),
+            ['rows' => 6, 'cols' => '60'], get_string('editorconfig_desc', 'responsetype_text'));
+        $mform->setType('text_editorconfig', PARAM_RAW);
+        $mform->disabledIf('text_editorconfig', 'text_overrideeditorconfig');
+
+        // And add the description - textareas can't directly set a description.
+        $plugins = [
+            'available' => implode('<br>', array_keys(core_plugin_manager::instance()->get_plugins_of_type('atto'))),
+        ];
+
+        $default = get_string('editorconfig_desc', 'responsetype_text', $plugins);
+
+        $mform->addElement('static', 'text_editorconfig_desc', '', $default);
     }
 
     /**
@@ -95,9 +117,60 @@ class configuration extends abstractconfig {
                 $defaultvalues['text_maximumwords_enabled'] = 1;
                 $defaultvalues['text_maximumwords'] = $response->activity->maxwords;
             }
+
+            // Editor configuration from our saved setup.
+            if ($response->activity->overrideeditorconfig) {
+                $defaultvalues['text_overrideeditorconfig'] = 1;
+                $defaultvalues['text_editorconfig'] = $response->activity->editorconfig;
+            }
         }
 
         return true;
+    }
+
+    /**
+     * Delegation handler for subplugins to offer them definition_after_data
+     * functionality.
+     *
+     * @param object $form The current form object in whatever state it is in.
+     * @return bool Whether any changes were successfully applied.
+     */
+    public function apply_definition_after_data(&$form) {
+        // We need to change the form if the user doesn't have permissions.
+        $cmid = $form->getElementValue('coursemodule');
+        if (!empty($cm)) {
+            $context = context_module::instance($cmid);
+        } else {
+            $context = context_course::instance($form->getElementValue('course'));
+        }
+        if (!has_capability('responsetype/text:editor_atto__toolbar_config', $context)) {
+            $form->freeze('text_overrideeditorconfig');
+            $form->freeze('text_editorconfig');
+        }
+    }
+
+    /**
+     * Similar to the main form validation method, review
+     * the submitted $data and $files to verify if any
+     * validation errors have occurred with this subplugin
+     * form and return an array of errors if so.
+     *
+     * @param array $data Form elements
+     * @param array $files Files if uploaded with form
+     * @return array Array of field name -> error message validation messages
+     */
+    public function apply_validation($data, $files) {
+        $errors = [];
+
+        if (!empty($data['overrideeditorconfig']) && !empty($data['editorconfig'])) {
+            try {
+                $this->validate_atto_config($data['editorconfig']);
+            } catch (InvalidArgumentException $e) {
+                $errors['editorconfig'] = $e->getMessage();
+            }
+        }
+
+        return $errors;
     }
 
     /**
@@ -117,6 +190,14 @@ class configuration extends abstractconfig {
         $newinstance->maxwords = 0;
         if (!empty($moduleinstance->text_maximumwords_enabled)) {
             $newinstance->maxwords = (int) $moduleinstance->text_maximumwords;
+        }
+
+        if (!empty($moduleinstance->text_overrideeditorconfig)) {
+            $newinstance->overrideeditorconfig = 1;
+            $newinstance->editorconfig = $moduleinstance->text_editorconfig ?? '';
+        } else {
+            $newinstance->overrideeditorconfig = 0;
+            $newinstance->editorconfig = '';
         }
 
         $DB->insert_record('responsetype_text', $newinstance);
@@ -144,6 +225,14 @@ class configuration extends abstractconfig {
             $updatedinstance->maxwords = (int) $moduleinstance->text_maximumwords;
         }
 
+        if (!empty($moduleinstance->text_overrideeditorconfig)) {
+            $updatedinstance->overrideeditorconfig = 1;
+            $updatedinstance->editorconfig = $moduleinstance->text_editorconfig ?? '';
+        } else {
+            $updatedinstance->overrideeditorconfig = 0;
+            $updatedinstance->editorconfig = '';
+        }
+
         $DB->update_record('responsetype_text', $updatedinstance);
     }
 
@@ -157,6 +246,19 @@ class configuration extends abstractconfig {
         global $DB;
 
         $DB->delete_records('responsetype_text', array('response' => $id));
+
+        $userresponses = $DB->get_records('responsetype_text_user', ['response' => $id]);
+        $DB->delete_records('responsetype_text_user', ['response' => $id]);
+
+        // Having gotten all the user details, delete all the attached files.
+        $cm = get_coursemodule_from_instance('response', $id);
+        $context = context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_text_user', 'response_text', $response->id);
+            }
+        }
     }
 
     /**
@@ -166,9 +268,79 @@ class configuration extends abstractconfig {
      * @return array object An array of admin_setting* objects
      */
     public function get_default_settings() {
+        global $CFG;
+
+        require_once($CFG->libdir . "/editor/atto/adminlib.php");
+        // We want to list all the Atto plugins here.
+        $plugins = [
+            'available' => implode('<br>', array_keys(core_plugin_manager::instance()->get_plugins_of_type('atto'))),
+        ];
+
+        // And provide a default base configuration.
+        $atto = [
+            'style1 = title, bold, italic',
+            'list = unorderedlist, orderedlist',
+            'links = link, noautolink',
+            'files = image, media, recordrtc, managefiles',
+        ];
+        $atto = implode("\n", $atto);
+
         return array(
             new admin_setting_configtext('responsetype_text/defaultwords', get_string('maximumwords', 'response'),
-                                         get_string('maximumwords_default', 'responsetype_text'), 0, PARAM_INT)
+                                         get_string('maximumwords_default', 'responsetype_text'), 0, PARAM_INT),
+            new editor_atto_toolbar_setting('responsetype_text/editorconfig', get_string('editorconfig', 'responsetype_text'),
+                                             get_string('editorconfig_desc', 'responsetype_text', $plugins), $atto, PARAM_RAW),
         );
+    }
+
+    /**
+     * Validates the editor configuration against Atto's own configuration.
+     *
+     * Adapted from lib/editor/atto/adminlib.php::validate.
+     *
+     * @param string $config The configuration as supplied by the user.
+     * @return bool True on success
+     * @throws InvalidArgumentException on failure; language string for error is the exception message.
+     */
+    protected function validate_atto_config(string $config) : bool {
+
+        $lines = explode("\n", $config);
+        $groups = array();
+        $plugins = array();
+
+        foreach ($lines as $line) {
+            if (!trim($line)) {
+                continue;
+            }
+
+            $matches = array();
+            if (!preg_match('/^\s*([a-z0-9]+)\s*=\s*([a-z0-9]+(\s*,\s*[a-z0-9]+)*)+\s*$/', $line, $matches)) {
+                throw new InvalidArgumentException(get_string('errorcannotparseline', 'editor_atto', $line));
+            }
+
+            $group = $matches[1];
+            if (isset($groups[$group])) {
+                throw new InvalidArgumentException(get_string('errorgroupisusedtwice', 'editor_atto', $group));
+            }
+            $groups[$group] = true;
+
+            $lineplugins = array_map('trim', explode(',', $matches[2]));
+            foreach ($lineplugins as $plugin) {
+                if (isset($plugins[$plugin])) {
+                    throw new InvalidArgumentException(get_string('errorpluginisusedtwice', 'editor_atto', $plugin));
+                } else if (!core_component::get_component_directory('atto_' . $plugin)) {
+                    throw new InvalidArgumentException(get_string('errorpluginnotfound', 'editor_atto', $plugin));
+                    break 2;
+                }
+                $plugins[$plugin] = true;
+            }
+        }
+
+        // We did not find any groups or plugins.
+        if (empty($groups) || empty($plugins)) {
+            throw new InvalidArgumentException(get_string('errornopluginsorgroupsfound', 'editor_atto'));
+        }
+
+        return true;
     }
 }

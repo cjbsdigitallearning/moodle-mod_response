@@ -80,34 +80,46 @@ abstract class abstractform extends moodleform {
         global $CFG;
 
         require_once("$CFG->libdir/form/editor.php");
-        $editor = new simpleeditor;
         \MoodleQuickForm::registerElementType('simpleeditor', "$CFG->libdir/form/editor.php", 'mod_response\\simpleeditor');
     }
 
     /**
      * This adds a simple editor to the form. Primarily we get an Atto
-     * editor instance, which can autosave, but without any of the formatting.
+     * editor instance, which can autosave, but optionally with a subset of formatting.
      *
      * @param string $elementname Name for the element.
      * @param string $elementlabel Label for the element.
+     * @param string $toolbar The toolbar to use for this particular instance.
      */
-    public function add_simple_editor($elementname, $elementlabel = null) {
+    public function add_simple_editor(string $elementname, ?string $elementlabel = null, ?string $toolbar = null) {
         $this->initialise_simple_editor();
 
-        $editoroptions = array(
-            'subdirs' => 0,
-            'maxbytes' => 0,
-            'maxfiles' => 0,
-            'changeformat' => 0,
-            'context' => null,
-            'noclean' => 0,
-            'trusttext' => 0,
-            'enable_filemanagement' => false,
-            'atto:toolbar' => '',
-        );
+        if (!empty($toolbar)) {
+            $editoroptions = helper::get_editor_options(null);
+            $editoroptions['atto:toolbar'] = $toolbar;
+        } else {
+            $editoroptions = array(
+                'subdirs' => 0,
+                'maxbytes' => 0,
+                'maxfiles' => 0,
+                'changeformat' => 0,
+                'context' => null,
+                'noclean' => 0,
+                'trusttext' => 0,
+                'enable_filemanagement' => false,
+                'atto:toolbar' => !empty($toolbar) ? $toolbar : '',
+            );
+        }
+
         $styles = array(
             'class' => 'fullwidtheditor',
         );
+        if (!empty($editoroptions['atto:toolbar'])) {
+            $styles['class'] .= ' hastoolbar';
+        } else {
+            $styles['class'] .= ' hasnotoolbar';
+        }
+
         $mform = $this->_form;
         $mform->addElement('simpleeditor', $elementname, $elementlabel, $styles, $editoroptions);
         $mform->setType($elementname, PARAM_RAW);

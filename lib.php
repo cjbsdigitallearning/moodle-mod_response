@@ -153,10 +153,11 @@ function response_delete_instance($id) {
     global $DB;
     // Before we delete it, we need to know what kind of response it was.
     $response = $DB->get_record('response', array('id' => $id));
-    $DB->delete_records('response', array('id' => $id));
 
     $subplugin = helper::instance_factory($response->responsetype, 'configuration');
     $subplugin->delete_instance($id);
+
+    $DB->delete_records('response', array('id' => $id));
 
     return true;
 }
@@ -598,6 +599,10 @@ function mod_response_output_fragment_answer($args) {
     $userwrote = $instance->load_user_information($userid);
     $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : array();
     $data->viewing_own = $userid == $USER->id; // Viewing our own item?
+
+    $data->meta = new stdClass;
+    $data->meta->cm = $cm;
+    $data->meta->context = $context;
 
     $renderer = $PAGE->get_renderer('mod_response');
 

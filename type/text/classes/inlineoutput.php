@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -61,7 +62,16 @@ class inlineoutput extends abstractoutput implements renderable, templatable {
         $data->profile_name = $this->data->user_wrote['first_name'];
         $data->viewing_own = $this->data->viewing_own;
 
-        $data->user_response = helper::clean_text($this->data->response->response_text);
+        $responsetext = $this->data->response->response_text;
+        $responsetext = file_rewrite_pluginfile_urls(
+            $responsetext,
+            'pluginfile.php',
+            context_module::instance($this->data->meta->cm->id)->id,
+            'responsetype_text',
+            'response_text',
+            $this->data->response->response_user_id
+        );
+        $data->user_response = format_text($responsetext);
 
         $dateformat = get_string('strftimedatefullshort', 'langconfig');
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');

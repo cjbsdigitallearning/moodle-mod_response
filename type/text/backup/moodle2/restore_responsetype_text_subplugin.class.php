@@ -36,6 +36,11 @@ defined('MOODLE_INTERNAL') || die();
 class restore_responsetype_text_subplugin extends restore_subplugin {
 
     /**
+     * @var array $responsemappings Defines a mapping of old responses to new responses and back.
+     */
+    protected $responsemappings = [];
+
+    /**
      * Defines the overall structure of the response data for text responses.
      *
      * @return array An array of restore_path_elements to restore
@@ -87,7 +92,14 @@ class restore_responsetype_text_subplugin extends restore_subplugin {
         $new->timesubmitted = $this->apply_date_offset($data['timesubmitted']);
         $new->response_text = $data['response_text'];
 
-        $DB->insert_record('responsetype_text_user', $new);
+        $newid = $DB->insert_record('responsetype_text_user', $new);
+
+        $this->responsemappings['old'][$data['id']] = $newid;
+        $this->responsemappings['new'][$newid] = $data['id'];
+
+        $this->set_mapping('responsetype_text_user_files', $newid, $data['id'], true);
+
+        $this->add_related_files('responsetype_text_user', 'response_text', 'response', null, $data['id']);
     }
 
     /**
@@ -103,8 +115,10 @@ class restore_responsetype_text_subplugin extends restore_subplugin {
         // Since we don't know what order we get the data in, let's recalculate them all now.
         $values = array();
 
-        $parentid = $this->get_new_parentid('response');
-        $result = $DB->get_records('responsetype_text_user', array('response' => $parentid));
+        $oldresponseid = $this->get_old_parentid('response');
+        $newresponseid = $this->get_new_parentid('response');
+
+        $result = $DB->get_records('responsetype_text_user', array('response' => $newresponseid));
         foreach ($result as $responseid => $response) {
             if (!isset($values[$response->userid])) {
                 // We don't have a record for this user already.
@@ -121,10 +135,26 @@ class restore_responsetype_text_subplugin extends restore_subplugin {
                     );
                 }
             }
+
+            $oldid = $this->get_mappingid('responsetype_text_user_files', $responseid);
+
+            // Because we're working around some limitations inside Moodle's backup system...
+            // Specifically, when you have a file attached to a sub-entity of the subplugin
+            // e.g. in this case response -> responsetype_text -> responsetype_text_user
+            // to represent one instance of an answer a user has to a response, it can't
+            // properly handle this. So we have to work around Moodle - when we store the
+            // id, we tag it as responsetext_type_user so backups annotate the ids correctly
+            // and then we have to work around the wrong response id (the parent id itself)
+            // being used for mappings by force-replacing the response mapping and putting it
+            // back afterwards. Sub-plugin backups have a variety of strange behaviours,
+            // this is one of them.
+            $this->set_mapping('response', $oldid, $this->responsemappings['old'][$oldid]);
+            $this->add_related_files('responsetype_text_user', 'response_text', 'response', null, $oldid);
+            $this->set_mapping('response', $oldresponseid, $newresponseid);
         }
 
         foreach ($values as $userid => $response) {
-            $params = array($response['id'], $parentid, $userid);
+            $params = array($response['id'], $newresponseid, $userid);
             $DB->execute('UPDATE {response_user}
                              SET response_identifier = ?
                            WHERE response = ? AND userid = ?', $params);

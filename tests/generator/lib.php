@@ -33,9 +33,30 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_response_generator extends testing_module_generator {
 
+    /**
+     * Create an instance of the response activity in the databae for PHPUnit.
+     *
+     * Types not hinted due to inheritance.
+     *
+     * @param array|stdClass $record The data for creating the activity, as if submitted from the module creation form
+     * @param array $options An array of options passed in that may affect creation of the module.
+     * @return stdClass The entry from the course module's own table (mdl_response) of the created record.
+     */
     public function create_instance($record = null, array $options = null) {
         $record = (object) (array) $record;
 
+        if (!isset($record->responsedisplay)) {
+            $record->responsedisplay = 0;
+        }
+        if (!isset($record->viewownpagedescription)) {
+            $record->viewownpagedescription = 0;
+        }
+        if (!isset($record->caption)) {
+            $record->caption = get_string('shareyourthoughts', 'response');
+        }
+        if (!isset($record->responsecontent)) {
+            $record->responsecontent = ['text' => '', 'format' => FORMAT_HTML];
+        }
         if (!isset($record->timemodified)) {
             $record->timemodified = time();
         }

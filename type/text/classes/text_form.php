@@ -27,6 +27,7 @@ use mod_response\abstractform;
 use stdClass;
 use mod_response\helper;
 use mod_response\completions;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -48,7 +49,13 @@ class text_form extends abstractform {
         $mform = $this->_form;
         $mform->disable_form_change_checker();
 
-        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'));
+        if (!empty($this->_customdata->activity->overrideeditorconfig)) {
+            $toolbar = $this->_customdata->activity->editorconfig;
+        } else {
+            $toolbar = get_config('responsetype_text', 'editorconfig');
+        }
+
+        $this->add_simple_editor('responsetype_text_' . $this->_customdata->id, get_string('youranswer', 'response'), $toolbar);
 
         // Is there a word count prompt on this activity?
         // If so we need to pass the language string to the client and load our counting JS.
@@ -80,6 +87,38 @@ class text_form extends abstractform {
     }
 
     /**
+     * Process the form's data to include plugin files.
+     *
+     * If editing a response, we need to process the HTML for Atto to include the proper references
+     * to files.
+     *
+     * Not typehinted due to inheritance.
+     *
+     * @param array $defaultvalues The values being submitted for the form.
+     * @return void
+     */
+    public function set_data($defaultvalues) {
+
+        // If this is an edit form, we have to edit the existing stuff.
+        if (!empty($this->_customdata->user_responses)) {
+            $existinganswer = reset($this->_customdata->user_responses);
+
+            $draftitemid = file_get_submitted_draft_itemid('responsetype_text_' . $this->_customdata->id);
+            $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
+            $context = context_module::instance($cm->id);
+
+            $element = 'responsetype_text_' . $this->_customdata->id;
+            $defaultvalues[$element]['format'] = FORMAT_HTML;
+            $defaultvalues[$element]['text'] = file_prepare_draft_area($draftitemid, $context->id, 'responsetype_text',
+                'response_text', $existinganswer->response_user_id, helper::get_editor_options($context),
+                $defaultvalues[$element]['text']);
+            $defaultvalues[$element]['itemid'] = $draftitemid;
+        }
+
+        parent::set_data($defaultvalues);
+    }
+
+    /**
      * Handles validation on this step of the form. Mostly because the rule
      * for validating content is more than just 'the field is not empty'.
      *
@@ -92,7 +131,7 @@ class text_form extends abstractform {
 
         if (empty($data['response']) || empty($data['responsetype_text_' . $data['response']])) {
             $errors['responsetype_text'] = get_string('nothingwritten', 'responsetype_text');
-        } else if (!helper::contains_content($data['responsetype_text_' . $data['response']]['text'])) {
+        } else if (!helper::contains_content_or_media($data['responsetype_text_' . $data['response']]['text'])) {
             $errors['responsetype_text'] = get_string('nothingwritten', 'responsetype_text');
         }
 

@@ -24,6 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Upgrade instructions for historical versions of mod_response to current functionality.
+ *
+ * @param string|int $oldversion The currently installed version of the plugin
+ * @return bool True on success
+ */
 function xmldb_response_upgrade($oldversion) {
     global $CFG, $DB;
 

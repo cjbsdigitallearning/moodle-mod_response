@@ -71,7 +71,7 @@ class helper {
      * @param string $text Content to test
      * @return bool True if content exists that isn't whitespace or p tags
      */
-    public static function contains_content($text) {
+    public static function contains_content(string $text) : bool {
         // First, replace all space entities to be actual whitespace, and for good measure bidi characters.
         $entities = array('&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;');
         $text = str_replace($entities, ' ', $text);
@@ -80,6 +80,33 @@ class helper {
         // This way the first step deals with script tags without being naive about it.
         $text = clean_text($text, FORMAT_HTML);
         $text = strip_tags($text);
+
+        // Now remove all spaces.
+        $text = preg_replace('/\s+/i', '', $text);
+
+        // If there's anything left, it's content.
+        return !empty($text);
+    }
+
+    /**
+     * Checks that a given user response is not empty. For this purpose
+     * we're considering responses from the editor which may contain p
+     * tags and we want to ensure that there is still content except them.
+     *
+     * This version allows supporting media objects such as <img> or similar.
+     *
+     * @param string $text Content to test
+     * @return bool True if content exists that isn't whitespace or p tags
+     */
+    public static function contains_content_or_media(string $text) : bool {
+        // First, replace all space entities to be actual whitespace, and for good measure bidi characters.
+        $entities = array('&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;');
+        $text = str_replace($entities, ' ', $text);
+
+        // Now pass it through Moodle's sanitiser and then strip_tags.
+        // This way the first step deals with script tags without being naive about it.
+        $text = clean_text($text, FORMAT_HTML);
+        $text = strip_tags($text, '<img><audio><video>');
 
         // Now remove all spaces.
         $text = preg_replace('/\s+/i', '', $text);

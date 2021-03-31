@@ -30,6 +30,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use context_module;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -65,14 +66,23 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
 
         // If there is no userresponse then these fields won't exist.
         if (isset($this->data->response)) {
-            $data->user_response = helper::clean_text($this->data->response->response_text);
-
             // Export date+time and date to the template in case people want to change it.
             $data->timemodified = $this->data->response->timemodified;
             $dateformat = get_string('strftimedatefullshort', 'langconfig');
             $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');
             $data->timemodified_date = userdate($data->timemodified, $dateformat, 99, false, false);
             $data->timemodified_datetime = userdate($data->timemodified, $datetimeformat, 99, false, false);
+
+            $data->user_response = file_rewrite_pluginfile_urls(
+                $this->data->response->response_text,
+                'pluginfile.php',
+                context_module::instance($this->data->cm_id)->id,
+                'responsetype_text',
+                'response_text',
+                $this->data->response->response_user_id
+            );
+
+            $data->user_response = format_text($data->user_response);
         }
 
         $data->responsetype = $this->data->responsetype;

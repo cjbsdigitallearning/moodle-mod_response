@@ -39,20 +39,27 @@ defined('MOODLE_INTERNAL') || die();
 class simpleeditor extends MoodleQuickForm_editor {
 
     /**
-     * Constructor
+     * Constructor. Type hinting not possible due to LSP compliance rules with parent classes.
      *
      * @param string $elementname (optional) name of the editor
      * @param string $elementlabel (optional) editor label
      * @param array $attributes (optional) Either a typical HTML attribute string
      *              or an associative array
-     * @param array $options set of options to initalize filepicker
+     * @param array $options set of options to initalize filepicker; additionally atto:toolbar is supported
+                    as a key that can be passed in to force the toolbar config.
      */
     public function __construct($elementname = null, $elementlabel = null, $attributes = null, $options = null) {
         global $PAGE;
 
         $this->_options['atto:toolbar'] = '';
+
+        if (is_array($options)) {
+            $this->_options = array_merge($this->_options, $options);
+        }
+
         $this->_options['context'] = context_course::instance($PAGE->course->id);
         $options = $this->_options;
+
         parent::__construct($elementname, $elementlabel, $attributes, $options);
     }
 
