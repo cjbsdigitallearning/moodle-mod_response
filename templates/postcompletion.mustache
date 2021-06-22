@@ -58,13 +58,13 @@
         <div class="profiles all">
             <div class="first-x">
                 {{# people_all }}
-                <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                <a href="#" class="userresponse" data-id="{{{userid}}}" role="button"><img src="{{{picture}}}" alt="{{name}}" title="{{name}}"></a>
                 {{/ people_all }}
             </div>
             {{# number_all_other }}
                 <div class="others hide">
                     {{# people_all_other }}
-                    <img data-id="{{{userid}}}" src="{{{picture}}}" alt="{{name}}" title="{{name}}">
+                    <a href="#" class="userresponse" data-id="{{{userid}}}" role="button"><img src="{{{picture}}}" alt="{{name}}" title="{{name}}"></a>
                     {{/ people_all_other }}
                 </div>
                 <div class="plus-x-others">

@@ -22,7 +22,7 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates'], funct
             });
             $form.find('.card-footer input:last-of-type').trigger('click');
 
-            $form.find('.profiles img').unbind().on('click', function() {
+            $form.find('.profiles .userresponse').unbind().on('click', function() {
                 var contextid = $(this).closest('.card.response').find('form input[name=context]').val();
                 var userid = $(this).data('id');
 
