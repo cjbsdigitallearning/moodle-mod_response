@@ -69,16 +69,15 @@ if ($edit && $canedit) {
 // Set up and show the form.
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
+$PAGE->add_body_class('limitedwidth');
 
 $output = $PAGE->get_renderer('mod_response');
-
 echo $output->header();
 
 // Display any activity information (eg completion requirements / dates).
 $cminfo = cm_info::create($cm);
 $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
 $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
 
 $modinfo = get_fast_modinfo($cm->course, $USER->id);
 $customdata =& $cminfo->customdata;

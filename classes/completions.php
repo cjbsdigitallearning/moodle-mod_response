@@ -124,7 +124,7 @@ class completions {
             $completions->people_all[$userid]->picture = '';
         }
 
-        $fields = user_picture::fields();
+        $fields = implode(',', \core_user\fields::get_picture_fields());
         list ($sql, $params) = $DB->get_in_or_equal($useridlist);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
 
