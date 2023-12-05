@@ -1,6 +1,6 @@
 ---
 include:
-- file: /checkstyle.yml
+- file: /pluginci/pluginci.yml
   project: clients/project-tools/project-scripts
   ref: master
 stages:
