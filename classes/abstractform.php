@@ -74,55 +74,29 @@ abstract class abstractform extends moodleform {
     }
 
     /**
-     * This makes the 'simpleeditor' element available to our forms.
-     */
-    public function initialise_simple_editor() {
-        global $CFG;
-
-        require_once("$CFG->libdir/form/editor.php");
-        \MoodleQuickForm::registerElementType('simpleeditor', "$CFG->libdir/form/editor.php", 'mod_response\\simpleeditor');
-    }
-
-    /**
-     * This adds a simple editor to the form. Primarily we get an Atto
-     * editor instance, which can autosave, but optionally with a subset of formatting.
+     * Add an editor to the form for the user's response.
      *
-     * @param string $elementname Name for the element.
-     * @param string $elementlabel Label for the element.
-     * @param string $toolbar The toolbar to use for this particular instance.
+     * @param string $name The name for this instance of the editor.
+     * @return void
      */
-    public function add_simple_editor(string $elementname, ?string $elementlabel = null, ?string $toolbar = null) {
-        $this->initialise_simple_editor();
-
-        if (!empty($toolbar)) {
-            $editoroptions = helper::get_editor_options(null);
-            $editoroptions['atto:toolbar'] = $toolbar;
-        } else {
-            $editoroptions = array(
-                'subdirs' => 0,
-                'maxbytes' => 0,
-                'maxfiles' => 0,
-                'changeformat' => 0,
-                'context' => null,
-                'noclean' => 0,
-                'trusttext' => 0,
-                'enable_filemanagement' => false,
-                'atto:toolbar' => !empty($toolbar) ? $toolbar : '',
-            );
-        }
-
-        $styles = array(
-            'class' => 'fullwidtheditor',
-        );
-        if (!empty($editoroptions['atto:toolbar'])) {
-            $styles['class'] .= ' hastoolbar';
-        } else {
-            $styles['class'] .= ' hasnotoolbar';
-        }
-
+    public function add_response_editor(string $name): void {
         $mform = $this->_form;
-        $mform->addElement('simpleeditor', $elementname, $elementlabel, $styles, $editoroptions);
-        $mform->setType($elementname, PARAM_RAW);
+        [$course, $cm] = get_course_and_cm_from_instance($this->_customdata->id, 'response');
+
+        $editoroptions = [
+            'maxfiles' => -1,
+            'maxbytes' => $course->maxbytes,
+            'context' => \core\context\module::instance($cm->id),
+            'enable_filemanagement' => true,
+        ];
+        $mform->addElement(
+            'editor',
+            $name,
+            get_string('youranswer', 'response'),
+            ['class' => 'fullwidtheditor'],
+            $editoroptions,
+        );
+        $mform->setType($name, PARAM_RAW);
     }
 
     /**

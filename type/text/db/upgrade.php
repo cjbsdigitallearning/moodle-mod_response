@@ -54,5 +54,28 @@ function xmldb_responsetype_text_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2020090302, 'responsetype', 'text');
     }
 
+    if ($oldversion < 2024091200) {
+
+        // Define field editorconfig to be dropped from responsetype_text.
+        $table = new xmldb_table('responsetype_text');
+        $field = new xmldb_field('editorconfig');
+
+        // Conditionally launch drop field editorconfig.
+        if ($dbmanager->field_exists($table, $field)) {
+            $dbmanager->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('overrideeditorconfig');
+
+        // Conditionally launch drop field overrideeditorconfig.
+        if ($dbmanager->field_exists($table, $field)) {
+            $dbmanager->drop_field($table, $field);
+        }
+
+        // Text savepoint reached.
+        upgrade_plugin_savepoint(true, 2024091200, 'responsetype', 'text');
+    }
+
+
     return true;
 }

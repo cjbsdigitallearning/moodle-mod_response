@@ -51,7 +51,7 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
         $wrapper = new backup_nested_element($this->get_recommended_name());
 
         $settings = new backup_nested_element('responsetype_text_settings', null,
-                                              ['maxwords', 'overrideeditorconfig', 'editorconfig']);
+                                              ['maxwords']);
 
         $settings->set_source_table('responsetype_text', array('response' => backup::VAR_ACTIVITYID));
 
