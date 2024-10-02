@@ -82,9 +82,11 @@ function responsetype_text_pluginfile(stdClass $course,
     $instance->load_activity($response);
     $response->user_responses = $instance->load_response_for_users($response, array($userid, $USER->id));
 
-    // First, did the viewing user complete the activity?
-    if (empty($response->user_responses[$USER->id])) {
-        return false;
+    // First, did the viewing user complete the activity (bypass check for viewall and viewother capabilities)?
+    if (!has_capability('mod/response:viewall', $context) && !has_capability('mod/response:viewother', $context)) {
+        if (empty($response->user_responses[$USER->id])) {
+            return false;
+        }
     }
     // Did the user whose completion is requested complete the activity?
     if (empty($response->user_responses[$userid])) {
@@ -94,6 +96,10 @@ function responsetype_text_pluginfile(stdClass $course,
     // Now, can the user actually see it? This involves verifying peer results etc.
     $cansee = false;
     if ($userid == $USER->id) {
+        $cansee = true;
+    }
+    // View all capabilities can see all.
+    if (has_capability('mod/response:viewall', $context)) {
         $cansee = true;
     }
     $displaypeerresults = (int) $response->displaypeerresults;
