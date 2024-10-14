@@ -1,5 +1,12 @@
 define(['jquery'], function($) {
     // Courtesy of https://github.com/kvz/locutus/blob/master/src/php/strings/strip_tags.js (PHPJS).
+    /**
+     * Strip HTML tags except allowed.
+     *
+     * @param {string} input
+     * @param {string} allowed
+     * @return {*}
+     */
     function strip_tags (input, allowed) {
         allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
 
@@ -11,6 +18,12 @@ define(['jquery'], function($) {
         });
     }
 
+    /**
+     * Convert HTML entities to text.
+     *
+     * @param {string} text
+     * @return {*|jQuery}
+     */
     function html_entity_decode(text) {
         return $('<textarea />').html(text).text();
     }
