@@ -46,6 +46,8 @@ if ($r) {
     $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
 }
 
+$PAGE->set_url('/mod/response/submit.php', array('id' => $cm->id));
+
 $response->going_back = !empty($back);
 $response->going_forward = !empty($forward);
 $response->in_course = !empty($incourse);
@@ -69,8 +71,6 @@ $response->is_editing = false;
 if ($edit && $canedit) {
     $response->is_editing = $edit;
 }
-
-$PAGE->set_url('/mod/response/submit.php', array('id' => $cm->id));
 
 // Work out what stage they're in and what needs to happen.
 $instance = helper::instance_factory($response->responsetype, 'information');

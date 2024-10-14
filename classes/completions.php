@@ -25,9 +25,7 @@
 namespace mod_response;
 use stdClass;
 use user_picture;
-use mod_response\helper;
-
-defined('MOODLE_INTERNAL') || die();
+use core_user\fields;
 
 /**
  * Methods for loading information on completed activities for the user incentivisation aspect of responses.
@@ -124,7 +122,7 @@ class completions {
             $completions->people_all[$userid]->picture = '';
         }
 
-        $fields = user_picture::fields();
+        $fields = implode(',', fields::get_picture_fields());
         list ($sql, $params) = $DB->get_in_or_equal($useridlist);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
 

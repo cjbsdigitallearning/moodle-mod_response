@@ -295,6 +295,10 @@ function response_get_coursemodule_info($cm) {
         $info->extraclasses = 'displayresponseownpage';
     }
 
+    if ($cm->completion == COMPLETION_TRACKING_AUTOMATIC) {
+        $info->customdata->customcompletionrules['requiresubmission'] = $response->requiresubmission;
+    }
+
     return $info;
 }
 
@@ -617,16 +621,17 @@ function mod_response_output_fragment_answer($args) {
  * @return string Rendered HTML for the browser (JS is handled by mutated global state)
  */
 function mod_response_output_fragment_completion($args) {
-    global $PAGE, $DB, $USER, $CFG;
+    global $PAGE, $DB, $USER;
 
     $context = $args['context'];
+    $mode = $args['mode'];
 
     // Work out where we are and get some details going for this.
     if ($context->contextlevel != CONTEXT_MODULE) {
         return null;
     }
     if (!$cm = get_coursemodule_from_id('response', $context->instanceid)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
     $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
 
@@ -637,14 +642,25 @@ function mod_response_output_fragment_completion($args) {
 
     // For the renderer we need a real cm_info instance, not a stdClass.
     $modinfo = get_fast_modinfo($cm->course, $USER->id);
-    $cm = $modinfo->get_cm($cm->id);
-
-    // Time to load the icon and return it.
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    require_once($CFG->libdir . '/completionlib.php');
-    $completion = new completion_info($course);
-
+    $cminfo = $modinfo->get_cm($cm->id);
     $renderer = $PAGE->get_renderer('core', 'course');
-    $icon = $renderer->course_section_cm_completion($course, $completion, $cm, array());
-    return $icon;
+
+    if ($mode === 'page') {
+        $PAGE->set_cm($cminfo);
+        $PAGE->set_activity_record($response);
+        $header = new \core\output\activity_header($PAGE, $USER);
+        $output = $renderer->render($header);
+    } else {
+        $cmoutput = new core_courseformat\output\local\content\cm(
+            course_get_format($cminfo->course),
+            $modinfo->get_section_info($cminfo->sectionnum),
+            $cminfo,
+        );
+
+        $context = $cmoutput->export_for_template($renderer);
+
+        $output = $renderer->render_from_template('core_courseformat/local/content/cm/activity_info', $context->completion);
+    }
+
+    return $output;
 }

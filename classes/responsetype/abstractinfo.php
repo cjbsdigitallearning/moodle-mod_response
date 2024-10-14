@@ -23,10 +23,9 @@
  */
 
 namespace mod_response\responsetype;
-use mod_response\helper;
-use coding_exception;
+
 use stdClass;
-use user_picture;
+use core_user\fields;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -268,9 +267,9 @@ abstract class abstractinfo {
         }
 
         $users = array();
-        $fields = user_picture::fields();
+        $fields = fields::get_picture_fields();
         list ($sql, $params) = $DB->get_in_or_equal($userids);
-        $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
+        $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', implode(',', $fields));
 
         $users = array();
         foreach ($records as $id => $record) {
