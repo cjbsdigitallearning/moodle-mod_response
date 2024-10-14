@@ -66,7 +66,10 @@ class postcompletion extends abstractform {
             $mform->addElement('hidden', 'context', $this->_customdata->context->id);
             $mform->setType('context', PARAM_INT);
 
-            if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP && $completions->people_group) {
+            if (
+                ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP && $completions->people_group)
+                && $displaypeerresults & RESPONSE_PEER_RESULTS_ALL
+            ) {
                 $submitarea[] = &$mform->createElement('submit', 'response' . $this->_customdata->context->id . 'group',
                     get_string('togglepeerresultsgroup', 'response'), ['data-completion' => 'group']);
             }

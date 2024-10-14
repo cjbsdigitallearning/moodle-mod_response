@@ -127,7 +127,7 @@ Feature: Students should see others' responses, filtered by group or not
     And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
     And "All" "button" should not be visible
-    And "Group" "button" should be visible
+    And "Group" "button" should not be visible
     And I log out
     And I log in as "student3"
     And I am on "Course 1" course homepage
@@ -167,7 +167,6 @@ Feature: Students should see others' responses, filtered by group or not
     And I log out
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I click on "Group" "button"
     Then ".group" "css_element" in the "div.display-completion" "css_element" should be visible
     And ".all" "css_element" in the "div.display-completion" "css_element" should not be visible
     And "img[title='Student 1']" "css_element" in the "div.display-completion .group" "css_element" should be visible
