@@ -6,8 +6,8 @@ Feature: Users should be able to edit their answers if permitted
 
   Background:
     Given the following "courses" exist:
-      | fullname | shortname | category | groupmode |
-      | Course 1 | C1 | 0 | 1 |
+      | fullname | shortname | category | groupmode | enablecompletion |
+      | Course 1 | C1        | 0        | 1         | 1                |
     And the following "users" exist:
       | username | firstname | lastname | email |
       | teacher1 | Teacher | 1 | teacher1@example.com |
@@ -16,25 +16,18 @@ Feature: Users should be able to edit their answers if permitted
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I navigate to "Edit settings" in current page administration
-    And I set the following fields to these values:
-      | Enable completion tracking | Yes |
-    And I press "Save and display"
-    And I add a "Response" to section "1"
-    And I set the following fields to these values:
+    And I am on the "C1" "course" page logged in as "teacher1"
+    And I turn editing mode on
+    And I add a "Response" to section "1" and I fill the form with:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-    And I press "Save and return to course"
     And I log out
 
   @javascript
   Scenario: Student cannot edit their answer.
-    When I log in as "student1"
-    And I am on "Course 1" course homepage
+    When I am on the "C1" "course" page logged in as "student1"
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
@@ -45,14 +38,13 @@ Feature: Users should be able to edit their answers if permitted
     When the following "permission overrides" exist:
       | capability | permission | role | contextlevel | reference |
       | mod/response:editown | Allow | student | Course | C1 |
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
+    And I am on the "C1" "course" page logged in as "student1"
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
     Then I should see "Edit response"
     And I follow "Edit response"
-    And I should see "It is overcast and bleak outside."
+    And the field "Your answer" matches value "It is overcast and bleak outside."
     And I set the field "Your answer" to "It was bleak earlier but is brighter now."
     And I press "Submit"
     And I should see "You wrote"
