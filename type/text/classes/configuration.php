@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - text subplugin.
- *
- * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\text;
 
 use admin_setting_configtext;
@@ -34,8 +26,6 @@ use mod_response\helper;
 use mod_response\responsetype\abstractconfig;
 use MoodleQuickForm;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines everything for showing, loading and saving config for text in response activities.
@@ -57,8 +47,8 @@ class configuration extends abstractconfig {
     public function add_elements(MoodleQuickForm &$mform) {
         $responseconfig = get_config('responsetype_text');
 
-        $maxwords = array();
-        $maxwords[] = $mform->createElement('text', 'text_maximumwords', '', array('size' => '6', 'maxlength' => '6'));
+        $maxwords = [];
+        $maxwords[] = $mform->createElement('text', 'text_maximumwords', '', ['size' => '6', 'maxlength' => '6']);
         $maxwords[] = $mform->createElement('checkbox', 'text_maximumwords_enabled', '', get_string('enable'));
         $mform->addGroup($maxwords, 'text_maximumwords_group', get_string('maximumwords', 'response'), ' ', false);
         $mform->setType('text_maximumwords', PARAM_INT);
@@ -173,7 +163,7 @@ class configuration extends abstractconfig {
         global $DB;
 
         // Before we can update, we need to get the row ID first.
-        $response = $DB->get_record('responsetype_text', array('response' => $moduleinstance->instance));
+        $response = $DB->get_record('responsetype_text', ['response' => $moduleinstance->instance]);
 
         $updatedinstance = new stdClass();
         $updatedinstance->id = $response->id;
@@ -195,7 +185,7 @@ class configuration extends abstractconfig {
     public function delete_instance($id) {
         global $DB;
 
-        $DB->delete_records('responsetype_text', array('response' => $id));
+        $DB->delete_records('responsetype_text', ['response' => $id]);
 
         $userresponses = $DB->get_records('responsetype_text_user', ['response' => $id]);
         $DB->delete_records('responsetype_text_user', ['response' => $id]);
@@ -218,10 +208,10 @@ class configuration extends abstractconfig {
      * @return array object An array of admin_setting* objects
      */
     public function get_default_settings() {
-        return array(
+        return [
             new admin_setting_configtext('responsetype_text/defaultwords', get_string('maximumwords', 'response'),
                                          get_string('maximumwords_default', 'responsetype_text'), 0, PARAM_INT),
-        );
+        ];
     }
 
     /**
@@ -233,18 +223,18 @@ class configuration extends abstractconfig {
      * @return bool True on success
      * @throws InvalidArgumentException on failure; language string for error is the exception message.
      */
-    protected function validate_atto_config(string $config) : bool {
+    protected function validate_atto_config(string $config): bool {
 
         $lines = explode("\n", $config);
-        $groups = array();
-        $plugins = array();
+        $groups = [];
+        $plugins = [];
 
         foreach ($lines as $line) {
             if (!trim($line)) {
                 continue;
             }
 
-            $matches = array();
+            $matches = [];
             if (!preg_match('/^\s*([a-z0-9]+)\s*=\s*([a-z0-9]+(\s*,\s*[a-z0-9]+)*)+\s*$/', $line, $matches)) {
                 throw new InvalidArgumentException(get_string('errorcannotparseline', 'editor_atto', $line));
             }

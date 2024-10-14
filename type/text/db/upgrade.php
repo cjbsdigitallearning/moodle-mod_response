@@ -17,18 +17,13 @@
 /**
  * Upgrade code for responsetype_text
  *
- * @package   responsetype_text
- * @copyright 2020 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Stub for upgrade code
+ * @package   responsetype_text
+ * @copyright 2020 Catalyst IT Europe Ltd.
+ * @author 2020 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @param int $oldversion
  * @return bool
- */
+ * */
 function xmldb_responsetype_text_upgrade($oldversion) {
     global $CFG, $DB;
 
@@ -75,7 +70,6 @@ function xmldb_responsetype_text_upgrade($oldversion) {
         // Text savepoint reached.
         upgrade_plugin_savepoint(true, 2024091200, 'responsetype', 'text');
     }
-
 
     return true;
 }

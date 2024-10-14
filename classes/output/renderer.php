@@ -14,21 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Rendering a response activity.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\output;
 
 use context_module;
 use plugin_renderer_base;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Rendering a response activity.
@@ -127,21 +117,21 @@ class renderer extends plugin_renderer_base {
      */
     public function render_postcompletion($completion) {
         $data = new stdClass();
-        $data->people_all = !empty($completion->people_all) ? array_values($completion->people_all) : array();
+        $data->people_all = !empty($completion->people_all) ? array_values($completion->people_all) : [];
         $data->number_all = count($data->people_all);
-        $data->people_group = !empty($completion->people_group) ? array_values($completion->people_group) : array();
+        $data->people_group = !empty($completion->people_group) ? array_values($completion->people_group) : [];
         $data->number_group = count($data->people_group);
         $data->response_id = $completion->response_id;
 
         $data->number_all_other = 0;
         if ($data->number_all) {
-            $data->people_all_other = !empty($completion->people_all_other) ? $completion->people_all_other : array();
+            $data->people_all_other = !empty($completion->people_all_other) ? $completion->people_all_other : [];
             $data->number_all_other = count($data->people_all_other);
         }
 
         $data->number_group_other = 0;
         if ($data->number_group) {
-            $data->people_group_other = !empty($completion->people_group_other) ? $completion->people_group_other : array();
+            $data->people_group_other = !empty($completion->people_group_other) ? $completion->people_group_other : [];
             $data->number_group_other = count($data->people_group_other);
         }
 
@@ -206,7 +196,7 @@ class renderer extends plugin_renderer_base {
         $data->can_see_all = !empty($cm->customdata->can_see_all);
         $data->viewall_url = !empty($cm->customdata->viewall_url) ? $cm->customdata->viewall_url : '';
 
-        $data->summary_url = new \moodle_url('mod/response/index.php', array('id' => $rawdata->course));
+        $data->summary_url = new \moodle_url('mod/response/index.php', ['id' => $rawdata->course]);
 
         return parent::render_from_template('response/courseinline', $data);
     }

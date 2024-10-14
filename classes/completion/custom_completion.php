@@ -48,7 +48,7 @@ class custom_completion extends activity_custom_completion {
 
         $status = false;
         if ($rule === 'requiresubmission') {
-            $responseuser = $DB->get_record('response_user', array('response' => $response->id, 'userid' => $userid));
+            $responseuser = $DB->get_record('response_user', ['response' => $response->id, 'userid' => $userid]);
             if (!empty($responseuser) && !empty($responseuser->timecompleted)) {
                 // If we did get a record, and it has a non-empty completion time, we must have completed this activity.
                 $status = true;

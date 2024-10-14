@@ -30,10 +30,10 @@ require_once($CFG->libdir.'/completionlib.php');
 
 $id = required_param('id', PARAM_INT); // Course ID.
 
-$PAGE->set_url('/mod/response/index.php', array('id' => $id));
+$PAGE->set_url('/mod/response/index.php', ['id' => $id]);
 
-if (!$course = $DB->get_record("course", array("id" => $id))) {
-    print_error('invalidcourseid');
+if (!$course = $DB->get_record("course", ["id" => $id])) {
+    throw new moodle_exception('invalidcourseid', 'error');
 }
 
 require_login($course);
@@ -57,7 +57,7 @@ if (empty($responses)) {
     die;
 }
 
-$responselist = array();
+$responselist = [];
 
 // Create an object to store the items that don't have a response yet.
 $noresponseobj = (object) [
@@ -71,7 +71,7 @@ if (course_format_uses_sections($course->format)) {
         if (!isset($responselist[$response->section])) {
             $responselist[$response->section] = new stdClass();
             $responselist[$response->section]->section_title = get_section_name($course, $response->section);
-            $responselist[$response->section]->responses = array();
+            $responselist[$response->section]->responses = [];
         }
         $activity = get_response_data($course, $response, $USER->id);
         if (isset($activity->response)) {
@@ -84,7 +84,7 @@ if (course_format_uses_sections($course->format)) {
     // No sections here, so present it flat.
     $responselist[] = new stdClass();
     $responselist[0]->section_title = '';
-    $responselist[0]->responses = array();
+    $responselist[0]->responses = [];
     foreach ($responses as $response) {
         $activity = get_response_data($course, $response, $USER->id);
         if (isset($activity->response)) {
@@ -140,7 +140,7 @@ function get_response_data($course, $response, $userid, $renderer = null) {
 
     // Determine if the user has responded.
     // We actually can't rely on completion status if it wasn't tracked by the completion system, so use ours.
-    $response->user_responses = $instance->load_response_for_users($response, array($userid));
+    $response->user_responses = $instance->load_response_for_users($response, [$userid]);
     if (!empty($response->user_responses[$userid]) || !empty($response->user_responses[$userid]->timecompleted)) {
         $return->response = $response->user_responses[$userid];
     }
@@ -167,7 +167,7 @@ function get_response_data($course, $response, $userid, $renderer = null) {
     $return->displaypeerresults = $response->displaypeerresults;
     $return->icon = new pix_icon('icon', '', 'responsetype_' . $response->responsetype);
 
-    $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', array($return, $instance));
+    $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);
     $return->render = $renderer->render($renderable);
 
     return $return;

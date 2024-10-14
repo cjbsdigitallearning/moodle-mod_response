@@ -23,8 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Structure step to restore one response activity.
  *
@@ -41,7 +39,7 @@ class restore_response_activity_structure_step extends restore_activity_structur
      * @return array An array of restore_path_elements to restore
      */
     protected function define_structure() {
-        $paths = array();
+        $paths = [];
 
         // Setting out the structure for responses in general.
         $userinfo = $this->get_setting_value('userinfo');

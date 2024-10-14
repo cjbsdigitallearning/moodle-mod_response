@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Rendering for the summary of response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\responsetype\abstractoutput;
 use stdClass;
@@ -30,8 +22,6 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Creates a renderer for summary of a course's activitities.
@@ -88,20 +78,20 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
                 $data->context_link->set_anchor('module-' . $this->data->cm_id);
             }
         } else {
-            $data->context_link = new moodle_url('/mod/response/view.php', array('id' => $this->data->cm_id));
+            $data->context_link = new moodle_url('/mod/response/view.php', ['id' => $this->data->cm_id]);
         }
 
         $aggregate = [];
         if (!empty($this->data->aggregate)) {
             $aggregate = new stdClass();
-            foreach (array('group', 'all') as $set) {
+            foreach (['group', 'all'] as $set) {
                 if (empty($this->data->aggregate->$set)) {
                     continue;
                 }
                 $aggregate->$set = new stdClass();
                 $aggregate->$set->title = get_string('aggregate_title_' . $set, 'responsetype_poll');
-                $aggregate->$set->labels = array();
-                $aggregate->$set->data = array();
+                $aggregate->$set->labels = [];
+                $aggregate->$set->data = [];
                 foreach ($this->data->activity->poll_choices as $choicenum => $choice) {
                     $aggregate->$set->labels[] = $choice->choice;
                     $amount = 0;

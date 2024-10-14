@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Rendering for the summary of response activity - text subplugin.
- *
- * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\text;
 use mod_response\responsetype\abstractoutput;
 use stdClass;
@@ -31,8 +23,6 @@ use templatable;
 use mod_response\helper;
 use moodle_url;
 use context_module;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Creates a renderer for summary of a course's activitities.
@@ -94,7 +84,7 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
                 $data->context_link->set_anchor('module-' . $this->data->cm_id);
             }
         } else {
-            $data->context_link = new moodle_url('/mod/response/view.php', array('id' => $this->data->cm_id));
+            $data->context_link = new moodle_url('/mod/response/view.php', ['id' => $this->data->cm_id]);
         }
 
         return $data;

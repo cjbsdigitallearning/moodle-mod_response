@@ -14,22 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - text subplugin.
- *
- * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\text;
 use mod_response\abstractform;
 use stdClass;
 use mod_response\helper;
 use mod_response\completions;
 use context_module;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the form required for handling a text response.
@@ -72,12 +62,12 @@ class text_form extends abstractform {
             $mform->setType('editing', PARAM_INT);
         }
 
-        $submitarea = array();
+        $submitarea = [];
 
         $this->add_precomplete_completion($USER->id, $submitarea);
 
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));
-        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
+        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
     }
 
     /**

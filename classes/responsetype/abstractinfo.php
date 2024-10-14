@@ -14,20 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Generic configuration API for response activity subplugins.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\responsetype;
 
 use stdClass;
 use core_user\fields;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the response information API that subplugins are expected to follow.
@@ -69,7 +59,7 @@ abstract class abstractinfo {
      * @return array Array of responses, user id -> that users' most recent response.
      */
     public function load_response_for_users($instance, $users, $completedonly = false, $getuserinfo = false) {
-        return array();
+        return [];
     }
 
     /**
@@ -105,7 +95,7 @@ abstract class abstractinfo {
      * @return array An array of all responses, key by user id, ordered completion date ascending.
      */
     public function load_all_responses($response) {
-        return array();
+        return [];
     }
 
     /**
@@ -182,7 +172,7 @@ abstract class abstractinfo {
         global $DB;
 
         // Does this already exist?
-        $existing = $DB->get_record('response_user', array('response' => $response, 'userid' => $userid));
+        $existing = $DB->get_record('response_user', ['response' => $response, 'userid' => $userid]);
         if (!empty($existing)) {
             $existing->response_identifier = $responseidentifier;
             $existing->timemodified = time();
@@ -263,21 +253,21 @@ abstract class abstractinfo {
 
         $userids = $this->sanitise_int_array($userids, false);
         if (empty($userids)) {
-            return array();
+            return [];
         }
 
-        $users = array();
+        $users = [];
         $fields = fields::get_picture_fields();
         list ($sql, $params) = $DB->get_in_or_equal($userids);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', implode(',', $fields));
 
-        $users = array();
+        $users = [];
         foreach ($records as $id => $record) {
-            $users[$id] = array(
-                'picture' => $OUTPUT->user_picture($record, array('size' => 50, 'class' => 'profilepicture')),
+            $users[$id] = [
+                'picture' => $OUTPUT->user_picture($record, ['size' => 50, 'class' => 'profilepicture']),
                 'first_name' => $record->firstname,
                 'last_name' => $record->lastname,
-            );
+            ];
         }
         return $users;
     }

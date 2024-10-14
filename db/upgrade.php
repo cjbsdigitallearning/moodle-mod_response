@@ -15,20 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
- *
- * @package   mod_response
- * @copyright 2019 Matt Whelan <matt.whelan@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die;
-
-/**
  * Upgrade instructions for historical versions of mod_response to current functionality.
  *
  * @param string|int $oldversion The currently installed version of the plugin
  * @return bool True on success
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_response
+ * @author 2019 Matt Whelan <matt.whelan@catalyst-eu.net>
+ * @copyright 2019 Catalyst IT Europe Ltd.
  */
 function xmldb_response_upgrade($oldversion) {
     global $CFG, $DB;

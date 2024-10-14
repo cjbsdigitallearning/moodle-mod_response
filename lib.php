@@ -24,8 +24,6 @@
 
 use mod_response\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 // These values are potentially combined when in the database.
 define('RESPONSE_PEER_RESULTS_GROUP', 0x01);
 define('RESPONSE_PEER_RESULTS_ALL', 0x02);
@@ -71,7 +69,7 @@ function response_add_instance($moduleinstance, $mform = null) {
 
     // Add any files added to WYSIWYG editor.
     // Done after insert_record as we need an id for the context.
-    if ($mform and !empty($moduleinstance->page['itemid'])) {
+    if ($mform && !empty($moduleinstance->page['itemid'])) {
         $cmid = $moduleinstance->coursemodule;
         $DB->set_field('course_modules', 'instance', $newinstance->id, ['id' => $cmid]);
         $context = context_module::instance($cmid);
@@ -152,12 +150,12 @@ function response_update_instance($moduleinstance, $mform = null) {
 function response_delete_instance($id) {
     global $DB;
     // Before we delete it, we need to know what kind of response it was.
-    $response = $DB->get_record('response', array('id' => $id));
+    $response = $DB->get_record('response', ['id' => $id]);
 
     $subplugin = helper::instance_factory($response->responsetype, 'configuration');
     $subplugin->delete_instance($id);
 
-    $DB->delete_records('response', array('id' => $id));
+    $DB->delete_records('response', ['id' => $id]);
 
     return true;
 }
@@ -174,14 +172,14 @@ function response_delete_instance($id) {
 function response_get_completion_state($course, $cm, $userid, $type) {
     global $DB;
 
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 
     if (!$response->requiresubmission) {
         // The student does not need to submit anything.
         return $type;
     }
 
-    $resourceuser = $DB->get_record('response_user', array('response' => $cm->instance, 'userid' => $userid));
+    $resourceuser = $DB->get_record('response_user', ['response' => $cm->instance, 'userid' => $userid]);
     if (!empty($resourceuser) && !empty($resourceuser->timecompleted)) {
         // If we did get a record, and it has a non-empty completion time, we must have completed this activity.
         return true;
@@ -203,8 +201,8 @@ function response_delete_response($course, $cm, $userid) {
     global $DB, $CFG;
 
     // Delete the record of it in the response table... after loading a copy for reference.
-    $response = $DB->get_record('response', array('id' => $cm->instance));
-    $DB->delete_records('response_user', array('response' => $response->id, 'userid' => $userid));
+    $response = $DB->get_record('response', ['id' => $cm->instance]);
+    $DB->delete_records('response_user', ['response' => $response->id, 'userid' => $userid]);
 
     // Pass it out to subplugins.
     $subplugin = helper::instance_factory($response->responsetype, 'information');
@@ -235,7 +233,7 @@ function response_delete_response($course, $cm, $userid) {
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
  */
-function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
 
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
@@ -265,7 +263,7 @@ function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 function response_get_coursemodule_info($cm) {
     global $DB;
 
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 
     $info = new cached_cm_info();
     $info->name = $response->name;
@@ -345,7 +343,7 @@ function response_cm_info_view(cm_info $cm) {
 
     // Before we go any further, we need to work out if the user has completed this instance.
     $instance = helper::instance_factory($customdata->responsetype, 'information');
-    $usercompletion = $instance->load_response_for_users($customdata, array($USER->id));
+    $usercompletion = $instance->load_response_for_users($customdata, [$USER->id]);
     $customdata->user_responses = $usercompletion;
 
     $renderer = $PAGE->get_renderer('mod_response');
@@ -382,7 +380,7 @@ function response_cm_info_view(cm_info $cm) {
             $customdata->postcompletion = new mod_response\postcompletion($PAGE->url, $responseclone);
         }
 
-        $renderable = helper::instance_factory($customdata->responsetype, 'output', array($customdata, $instance));
+        $renderable = helper::instance_factory($customdata->responsetype, 'output', [$customdata, $instance]);
         $data->user_answer = $renderer->render($renderable);
     }
 
@@ -428,7 +426,7 @@ function mod_response_output_fragment_form($args) {
     // We receive arbitrary arrays here, except... they're flattened in transit by JSON.stringify.
     // So we need to convert "var[x]" into a real array item into $args... regardless of depth or nesting.
     foreach ($json as $k => $v) {
-        $var = array();
+        $var = [];
         parse_str($k . '=' . $v, $var);
         $args = array_replace_recursive($args, $var);
     }
@@ -441,15 +439,15 @@ function mod_response_output_fragment_form($args) {
     $editing = isset($args['editing']) ? (int) $args['editing'] : 0; // Whether editing or not.
 
     if ($r) {
-        if (!$response = $DB->get_record('response', array('id' => $r))) {
-            print_error('invalidaccessparameter');
+        if (!$response = $DB->get_record('response', ['id' => $r])) {
+            throw new moodle_exception('invalidaccessparameter', 'error');
         }
         $cm = get_coursemodule_from_instance('response', $response->id, $response->course, false, MUST_EXIST);
     } else {
         if (!$cm = get_coursemodule_from_id('response', $id)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'error');
         }
-        $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+        $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
     }
 
     $response->cm = $cm;
@@ -457,7 +455,7 @@ function mod_response_output_fragment_form($args) {
     $response->going_forward = !empty($forward);
     $response->in_course = false;
 
-    $response->standalone_url = new moodle_url('/mod/response/view.php', array('id' => $cm->id));
+    $response->standalone_url = new moodle_url('/mod/response/view.php', ['id' => $cm->id]);
 
     $context = context_module::instance($cm->id);
     require_capability('mod/response:participate', $context);
@@ -466,13 +464,13 @@ function mod_response_output_fragment_form($args) {
 
     $instance = helper::instance_factory($response->responsetype, 'information');
     $instance->load_activity($response);
-    $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
+    $response->user_responses = $instance->load_response_for_users($response, [$USER->id]);
 
     // Before we pass everything to the form, clean out the context because that breaks the form system otherwise.
     $argsclone = $args;
     unset ($argsclone['context']);
     unset ($argsclone['editing']);
-    $PAGE->set_url(new moodle_url('/course/view.php', array('id' => $cm->course)));
+    $PAGE->set_url(new moodle_url('/course/view.php', ['id' => $cm->course]));
     $instance->load_form($response, $USER->id, $argsclone);
 
     $output = $PAGE->get_renderer('mod_response');
@@ -495,17 +493,17 @@ function mod_response_output_fragment_form($args) {
             // Notify the completion system.
             require_once($CFG->libdir . '/completionlib.php');
 
-            $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+            $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
             $completion = new completion_info($course);
             if ($completion->is_enabled($cm) && $response->requiresubmission) {
                 $completion->update_state($cm, COMPLETION_COMPLETE);
-                $PAGE->requires->js_call_amd('mod_response/completionstatus', 'init', array($contextid));
+                $PAGE->requires->js_call_amd('mod_response/completionstatus', 'init', [$contextid]);
             }
         }
 
         // Force a reload of whatever form state.
         $response->form = false;
-        $response->user_responses = $instance->load_response_for_users($response, array($USER->id));
+        $response->user_responses = $instance->load_response_for_users($response, [$USER->id]);
         $instance->load_form($response, $USER->id);
         if (!empty($response->user_responses[$USER->id]->timecompleted)) {
             $instance->load_aggregate_data($response, $USER->id);
@@ -528,7 +526,7 @@ function mod_response_output_fragment_form($args) {
     $response->contextid = $context->id;
 
     // Return whatever view we have on the data.
-    $renderable = helper::instance_factory($response->responsetype, 'output', array($response, $instance));
+    $renderable = helper::instance_factory($response->responsetype, 'output', [$response, $instance]);
     return $output->render($renderable);
 }
 
@@ -548,30 +546,30 @@ function mod_response_output_fragment_answer($args) {
         return null;
     }
     if (!$cm = get_coursemodule_from_id('response', $context->instanceid)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
     require_capability('mod/response:participate', $context);
     require_capability('mod/response:viewother', $context);
 
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 
     $userid = !empty($args['userid']) ? (int) $args['userid'] : 0;
     if (empty($userid)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
 
     // Now we need to verify the user could conceivably could see these answers.
     $instance = helper::instance_factory($response->responsetype, 'information');
     $instance->load_activity($response);
-    $response->user_responses = $instance->load_response_for_users($response, array($userid, $USER->id));
+    $response->user_responses = $instance->load_response_for_users($response, [$userid, $USER->id]);
 
     // First, did the viewing user complete the activity?
     if (empty($response->user_responses[$USER->id])) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
     // Did the user whose completion is requested complete the activity?
     if (empty($response->user_responses[$userid])) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
 
     // Now, can the user actually see it? This involves verifying peer results etc.
@@ -591,7 +589,7 @@ function mod_response_output_fragment_answer($args) {
         }
     }
     if (!$cansee) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
 
     // If we're here, we can see the response.
@@ -601,7 +599,7 @@ function mod_response_output_fragment_answer($args) {
     unset ($data->user_responses);
 
     $userwrote = $instance->load_user_information($userid);
-    $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : array();
+    $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : [];
     $data->viewing_own = $userid == $USER->id; // Viewing our own item?
 
     $data->meta = new stdClass;
@@ -610,7 +608,7 @@ function mod_response_output_fragment_answer($args) {
 
     $renderer = $PAGE->get_renderer('mod_response');
 
-    $renderable = helper::instance_factory($response->responsetype, 'inlineoutput', array($data, $instance));
+    $renderable = helper::instance_factory($response->responsetype, 'inlineoutput', [$data, $instance]);
     return $renderer->render($renderable);
 }
 
@@ -633,7 +631,7 @@ function mod_response_output_fragment_completion($args) {
     if (!$cm = get_coursemodule_from_id('response', $context->instanceid)) {
         throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 
     // This module has no completion criteria set.
     if (!$response->requiresubmission) {

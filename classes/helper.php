@@ -14,22 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * This file contains a helper class for response activities.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response;
 use core_component;
 use coding_exception;
 use stdClass;
 use ReflectionClass;
 use moodle_url;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Helpers for mod_response; essentially an autoloadable version of locallib.php.
@@ -52,8 +42,8 @@ class helper {
         // First, convert lists into something useful if somehow we got one.
         $text = str_replace('</li>', '<br />', $text);
         $text = str_replace('<li>', '', $text);
-        $text = str_replace(array('<ul>', '<ol>'), '<p>', $text);
-        $text = str_replace(array('</ul>', '</ol>'), '</p>', $text);
+        $text = str_replace(['<ul>', '<ol>'], '<p>', $text);
+        $text = str_replace(['</ul>', '</ol>'], '</p>', $text);
         // Strip the rest of the formatting.
         $text = strip_tags(clean_text($text, FORMAT_HTML), '<p><br>');
         // Clean house on weird circumstances; Atto can oddly nest P tags, for example.
@@ -71,9 +61,9 @@ class helper {
      * @param string $text Content to test
      * @return bool True if content exists that isn't whitespace or p tags
      */
-    public static function contains_content(string $text) : bool {
+    public static function contains_content(string $text): bool {
         // First, replace all space entities to be actual whitespace, and for good measure bidi characters.
-        $entities = array('&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;');
+        $entities = ['&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;'];
         $text = str_replace($entities, ' ', $text);
 
         // Now pass it through Moodle's sanitiser and then strip_tags.
@@ -98,9 +88,9 @@ class helper {
      * @param string $text Content to test
      * @return bool True if content exists that isn't whitespace or p tags
      */
-    public static function contains_content_or_media(string $text) : bool {
+    public static function contains_content_or_media(string $text): bool {
         // First, replace all space entities to be actual whitespace, and for good measure bidi characters.
-        $entities = array('&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;');
+        $entities = ['&nbsp;', '&ensp;', '$emsp;', '&thinsp;', '&zwnj;', '&zwj;', '&lrm;', '&rlm;'];
         $text = str_replace($entities, ' ', $text);
 
         // Now pass it through Moodle's sanitiser and then strip_tags.
@@ -122,7 +112,7 @@ class helper {
      * @return array Details of known subplugins
      */
     public static function get_type_subplugins() {
-        $subplugins = array();
+        $subplugins = [];
         $subpluginlist = core_component::get_plugin_list('responsetype');
         foreach ($subpluginlist as $name => $path) {
 
@@ -186,7 +176,7 @@ class helper {
     public static function package_modform_data($moduleinstance) {
         $newinstance = new stdClass();
 
-        $fields = array('course',
+        $fields = ['course',
                         'name',
                         'intro',
                         'introformat',
@@ -196,7 +186,7 @@ class helper {
                         'question',
                         'displaycompletion',
                         'caption',
-                    );
+                    ];
 
         foreach ($fields as $field) {
             $newinstance->$field = $moduleinstance->$field;
@@ -242,7 +232,7 @@ class helper {
             'changeformat' => true,
             'context' => $context,
             'noclean' => true,
-            'trusttext' => false
+            'trusttext' => false,
         ];
 
         return $editoroptions;
@@ -256,13 +246,13 @@ class helper {
      * @return array List of completion visibility options.
      */
     public static function display_completion_options() {
-        return array(
+        return [
             'full' => get_string('displaycompletionfull', 'response'),
             'fullgrp' => get_string('displaycompletionfullgroup', 'response'),
             'number' => get_string('displaycompletionnumber', 'response'),
             'numbergrp' => get_string('displaycompletionnumbergroup', 'response'),
             'none' => get_string('displaycompletionnone', 'response'),
-        );
+        ];
     }
 
     /**
@@ -273,10 +263,10 @@ class helper {
      * @return array List of peer toggle options.
      */
     public static function peer_result_options() {
-        return array(
+        return [
             'studygroup' => get_string('togglepeerresultsstudygroup', 'response'),
             'all' => get_string('togglepeerresultsall', 'response'),
-        );
+        ];
     }
 
     /**
@@ -289,13 +279,13 @@ class helper {
      */
     public static function get_users_in_same_group($id, $userid = null) {
         if (empty($id) || empty($userid)) {
-            return array();
+            return [];
         }
 
         // Now, figure out which groups the user is in.
         $cm = get_coursemodule_from_instance('response', $id, 0, false, MUST_EXIST);
         $groups = groups_get_user_groups($cm->course, $userid);
-        $groupmembers = array();
+        $groupmembers = [];
         if (!empty($groups)) {
             foreach ($groups as $grouping) {
                 foreach ($grouping as $group) {
@@ -304,7 +294,7 @@ class helper {
             }
         }
         // Having worked out which people are in the same groups the user is, flatten it down.
-        $memberlist = array();
+        $memberlist = [];
         foreach ($groupmembers as $memberid) {
             $memberlist[] = $memberid->id;
         }
@@ -330,7 +320,7 @@ class helper {
             $response->can_delete = has_capability('mod/response:deleteown', $context);
         }
         if ($response->can_delete) {
-            $response->delete_url = new moodle_url('/mod/response/deleteanswer.php', array('id' => $cm->id, 'u' => $USER->id));
+            $response->delete_url = new moodle_url('/mod/response/deleteanswer.php', ['id' => $cm->id, 'u' => $USER->id]);
         }
     }
 
@@ -346,7 +336,7 @@ class helper {
         $response->can_see_all = false;
         if (has_capability('mod/response:viewall', $context)) {
             $response->can_see_all = true;
-            $response->viewall_url = new moodle_url('/mod/response/viewall.php', array('id' => $cm->id));
+            $response->viewall_url = new moodle_url('/mod/response/viewall.php', ['id' => $cm->id]);
         }
     }
 
@@ -365,7 +355,7 @@ class helper {
             $response->can_edit = has_capability('mod/response:editown', $context);
         }
         if ($response->can_edit) {
-            $response->edit_url = new moodle_url('/mod/response/view.php', array('id' => $cm->id, 'editing' => 1));
+            $response->edit_url = new moodle_url('/mod/response/view.php', ['id' => $cm->id, 'editing' => 1]);
         }
     }
 }

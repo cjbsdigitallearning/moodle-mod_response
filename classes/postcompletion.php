@@ -14,19 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Container form for completion status.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response;
 use mod_response\abstractform;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the form required for handling showing completions in an activity.
@@ -52,7 +42,7 @@ class postcompletion extends abstractform {
         $mform = $this->_form;
         $mform->disable_form_change_checker();
 
-        $submitarea = array();
+        $submitarea = [];
 
         $displaypeerresults = (int) $this->_customdata->displaypeerresults;
 
@@ -74,7 +64,7 @@ class postcompletion extends abstractform {
                     get_string('togglepeerresultsgroup', 'response'), ['data-completion' => 'group']);
             }
 
-            $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
+            $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
         }
     }
 }

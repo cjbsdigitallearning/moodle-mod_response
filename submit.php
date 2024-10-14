@@ -35,27 +35,27 @@ $incourse = optional_param('incourse', 0, PARAM_INT); // Whether to return to co
 $edit = optional_param('editing', 0, PARAM_INT); // Whether editing or not, and which step through the activity.
 
 if ($r) {
-    if (!$response = $DB->get_record('response', array('id' => $r))) {
-        print_error('invalidaccessparameter');
+    if (!$response = $DB->get_record('response', ['id' => $r])) {
+        throw new moodle_exception('invalidaccessparameter', 'error');
     }
     $cm = get_coursemodule_from_instance('response', $response->id, $response->course, false, MUST_EXIST);
 } else {
     if (!$cm = get_coursemodule_from_id('response', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 }
 
-$PAGE->set_url('/mod/response/submit.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/response/submit.php', ['id' => $cm->id]);
 
 $response->going_back = !empty($back);
 $response->going_forward = !empty($forward);
 $response->in_course = !empty($incourse);
 
-$response->in_course_url = new moodle_url('/course/view.php', array('id' => $cm->course), 'module-' . $cm->id);
-$response->standalone_url = new moodle_url('/mod/response/view.php', array('id' => $cm->id));
+$response->in_course_url = new moodle_url('/course/view.php', ['id' => $cm->course], 'module-' . $cm->id);
+$response->standalone_url = new moodle_url('/mod/response/view.php', ['id' => $cm->id]);
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
 $response->course = $course;
 $response->cm = $cm;
@@ -75,7 +75,7 @@ if ($edit && $canedit) {
 // Work out what stage they're in and what needs to happen.
 $instance = helper::instance_factory($response->responsetype, 'information');
 $instance->load_activity($response);
-$response->user_responses = $instance->load_response_for_users($response, array($USER->id));
+$response->user_responses = $instance->load_response_for_users($response, [$USER->id]);
 $instance->load_form($response, $USER->id);
 
 // At this point, $response->form might contain false, which is 'nothing to do' - send them off to the completed activity.
@@ -109,7 +109,7 @@ if ($data = $response->form->get_data()) {
 
 // So the form wasn't valid... better re-render it.
 // Use the course page to ensure consistent access to autosave.
-$PAGE->set_url(new moodle_url('/course/view.php', array('id' => $PAGE->course->id)));
+$PAGE->set_url(new moodle_url('/course/view.php', ['id' => $PAGE->course->id]));
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
 
@@ -117,7 +117,7 @@ $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
 
-$renderable = helper::instance_factory($response->responsetype, 'output', array($response, $instance));
+$renderable = helper::instance_factory($response->responsetype, 'output', [$response, $instance]);
 
 echo $output->render($renderable);
 echo $output->footer();

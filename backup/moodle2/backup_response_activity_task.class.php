@@ -25,7 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/response/backup/moodle2/backup_response_settingslib.php');
 require_once($CFG->dirroot . '/mod/response/backup/moodle2/backup_response_stepslib.php');
 
 /**
@@ -58,7 +57,7 @@ class backup_response_activity_task extends backup_activity_task {
      * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
      * @return string the content with the URLs encoded
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         global $CFG;
 
         $base = preg_quote($CFG->wwwroot, '/');

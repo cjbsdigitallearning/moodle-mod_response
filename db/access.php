@@ -24,82 +24,82 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'mod/response:addinstance' => array(
+    'mod/response:addinstance' => [
         'riskbitmask'  => RISK_XSS,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'editingteacher' => CAP_ALLOW,
-            'manager'        => CAP_ALLOW
-        )
-    ),
+            'manager'        => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/response:deleteown' => array(
+    'mod/response:deleteown' => [
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array()
-    ),
+        'archetypes'   => [],
+    ],
 
-    'mod/response:editown' => array(
+    'mod/response:editown' => [
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array()
-    ),
+        'archetypes'   => [],
+    ],
 
-    'mod/response:manage' => array(
+    'mod/response:manage' => [
         'riskbitmask'  => RISK_DATALOSS,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'editingteacher' => CAP_ALLOW,
-            'manager'        => CAP_ALLOW
-        )
-    ),
+            'manager'        => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/response:participate' => array(
+    'mod/response:participate' => [
         'riskbitmask'  => RISK_SPAM | RISK_PERSONAL,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
-            'student'        => CAP_ALLOW
-        )
-    ),
+        'archetypes'   => [
+            'student'        => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/response:view' => array(
+    'mod/response:view' => [
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'student'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'        => CAP_ALLOW
-        )
-    ),
+            'manager'        => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/response:viewall' => array(
+    'mod/response:viewall' => [
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'editingteacher' => CAP_ALLOW,
-            'manager'        => CAP_ALLOW
-        )
-    ),
+            'manager'        => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/response:viewother' => array(
+    'mod/response:viewother' => [
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'student'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'        => CAP_ALLOW
-        )
-    ),
-);
+            'manager'        => CAP_ALLOW,
+        ],
+    ],
+];

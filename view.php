@@ -34,7 +34,7 @@ $back = optional_param('back', 0, PARAM_INT); // Back a step or not.
 $edit = optional_param('editing', 0, PARAM_INT); // Whether editing or not, and which step through the activity.
 
 if ($r) {
-    if (!$response = $DB->get_record('response', array('id' => $r))) {
+    if (!$response = $DB->get_record('response', ['id' => $r])) {
         throw new moodle_exception('invalidaccessparameter', 'error');
     }
     $cm = get_coursemodule_from_instance('response', $response->id, $response->course, false, MUST_EXIST);
@@ -42,15 +42,15 @@ if ($r) {
     if (!$cm = get_coursemodule_from_id('response', $id)) {
         throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 }
 
 // We can't know if this is relevant or not, but we need to pass it onward.
 $response->going_back = !empty($back);
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$PAGE->set_url('/mod/response/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/response/view.php', ['id' => $cm->id]);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);

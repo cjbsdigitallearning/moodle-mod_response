@@ -15,17 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the steps necessary to restore a poll response.
- *
- * @package     responsetype_poll
- * @category    backup
- * @copyright   2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * Structure step to restore a poll activity.
  *
  * @package     responsetype_poll
@@ -41,7 +30,7 @@ class restore_responsetype_poll_subplugin extends restore_subplugin {
      * @return array An array of restore_path_elements to restore
      */
     protected function define_response_subplugin_structure() {
-        $paths = array();
+        $paths = [];
 
         $userinfo = $this->get_setting_value('userinfo');
 
@@ -120,30 +109,30 @@ class restore_responsetype_poll_subplugin extends restore_subplugin {
 
         // We need to update all the response_identifier columns.
         // Since we don't know what order we get the data in, let's recalculate them all now.
-        $values = array();
+        $values = [];
 
         $parentid = $this->get_new_parentid('response');
-        $result = $DB->get_records('responsetype_poll_user', array('response' => $parentid));
+        $result = $DB->get_records('responsetype_poll_user', ['response' => $parentid]);
         foreach ($result as $responseid => $response) {
             if (!isset($values[$response->userid])) {
                 // We don't have a record for this user already.
-                $values[$response->userid] = array(
+                $values[$response->userid] = [
                     'id' => $responseid,
                     'time' => (int) $response->timesubmitted,
-                );
+                ];
             } else {
                 if ((int) $response->timesubmitted > $values[$response->userid]['time']) {
                     // It's a newer answer.
-                    $values[$response->userid] = array(
+                    $values[$response->userid] = [
                         'id' => $responseid,
                         'time' => (int) $response->timesubmitted,
-                    );
+                    ];
                 }
             }
         }
 
         foreach ($values as $userid => $response) {
-            $params = array($response['id'], $parentid, $userid);
+            $params = [$response['id'], $parentid, $userid];
             $DB->execute('UPDATE {response_user}
                              SET response_identifier = ?
                            WHERE response = ? AND userid = ?', $params);

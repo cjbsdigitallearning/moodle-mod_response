@@ -23,8 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Defines the complete response structure for backup, with file and id annotations
  *
@@ -45,22 +43,22 @@ class backup_response_activity_structure_step extends backup_activity_structure_
         $userinfo = $this->get_setting_value('userinfo');
 
         // The most core table.
-        $response = new backup_nested_element('response', array('id'), array(
+        $response = new backup_nested_element('response', ['id'], [
             'name', 'intro', 'introformat', 'content', 'contentformat',
             'responsetype', 'responsedisplay',
             'viewownpagedescription', 'question', 'timemodified', 'displaypeerresults',
-            'displaycompletion', 'requiresubmission', 'caption'
-        ));
-        $response->set_source_table('response', array('id' => backup::VAR_ACTIVITYID));
+            'displaycompletion', 'requiresubmission', 'caption',
+        ]);
+        $response->set_source_table('response', ['id' => backup::VAR_ACTIVITYID]);
 
         // Hook up the subplugins.
         $this->add_subplugin_structure('responsetype', $response, true);
 
         if ($userinfo) {
             // Data exists for users that have started an activity regardless of type.
-            $userfields = array('timecreated', 'timemodified', 'timecompleted');
-            $userresponse = new backup_nested_element('response_user', array('userid'), $userfields);
-            $userresponse->set_source_table('response_user', array('response' => backup::VAR_ACTIVITYID));
+            $userfields = ['timecreated', 'timemodified', 'timecompleted'];
+            $userresponse = new backup_nested_element('response_user', ['userid'], $userfields);
+            $userresponse->set_source_table('response_user', ['response' => backup::VAR_ACTIVITYID]);
             $response->add_child($userresponse);
             $userresponse->annotate_ids('user', 'userid');
         }

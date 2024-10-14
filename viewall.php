@@ -31,20 +31,20 @@ $id = optional_param('id', 0, PARAM_INT); // Course module ID.
 $r = optional_param('r', 0, PARAM_INT); // Response instance ID.
 
 if ($r) {
-    if (!$response = $DB->get_record('response', array('id' => $r))) {
-        print_error('invalidaccessparameter');
+    if (!$response = $DB->get_record('response', ['id' => $r])) {
+        throw new moodle_exception('invalidaccessparameter', 'error');
     }
     $cm = get_coursemodule_from_instance('response', $response->id, $response->course, false, MUST_EXIST);
 } else {
     if (!$cm = get_coursemodule_from_id('response', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 }
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$PAGE->set_url('/mod/response/viewall.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/response/viewall.php', ['id' => $cm->id]);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -78,14 +78,14 @@ if ($group == 0) {
 // If they can delete responses, we need to build suitable links.
 if (has_capability('mod/response:manage', $context)) {
     foreach (array_keys($response->all_responses) as $userid) {
-        $deletelink = new moodle_url('/mod/response/deleteanswer.php', array('id' => $cm->id, 'u' => $userid));
+        $deletelink = new moodle_url('/mod/response/deleteanswer.php', ['id' => $cm->id, 'u' => $userid]);
         $response->all_responses[$userid]->delete_link = $deletelink;
     }
 }
 
 // The renderer is very much up to the plugin to identify what it is rendering.
 
-$renderable = helper::instance_factory($response->responsetype, 'viewall', array($response, $instance));
+$renderable = helper::instance_factory($response->responsetype, 'viewall', [$response, $instance]);
 
 echo $output->render($renderable);
 

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\responsetype\abstractconfig;
 use mod_response\helper;
@@ -30,8 +22,6 @@ use MoodleQuickForm;
 use stdClass;
 use admin_setting_configtext;
 use admin_setting_configselect;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines everything for showing, loading and saving config for polls in response activities.
@@ -61,22 +51,22 @@ class configuration extends abstractconfig {
         // Add some choices.
         for ($i = 1; $i <= 5; $i++) {
             $string = get_string('poll_choice', 'responsetype_poll', $i);
-            $mform->addElement('text', 'poll_choice' . $i, $string, array('size' => '64'));
+            $mform->addElement('text', 'poll_choice' . $i, $string, ['size' => '64']);
             $mform->setType('poll_choice' . $i, PARAM_TEXT);
         }
         // Add the reflection step configuration.
         $mform->addElement('selectyesno', 'poll_reflectionstep', get_string('poll_reflectionstep', 'responsetype_poll'));
         $mform->setDefault('poll_reflectionstep', $responseconfig->poll_reflectionstep);
         $mform->addElement('text', 'poll_reflectiontext',
-                get_string('poll_reflectiontext', 'responsetype_poll'), array('size' => '64'));
+                get_string('poll_reflectiontext', 'responsetype_poll'), ['size' => '64']);
         $mform->setType('poll_reflectiontext', PARAM_TEXT);
         $mform->addHelpButton('poll_reflectiontext', 'poll_reflectiontext', 'responsetype_poll');
         // Disable the reflection text box if we've turned off that step.
         $mform->disabledIf('poll_reflectiontext', 'poll_reflectionstep', 'neq', 1);
 
         // Add the maximum words, again disabled if no reflection step.
-        $maxwords = array();
-        $maxwords[] = $mform->createElement('text', 'poll_maximumwords', '', array('size' => '6', 'maxlength' => '6'));
+        $maxwords = [];
+        $maxwords[] = $mform->createElement('text', 'poll_maximumwords', '', ['size' => '6', 'maxlength' => '6']);
         $maxwords[] = $mform->createElement('checkbox', 'poll_maximumwords_enabled', '', get_string('enable'));
         $mform->addGroup($maxwords, 'poll_maximumwords_group', get_string('maximumwords', 'response'), ' ', false);
         $mform->setType('poll_maximumwords', PARAM_INT);
@@ -101,7 +91,7 @@ class configuration extends abstractconfig {
     public function apply_validation($data, $files) {
         global $DB;
 
-        $errors = array();
+        $errors = [];
 
         if (!empty($data['poll_reflectionstep'])) {
             // If there is a reflection step, there is some validation to do.
@@ -114,15 +104,15 @@ class configuration extends abstractconfig {
         // But which items we need depends on whether we are creating or updating.
         if (!empty($data['instance']) && completions::total_students_have_begun($data['instance'])) {
             // We're updating, we need to add whichever were used before.
-            $requiredchoices = array();
-            $responsechoices = $DB->get_records('responsetype_poll_choice', array('response' => $data['instance']));
+            $requiredchoices = [];
+            $responsechoices = $DB->get_records('responsetype_poll_choice', ['response' => $data['instance']]);
             foreach ($responsechoices as $responsechoice) {
                 $requiredchoices[] = (int) $responsechoice->responsenum;
             }
             $warning = get_string('poll_choice_required_previous', 'responsetype_poll');
         } else if (!empty($data['responsetype']) && $data['responsetype'] == 'poll') {
             // We're creating a new one, so only the first two are required... but only if we're actually doing a poll.
-            $requiredchoices = array(1, 2);
+            $requiredchoices = [1, 2];
             $warning = get_string('poll_choice_required', 'responsetype_poll');
         }
         // Now we know which items are required, apply validation.
@@ -196,7 +186,7 @@ class configuration extends abstractconfig {
         // This is mostly about preventing users deleting choices that might already have been used somewhere.
         if (!empty($instance) && completions::total_students_have_begun($instance)) {
             // Someone has at least attempted this.
-            $responsechoices = $DB->get_records('responsetype_poll_choice', array('response' => $instance));
+            $responsechoices = $DB->get_records('responsetype_poll_choice', ['response' => $instance]);
             $warning = get_string('poll_choice_required_previous', 'responsetype_poll');
             foreach ($responsechoices as $responsechoice) {
                 $form->addRule('poll_choice' . $responsechoice->responsenum, $warning, 'required', null, 'client');
@@ -241,7 +231,7 @@ class configuration extends abstractconfig {
         $DB->insert_record('responsetype_poll', $newinstance);
 
         // Then we need to insert the poll choices.
-        $rowstoinsert = array();
+        $rowstoinsert = [];
         $position = 1;
         for ($i = 1; $i <= self::RESPONSETYPE_POLL_MAXCHOICES; $i++) {
             if ($moduleinstance->{'poll_choice' . $i}) {
@@ -273,7 +263,7 @@ class configuration extends abstractconfig {
 
         // Before we can update, we need to get the row ID first.
         $instance = $moduleinstance->instance;
-        $response = $DB->get_record('responsetype_poll', array('response' => $instance));
+        $response = $DB->get_record('responsetype_poll', ['response' => $instance]);
 
         $updatedinstance = new stdClass();
         $updatedinstance->id = $response->id;
@@ -289,8 +279,8 @@ class configuration extends abstractconfig {
 
         // Now we need to update the poll choices.
         // Start by fetching the ones we already have.
-        $existingchoices = array();
-        $responsechoices = $DB->get_records('responsetype_poll_choice', array('response' => $instance));
+        $existingchoices = [];
+        $responsechoices = $DB->get_records('responsetype_poll_choice', ['response' => $instance]);
         foreach ($responsechoices as $responsechoice) {
             $existingchoices[$responsechoice->responsenum] = $responsechoice;
         }
@@ -301,7 +291,7 @@ class configuration extends abstractconfig {
             if (empty($moduleinstance->{'poll_choice' . $i})) {
                 // Was there an option previously?
                 if (!empty($existingchoices[$i])) {
-                    $DB->delete_records('responsetype_poll_choice', array('response' => $instance, 'responsenum' => $i));
+                    $DB->delete_records('responsetype_poll_choice', ['response' => $instance, 'responsenum' => $i]);
                 }
                 continue;
             }
@@ -335,8 +325,8 @@ class configuration extends abstractconfig {
     public function delete_instance($id) {
         global $DB;
 
-        $DB->delete_records('responsetype_poll', array('response' => $id));
-        $DB->delete_records('responsetype_poll_choice', array('response' => $id));
+        $DB->delete_records('responsetype_poll', ['response' => $id]);
+        $DB->delete_records('responsetype_poll_choice', ['response' => $id]);
     }
 
     /**
@@ -346,13 +336,13 @@ class configuration extends abstractconfig {
      * @return array object An array of admin_setting* objects
      */
     public function get_default_settings() {
-        return array(
+        return [
             new admin_setting_configtext('responsetype_poll/defaultwords', get_string('maximumwords', 'response'),
                                          get_string('maximumwords_default', 'responsetype_poll'), 0, PARAM_INT),
             new admin_setting_configselect('responsetype_poll/poll_reflectionstep',
                                          get_string('poll_reflectionstep', 'responsetype_poll'),
                                          get_string('poll_reflectionstep_explain', 'responsetype_poll'),
-                                         1, array(1 => get_string('yes'), 0 => get_string('no'))),
-        );
+                                         1, [1 => get_string('yes'), 0 => get_string('no')]),
+        ];
     }
 }
