@@ -14,19 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\abstractform;
-use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the form required for handling a poll response when there is a reflection step.
@@ -47,12 +36,12 @@ class poll_form_choicesbeforereflection extends abstractform {
         $mform->disable_form_change_checker();
 
         $id = $this->_customdata->id;
-        $choices = array();
+        $choices = [];
         foreach ($this->_customdata->activity->poll_choices as $choice) {
             $choice->choice = format_string($choice->choice);
             $choices[] = $mform->createElement('radio', 'poll_choice' . $id, '', $choice->choice, $choice->responsenum);
         }
-        $mform->addGroup($choices, 'poll_choices' . $id, '', array('<br />'), false);
+        $mform->addGroup($choices, 'poll_choices' . $id, '', ['<br />'], false);
         $mform->addRule('poll_choices' . $id, get_string('poll_choice_required', 'responsetype_poll'), 'required');
         if (!empty($this->_customdata->user_responses[$USER->id])) {
             $userchoice = $this->_customdata->user_responses[$USER->id]->choice;
@@ -82,9 +71,9 @@ class poll_form_choicesbeforereflection extends abstractform {
             $mform->setType('editing', PARAM_INT);
         }
 
-        $submitarea = array();
+        $submitarea = [];
         $this->add_precomplete_completion($USER->id, $submitarea);
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('next'));
-        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
+        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
     }
 }

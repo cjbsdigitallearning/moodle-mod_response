@@ -59,7 +59,7 @@ class mod_response_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Add the activity name and description.
-        $mform->addElement('text', 'name', get_string('activitytitle', 'response'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('activitytitle', 'response'), ['size' => '64']);
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -80,11 +80,11 @@ class mod_response_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('response', 'response'));
 
         // Add the caption.
-        $mform->addElement('text', 'caption', get_string('caption', 'response'), array('size' => '64'));
+        $mform->addElement('text', 'caption', get_string('caption', 'response'), ['size' => '64']);
         $mform->setType('caption', PARAM_TEXT);
 
         // And add the question for the activity.
-        $mform->addElement('text', 'question', get_string('activityquestion', 'response'), array('size' => '64'));
+        $mform->addElement('text', 'question', get_string('activityquestion', 'response'), ['size' => '64']);
         $mform->addRule('question', null, 'required', null, 'client');
         $mform->setType('question', PARAM_TEXT);
 
@@ -96,25 +96,25 @@ class mod_response_mod_form extends moodleform_mod {
         }
 
         // Then the scope of response visibility.
-        $togglepeerresults = array();
+        $togglepeerresults = [];
         foreach (helper::peer_result_options() as $key => $label) {
             $togglepeerresults[] = $mform->createElement('advcheckbox',
                                                          'togglepeerresults['. $key . ']',
                                                          '',
                                                          $label,
-                                                         array('group' => 1),
-                                                         array(0, 1));
+                                                         ['group' => 1],
+                                                         [0, 1]);
         }
         $mform->addGroup($togglepeerresults,
                          'togglepeerresults',
                          get_string('togglepeerresults', 'response'),
-                         array('<br />'),
+                         ['<br />'],
                          false);
         // We set the default later as it's based on having data.
 
         // Now the response type selector.
         $this->load_subplugins();
-        $subplugins = array();
+        $subplugins = [];
         foreach ($this->subplugins as $name => $subplugin) {
             $subplugins[$name] = $subplugin->display_name;
         }
@@ -123,13 +123,13 @@ class mod_response_mod_form extends moodleform_mod {
         $mform->addElement('select', 'responsetype', get_string('responsetype', 'response'), $subplugins);
 
         // Now the display options.
-        $displayoptions = array('0' => get_string('displayresponseownpage', 'response'),
-                                '1' => get_string('displayresponseinline', 'response'));
+        $displayoptions = ['0' => get_string('displayresponseownpage', 'response'),
+                                '1' => get_string('displayresponseinline', 'response')];
 
         $mform->addElement('select', 'responsedisplay', get_string('responsedisplay', 'response'), $displayoptions);
 
         $mform->addElement('advcheckbox', 'viewownpagedescription', '', get_string('viewownpagedescription', 'response'),
-                            null, array('0', '1'));
+                            null, ['0', '1']);
 
         // Hide the viewownpagedescription checkbox if displayresponseinline selected.
         $mform->disabledIf('viewownpagedescription', 'responsedisplay', 'eq', 1);
@@ -257,11 +257,11 @@ class mod_response_mod_form extends moodleform_mod {
      * @return array List of completion visibility options.
      */
     public function display_completion_options() {
-        return array(
+        return [
             'full' => get_string('displaycompletionfull', 'response'),
             'number' => get_string('displaycompletionnumber', 'response'),
             'none' => get_string('displaycompletionnone', 'response'),
-        );
+        ];
     }
 
     /**
@@ -283,14 +283,14 @@ class mod_response_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform = $this->_form;
 
-        $group = array();
+        $group = [];
         $group[] = $mform->createElement('advcheckbox', 'requiresubmission', null, get_string('requiresubmission_desc', 'response'),
-                array('group' => 'requiresubmissiongroup'));
+                ['group' => 'requiresubmissiongroup']);
 
         $mform->addGroup($group, 'requiresubmissiongroup', get_string('requiresubmission', 'response'), ' &nbsp; ', false);
         $mform->addHelpButton('requiresubmissiongroup', 'requiresubmission', 'response');
 
-        return array('requiresubmissiongroup');
+        return ['requiresubmissiongroup'];
     }
 
     /**

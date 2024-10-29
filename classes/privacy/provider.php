@@ -14,31 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Privacy class for requesting user data.
- *
- * @package   mod_response
- * @copyright 2018 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\metadata\provider as metadataprovider;
-use \core_privacy\local\request\plugin\provider as pluginprovider;
-use \core_privacy\local\request\core_userlist_provider as userlist_provider;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\local\request\contextlist;
-use \context_module;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\transform;
-use \core_privacy\manager;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\provider as metadataprovider;
+use core_privacy\local\request\plugin\provider as pluginprovider;
+use core_privacy\local\request\core_userlist_provider as userlist_provider;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\contextlist;
+use context_module;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\helper;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\transform;
+use core_privacy\manager;
 
 /**
  * Privacy class for requesting user data.
@@ -58,7 +48,7 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
      * @param   collection     $collection The initialised collection to add items to.
      * @return  collection     A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         // The core plugin only has one table with user data.
         $responseuser = [
             'userid' => 'privacy:metadata:userid',
@@ -79,7 +69,7 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
      * @param  int $userid The user ID.
      * @return contextlist an object with the contexts related to a userid.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new contextlist();
         $sql = "
             SELECT DISTINCT ctx.id

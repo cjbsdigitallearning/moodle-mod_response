@@ -14,21 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Generic configuration API for response activity subplugins.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\responsetype;
 use stdClass;
 use renderable;
 use renderer_base;
 use templatable;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the response information API that subplugins are expected to follow.

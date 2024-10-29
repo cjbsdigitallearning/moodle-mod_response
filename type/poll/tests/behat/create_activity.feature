@@ -206,21 +206,15 @@ Feature: In a course, teacher can pose a poll question
 
     And I log out
 
-  @javascript @_file_upload
+  @javascript @_file_upload @editor_tiny
   Scenario: Create an activity with a page content image and a reflection step (inline view).
-    When I log in as "teacher1"
-    # Upload the image
-    And I follow "Manage private files..."
-    And I upload "lib/editor/atto/tests/fixtures/moodle-logo.png" file to "Files" filemanager
-    And I click on "Save changes" "button"
-    And I am on "Course 1" course homepage with editing mode on
+    Given I am on the "C1" "course" page logged in as "teacher1"
+    And I turn editing mode on
     And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
-    And I click on "Insert or edit image" "button" in the "Content" "fieldset"
-    And I click on "Browse repositories..." "button"
-    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
-    And I click on "moodle-logo.png" "link"
-    And I click on "Select this file" "button"
+    And I click on the "Image" button for the "Activity Content" TinyMCE editor
+    And I click on "Browse repositories" "button" in the "Image properties" "dialogue"
+    And I upload "lib/editor/tiny/tests/behat/fixtures/moodle-logo.png" to the file picker for TinyMCE
     And I set the field "Describe this image for someone who cannot see it" to "It's the Moodle"
     # Wait for the page to "settle".
     And I wait until the page is ready

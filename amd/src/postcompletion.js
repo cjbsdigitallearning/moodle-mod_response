@@ -1,4 +1,11 @@
-define(['jquery', 'core/notification', 'core/fragment', 'core/templates'], function($, notification, fragment, template) {
+define(
+    [
+        'jquery',
+        'core/notification',
+        'core/fragment',
+        'core/templates',
+        'core/str'
+    ], function($, notification, fragment, template, str) {
     return {
         init: function (selector) {
             $(selector + ' [id^=fgroup_id_buttonar').unbind().each(function() {
@@ -19,6 +26,17 @@ define(['jquery', 'core/notification', 'core/fragment', 'core/templates'], funct
                 $form.find('.profiles.' + peer).show();
                 $form.find('.user-response[data-response]').data('response_peer', peer)
                      .trigger('peer_change.response', { display: peer });
+                if (peer === 'group') {
+                    $(this).data('completion', 'all');
+                    str.get_string('togglepeerresultsall', 'mod_response').then((label) => {
+                        return $(this).val(label);
+                    });
+                } else {
+                    $(this).data('completion', 'group');
+                    str.get_string('togglepeerresultsgroup', 'mod_response').then((label) => {
+                        return $(this).val(label);
+                    });
+                }
             });
             $form.find('.card-footer input:last-of-type').trigger('click');
 

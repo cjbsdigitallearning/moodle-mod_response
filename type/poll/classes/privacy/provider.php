@@ -14,29 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Privacy class for requesting user data.
- *
- * @package   responsetype_poll
- * @copyright 2018 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace responsetype_poll\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\metadata\provider as metadataprovider;
-use \mod_response\privacy\responsetype_provider as subplugin_provider;
-use \core_privacy\local\request\contextlist;
-use \context_module;
-use \core_privacy\local\request\approved_contextlist;
-use \mod_response\privacy\provider as responseprovider;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\transform;
-use \context;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\provider as metadataprovider;
+use mod_response\privacy\responsetype_provider as subplugin_provider;
+use core_privacy\local\request\contextlist;
+use context_module;
+use core_privacy\local\request\approved_contextlist;
+use mod_response\privacy\provider as responseprovider;
+use core_privacy\local\request\helper;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\transform;
+use context;
 
 /**
  * Privacy class for requesting user data.
@@ -53,7 +43,7 @@ class provider implements metadataprovider, subplugin_provider {
      * @param   collection     $collection The initialised collection to add items to.
      * @return  collection     A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         // The core plugin only has one table with user data.
         $responsepolluser = [
             'response' => 'privacy:metadata:response',

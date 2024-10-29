@@ -15,19 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all the backup steps that will be used by {@see backup_response_activity_task}
- *
- * At least the ones specific to text type responses.
- *
- * @package     responsetype_text
- * @category    backup
- * @copyright   2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * Defines the complete workshop structure for backup, with file and id annotations.
  *
  * @package     responsetype_text
@@ -51,18 +38,18 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
         $wrapper = new backup_nested_element($this->get_recommended_name());
 
         $settings = new backup_nested_element('responsetype_text_settings', null,
-                                              ['maxwords', 'overrideeditorconfig', 'editorconfig']);
+                                              ['maxwords']);
 
-        $settings->set_source_table('responsetype_text', array('response' => backup::VAR_ACTIVITYID));
+        $settings->set_source_table('responsetype_text', ['response' => backup::VAR_ACTIVITYID]);
 
         $subplugin->add_child($wrapper);
         $wrapper->add_child($settings);
 
         if ($userinfo) {
             // Set up how to save the answers given by students.
-            $userfields = array('userid', 'timesubmitted', 'response_text');
-            $answers = new backup_nested_element('responsetype_text_answers', array('id'), $userfields);
-            $answers->set_source_table('responsetype_text_user', array('response' => backup::VAR_ACTIVITYID));
+            $userfields = ['userid', 'timesubmitted', 'response_text'];
+            $answers = new backup_nested_element('responsetype_text_answers', ['id'], $userfields);
+            $answers->set_source_table('responsetype_text_user', ['response' => backup::VAR_ACTIVITYID]);
             $answers->annotate_ids('user', 'userid');
             $wrapper->add_child($answers);
 

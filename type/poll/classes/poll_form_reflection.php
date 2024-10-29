@@ -14,20 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\abstractform;
 use stdClass;
 use mod_response\helper;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the form required for handling a poll response's reflection step.
@@ -64,7 +54,8 @@ class poll_form_reflection extends abstractform {
         $mform->setType('poll_choice' . $id, PARAM_INT);
 
         $mform->addElement('html', '<div class="reflection-prompt">' . $reflectionprompt . '</div>');
-        $this->add_simple_editor('responsetype_poll_' . $this->_customdata->id, get_string('youranswer', 'response'));
+
+        $this->add_response_editor('responsetype_poll_' . $this->_customdata->id);
 
         // Is there a word count prompt on this activity?
         // If so we need to pass the language string to the client and load our counting JS.
@@ -81,12 +72,12 @@ class poll_form_reflection extends abstractform {
         $mform->addElement('hidden', 'response', $this->_customdata->id);
         $mform->setType('response', PARAM_INT);
 
-        $submitarea = array();
+        $submitarea = [];
         $this->add_precomplete_completion($USER->id, $submitarea);
         // Put them in less obvious order, so they get floated appropriately in the form.
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));
         $submitarea[] = &$mform->createElement('submit', 'back', get_string('back'));
-        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', array(' '), false);
+        $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
     }
 
     /**

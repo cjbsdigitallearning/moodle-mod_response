@@ -45,7 +45,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configmulticheckbox('response/togglepeerresults',
                                                          get_string('togglepeerresults', 'response'),
                                                          get_string('togglepeerresults_desc', 'response'),
-                                                         array(), $options));
+                                                         [], $options));
 
     $subplugins = helper::get_type_subplugins();
     $sorter = function ($a, $b) {

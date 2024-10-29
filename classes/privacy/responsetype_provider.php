@@ -14,9 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace mod_response\privacy;
+
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\plugin\subplugin_provider;
+use core_privacy\local\request\shared_userlist_provider;
+use core_privacy\local\request\approved_contextlist;
+use context;
+
 /**
- * This file contains the responsetype_provider interface.
- *
  * Response Sub plugins should implement this if they store personal information.
  *
  * @package mod_response
@@ -24,16 +30,6 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace mod_response\privacy;
-
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\plugin\subplugin_provider;
-use \core_privacy\local\request\shared_userlist_provider;
-use \core_privacy\local\request\approved_contextlist;
-use context;
-
-defined('MOODLE_INTERNAL') || die();
-
 interface responsetype_provider extends subplugin_provider, shared_userlist_provider {
 
     /**

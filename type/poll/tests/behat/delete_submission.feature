@@ -20,25 +20,22 @@ Feature: Users might choose to withdraw and submit a new answer
       | capability | permission | role | contextlevel | reference |
       | mod/response:participate | Allow | editingteacher | Course | C1 |
       | mod/response:deleteown | Allow | editingteacher | Course | C1 |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
-    And I set the field "Activity title" to "The weather"
-    And I set the field "Activity question" to "What is the weather like outside?"
-    And I set the field "Response type" to "Poll"
-    And I set the field "Response display" to "Inline - within the module section"
-    And I set the field "Choice 1" to "Sunny."
-    And I set the field "Choice 2" to "Cloudy."
-    And I set the field "Choice 3" to "Raining."
-    And I set the field "Add a reflection step" to "No"
-    And I press "Save and return to course"
+    And I am on the "C1" "course" page logged in as "teacher1"
+    And I turn editing mode on
+    And I add a "Response" to section "1" and I fill the form with:
+     | Activity title        | The weather                        |
+     | Activity question     | What is the weather like outside?  |
+     | Response type         | Poll                               |
+     | Response display      | Inline - within the module section |
+     | Choice 1              | Sunny.                             |
+     | Choice 2              | Cloudy.                            |
+     | Choice 3              | Raining.                           |
+     | Add a reflection step | No                                 |
     And I log out
 
   @javascript
   Scenario: A user with the delete permission allowed can delete their response.
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "The weather"
+    Given I am on the "The weather" "mod_response > view" page logged in as "teacher1"
     And I should see "The weather"
     And I click on "Sunny." "radio"
     And I press "Submit"
@@ -51,9 +48,7 @@ Feature: Users might choose to withdraw and submit a new answer
 
   @javascript
   Scenario: A user without the delete permission allowed cannot delete their response.
-    When I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "The weather"
+    Given I am on the "The weather" "mod_response > view" page logged in as "student1"
     And I should see "The weather"
     And I click on "Sunny." "radio"
     And I press "Submit"

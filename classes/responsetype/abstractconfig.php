@@ -14,18 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Generic configuration API for response activity subplugins.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\responsetype;
 use MoodleQuickForm;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines the response configuration API that subplugins are expected to follow.
@@ -64,7 +54,7 @@ abstract class abstractconfig {
      * @return array Array of field name -> error message validation messages
      */
     public function apply_validation($data, $files) {
-        return array();
+        return [];
     }
 
     /**
@@ -124,6 +114,6 @@ abstract class abstractconfig {
      * @return array object An array of admin_setting* objects
      */
     public function get_default_settings() {
-        return array();
+        return [];
     }
 }

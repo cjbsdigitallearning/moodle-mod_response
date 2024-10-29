@@ -15,16 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Helper for PHPUnit test cases.
- *
- * @package   mod_response
- * @copyright 2018 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * Privacy class for requesting user data.
  *
  * @package   mod_response

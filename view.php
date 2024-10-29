@@ -22,7 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_response\helper;
+use core_course\output\activity_dates;
+use core_course\output\activity_completion;
 
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/response/lib.php');
@@ -33,23 +34,23 @@ $back = optional_param('back', 0, PARAM_INT); // Back a step or not.
 $edit = optional_param('editing', 0, PARAM_INT); // Whether editing or not, and which step through the activity.
 
 if ($r) {
-    if (!$response = $DB->get_record('response', array('id' => $r))) {
-        print_error('invalidaccessparameter');
+    if (!$response = $DB->get_record('response', ['id' => $r])) {
+        throw new moodle_exception('invalidaccessparameter', 'error');
     }
     $cm = get_coursemodule_from_instance('response', $response->id, $response->course, false, MUST_EXIST);
 } else {
     if (!$cm = get_coursemodule_from_id('response', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception('invalidcoursemodule', 'error');
     }
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 }
 
 // We can't know if this is relevant or not, but we need to pass it onward.
 $response->going_back = !empty($back);
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$PAGE->set_url('/mod/response/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/response/view.php', ['id' => $cm->id]);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -69,6 +70,8 @@ if ($edit && $canedit) {
 // Set up and show the form.
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
+$PAGE->set_cm($cm);
+$PAGE->set_activity_record($response);
 
 $output = $PAGE->get_renderer('mod_response');
 
@@ -76,9 +79,6 @@ echo $output->header();
 
 // Display any activity information (eg completion requirements / dates).
 $cminfo = cm_info::create($cm);
-$completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
-$activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
 
 $modinfo = get_fast_modinfo($cm->course, $USER->id);
 $customdata =& $cminfo->customdata;

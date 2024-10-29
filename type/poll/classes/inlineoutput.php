@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Rendering inline for the response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\responsetype\abstractoutput;
 use stdClass;
@@ -30,8 +22,6 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Creates a renderer for viewing a user's responses inline.

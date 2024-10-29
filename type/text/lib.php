@@ -24,8 +24,6 @@
 
 use mod_response\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Serves the response-text files.
  *
@@ -75,12 +73,12 @@ function responsetype_text_pluginfile(stdClass $course,
 
     // Work out if we can see the activity response.
     $userid = $requestedresponse->userid;
-    $response = $DB->get_record('response', array('id' => $cm->instance), '*', MUST_EXIST);
+    $response = $DB->get_record('response', ['id' => $cm->instance], '*', MUST_EXIST);
 
     // Now we need to verify the user could conceivably could see these answers.
     $instance = helper::instance_factory($response->responsetype, 'information');
     $instance->load_activity($response);
-    $response->user_responses = $instance->load_response_for_users($response, array($userid, $USER->id));
+    $response->user_responses = $instance->load_response_for_users($response, [$userid, $USER->id]);
 
     // First, did the viewing user complete the activity (bypass check for viewall and viewother capabilities)?
     if (!has_capability('mod/response:viewall', $context) && !has_capability('mod/response:viewother', $context)) {

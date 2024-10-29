@@ -14,20 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * This file contains methods for loading completion information on activities.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response;
 use stdClass;
 use user_picture;
-use mod_response\helper;
-
-defined('MOODLE_INTERNAL') || die();
+use core_user\fields;
 
 /**
  * Methods for loading information on completed activities for the user incentivisation aspect of responses.
@@ -52,7 +42,7 @@ class completions {
     public static function total_students_have_begun($id) {
         global $DB;
 
-        return $DB->count_records_select('response_user', 'response = ?', array($id));
+        return $DB->count_records_select('response_user', 'response = ?', [$id]);
     }
 
     /**
@@ -65,7 +55,7 @@ class completions {
     public static function total_students_have_completed($id) {
         global $DB;
 
-        return $DB->count_records_select('response_user', 'response = ? AND timecompleted > ?', array($id, 0));
+        return $DB->count_records_select('response_user', 'response = ? AND timecompleted > ?', [$id, 0]);
     }
 
     /**
@@ -83,10 +73,10 @@ class completions {
     protected static function fetch_completions($id, $userid = null) {
         global $DB;
 
-        $completions = array();
+        $completions = [];
 
         // First, get everyone who has completed this activity.
-        $completed = $DB->get_records_select('response_user', 'response = ? AND timecompleted > ?', array($id, 0));
+        $completed = $DB->get_records_select('response_user', 'response = ? AND timecompleted > ?', [$id, 0]);
         foreach ($completed as $completion) {
             $completions[$completion->userid] = $completion;
         }
@@ -95,7 +85,7 @@ class completions {
         if (!empty($userid) && isset($completions[$userid])) {
             $usercompletion = $completions[$userid];
             unset ($completions[$userid]);
-            $completions = array($userid => $usercompletion) + $completions;
+            $completions = [$userid => $usercompletion] + $completions;
         }
 
         return $completions;
@@ -124,7 +114,7 @@ class completions {
             $completions->people_all[$userid]->picture = '';
         }
 
-        $fields = user_picture::fields();
+        $fields = implode(',', fields::get_picture_fields());
         list ($sql, $params) = $DB->get_in_or_equal($useridlist);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
 
@@ -144,7 +134,7 @@ class completions {
      */
     protected static function sift_groups_out(&$completions, $membersingroup) {
         // Now sift out groups.
-        $completions->people_group = array();
+        $completions->people_group = [];
         $members = array_flip($membersingroup); // As isset runs faster than in_array, flip the array and do it as a hash lookup.
         foreach (array_keys($completions->people_all) as $user) {
             if (isset($members[$user])) {
@@ -169,7 +159,7 @@ class completions {
             return; // Nothing else to do here.
         }
 
-        foreach (array('group', 'all') as $sel) {
+        foreach (['group', 'all'] as $sel) {
             $source = 'people_' . $sel;
             $dest = 'people_' . $sel . '_other';
             // Get full list.
@@ -194,8 +184,8 @@ class completions {
 
         $completions->people_all = self::fetch_completions($id, $userid);
         $completions->number_all = count($completions->people_all);
-        $completions->people_group_other = array();
-        $completions->people_all_other = array();
+        $completions->people_group_other = [];
+        $completions->people_all_other = [];
 
         $membersingroup = helper::get_users_in_same_group($id, $userid);
 
@@ -219,8 +209,8 @@ class completions {
 
         $completions->people_all = self::fetch_completions($id, $userid);
         $completions->number_all = count($completions->people_all);
-        $completions->people_group_other = array();
-        $completions->people_all_other = array();
+        $completions->people_group_other = [];
+        $completions->people_all_other = [];
 
         $membersingroup = helper::get_users_in_same_group($id, $userid);
 

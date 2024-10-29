@@ -14,22 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - poll subplugin.
- *
- * @package   responsetype_poll
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\poll;
 use mod_response\responsetype\abstractinfo;
 use stdClass;
 use mod_response\helper;
 use moodle_url;
 use user_picture;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines everything for showing a specific instance of a poll activity.
@@ -56,12 +46,12 @@ class information extends abstractinfo {
         }
 
         // First the generic record.
-        $response->activity = $DB->get_record('responsetype_poll', array('response' => $response->id));
+        $response->activity = $DB->get_record('responsetype_poll', ['response' => $response->id]);
 
         // Then the poll choices.
-        $response->activity->poll_choices = array();
+        $response->activity->poll_choices = [];
 
-        $responsechoices = $DB->get_records('responsetype_poll_choice', array('response' => $response->id));
+        $responsechoices = $DB->get_records('responsetype_poll_choice', ['response' => $response->id]);
         foreach ($responsechoices as $responsechoice) {
             $response->activity->poll_choices[$responsechoice->responsenum] = $responsechoice;
         }
@@ -88,7 +78,7 @@ class information extends abstractinfo {
         $users = $this->sanitise_int_array($users, false);
         if (empty($users)) {
             // Nothing to do, don't even bother querying.
-            return array();
+            return [];
         }
 
         list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
@@ -125,7 +115,7 @@ class information extends abstractinfo {
     public function load_all_responses($response) {
         global $DB;
 
-        $responses = array();
+        $responses = [];
 
         // First load any responses we actually have.
         $query = "SELECT ru.userid, rpu.id, ru.timecreated, ru.timemodified, ru.timecompleted, rpu.choice, rpu.reflection_text
@@ -134,10 +124,10 @@ class information extends abstractinfo {
                    WHERE ru.response = :response
                      AND ru.timecompleted > :timecompleted
                 ORDER BY ru.timecreated";
-        $params = array(
+        $params = [
             'response' => $response->id,
             'timecompleted' => 0,
-        );
+        ];
         $responses = $DB->get_records_sql($query, $params);
 
         // Now get user data.
@@ -159,15 +149,15 @@ class information extends abstractinfo {
         require_once($CFG->libdir . '/formslib.php');
 
         $responseclone = clone $response;
-        $params = array(
-            new moodle_url('/mod/response/submit.php', array('r' => $response->id)), // The action item.
+        $params = [
+            new moodle_url('/mod/response/submit.php', ['r' => $response->id]), // The action item.
             $responseclone, // Custom data, which we do need.
             'post', // Form method.
             '', // Target of the form.
             null, // Generic attributes.
             true, // Whether the form is editable.
             $ajaxformdata, // Passing through AJAX data.
-        );
+        ];
 
         // Now we can begin our checking.
         if (!$userid) {
@@ -178,7 +168,7 @@ class information extends abstractinfo {
         $userresponse = !empty($response->user_responses[$userid]) ? $response->user_responses[$userid] : false;
         // It's also possible we come back to step 1 after having been to step 2...
         if ($userresponse && empty($response->going_back) && empty($response->going_forward)) {
-            // The current user has done something, but there might still be a form.)
+            // The current user has done something, but there might still be a form.
             if (empty($response->is_editing)) {
                 $response->form = false;
                 if ($response->activity->reflection_step && !$userresponse->reflection_text) {
@@ -192,7 +182,7 @@ class information extends abstractinfo {
             $data = false;
             if ($response->is_editing == 1 || ($response->is_editing == 2 && $response->going_back)) {
                 // First step through the form - poll choice.
-                $data = array('poll_choice' . $response->id => $response->user_responses[$userid]->choice);
+                $data = ['poll_choice' . $response->id => $response->user_responses[$userid]->choice];
                 if ($response->activity->reflection_step) {
                     $mform = helper::instance_factory('poll', 'poll_form_choicesbeforereflection', $params);
 
@@ -204,9 +194,9 @@ class information extends abstractinfo {
                 // Second step through the form - reflection step.
                 $mform = helper::instance_factory('poll', 'poll_form_reflection', $params);
 
-                $data = array(
-                    'responsetype_poll_' . $response->id => array('text' => $response->user_responses[$userid]->reflection_text),
-                );
+                $data = [
+                    'responsetype_poll_' . $response->id => ['text' => $response->user_responses[$userid]->reflection_text],
+                ];
             }
             if ($mform && $data) {
                 $mform->set_data($data);
@@ -245,10 +235,10 @@ class information extends abstractinfo {
                     JOIN {responsetype_poll_user} rpu ON (ru.response_identifier = rpu.id)
                    WHERE ru.response = :response
                      AND ru.timecompleted > :timecompleted";
-        $params = array(
+        $params = [
             'response' => $response->id,
-            'timecompleted' => 0
-        );
+            'timecompleted' => 0,
+        ];
         $rawallusers = $DB->get_records_sql_menu($query, $params);
         if (empty($rawallusers)) {
             // This shouldn't happen, but just in case it does...
@@ -258,7 +248,7 @@ class information extends abstractinfo {
         // Let's sift that data into the aggregate for all users.
         $displaypeerresults = isset($override) ? $override : $response->displaypeerresults;
         if ($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) {
-            $response->aggregate->all = array();
+            $response->aggregate->all = [];
             // First, make some defaults using all valid choices.
             foreach ($response->activity->poll_choices as $choice) {
                 $response->aggregate->all[$choice->responsenum] = 0;
@@ -271,7 +261,7 @@ class information extends abstractinfo {
 
         // Now let's work out about groups.
         if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) {
-            $response->aggregate->group = array();
+            $response->aggregate->group = [];
             // First, make some defaults using all valid choices.
             foreach ($response->activity->poll_choices as $choice) {
                 $response->aggregate->group[$choice->responsenum] = 0;
@@ -350,7 +340,7 @@ class information extends abstractinfo {
             // Are we heading back to the first step? This is where we don't progress to step 2.
             if (!empty($data->back)) {
                 $response->going_back = false;
-                return new moodle_url('/mod/response/view.php', array('r' => $response->id, 'back' => 1));
+                return new moodle_url('/mod/response/view.php', ['r' => $response->id, 'back' => 1]);
             }
 
             // So we already had some kind of answer (and we're progressing). Is it the reflection step for our existing answer?
@@ -364,7 +354,7 @@ class information extends abstractinfo {
             if (!empty($response->is_editing) && $response->is_editing == 1) {
                 // Mark that we want to redirect to step 2.
                 $response->is_editing = 2;
-                $redirect = new moodle_url('/mod/response/view.php', array('id' => $response->cm->id, 'editing' => 2));
+                $redirect = new moodle_url('/mod/response/view.php', ['id' => $response->cm->id, 'editing' => 2]);
             } else {
                 $response->is_editing = false;
             }
@@ -425,7 +415,7 @@ class information extends abstractinfo {
      */
     public function delete_user_response($course, $cm, $userid) {
         global $DB;
-        $DB->delete_records('responsetype_poll_user', array('response' => $cm->instance, 'userid' => $userid));
+        $DB->delete_records('responsetype_poll_user', ['response' => $cm->instance, 'userid' => $userid]);
 
         return true;
     }

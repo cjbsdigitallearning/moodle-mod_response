@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Rendering for viewing all response activities - text subplugin.
- *
- * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\text;
 use mod_response\responsetype\abstractoutput;
 use stdClass;
@@ -32,8 +24,6 @@ use mod_response\helper;
 use moodle_url;
 use pix_icon;
 use context_module;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Creates a renderer for showing all responses to an activity.
@@ -63,7 +53,7 @@ class viewall extends abstractoutput implements renderable, templatable {
         // Whatever we're exporting, we want the title and question. (And support multilang by default).
         $data->heading = format_string($this->data->name);
         $data->question = format_string($this->data->question);
-        $data->all_responses = !empty($this->data->all_responses) ? $this->data->all_responses : array();
+        $data->all_responses = !empty($this->data->all_responses) ? $this->data->all_responses : [];
         $data->group_selector = !empty($this->data->group_selector) ? $this->data->group_selector : '';
 
         $data->icon = $OUTPUT->render(new pix_icon('icon', '', 'responsetype_text'));
@@ -97,9 +87,9 @@ class viewall extends abstractoutput implements renderable, templatable {
         if ($this->data->course->format !== 'singleactivity') {
             $course = $this->data->course;
             $cm = $this->data->cm;
-            $data->context_link = new moodle_url('/course/view.php', array('id' => $course->id), 'module-' . $cm->id);
+            $data->context_link = new moodle_url('/course/view.php', ['id' => $course->id], 'module-' . $cm->id);
         } else {
-            $data->context_link = new moodle_url('/view.php', array('id' => $cm->id));
+            $data->context_link = new moodle_url('/view.php', ['id' => $cm->id]);
         }
 
         return $data;

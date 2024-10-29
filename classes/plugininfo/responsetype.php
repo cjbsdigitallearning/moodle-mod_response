@@ -14,18 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Plugin info class for the response type subplugins.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\plugininfo;
 use core\plugininfo\base;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines behaviours that apply to all response type subplugins.

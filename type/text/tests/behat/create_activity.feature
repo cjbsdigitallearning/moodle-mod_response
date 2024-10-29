@@ -129,21 +129,15 @@ Feature: In a course, students can see and respond to a question and see others'
 
     And I log out
 
-  @javascript @_file_upload
+  @javascript @_file_upload @editor_tiny
   Scenario: Create an activity with image page content (inline view).
-    When I log in as "teacher1"
-    # Upload the image
-    And I follow "Manage private files..."
-    And I upload "lib/editor/atto/tests/fixtures/moodle-logo.png" file to "Files" filemanager
-    And I click on "Save changes" "button"
-    When I am on "Course 1" course homepage with editing mode on
+    Given I am on the "C1" "course" page logged in as "teacher1"
+    And I turn editing mode on
     And I add a "Response" to section "1"
     And I set the field "Activity title" to "The weather"
-    And I click on "Insert or edit image" "button" in the "Content" "fieldset"
-    And I click on "Browse repositories..." "button"
-    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
-    And I click on "moodle-logo.png" "link"
-    And I click on "Select this file" "button"
+    And I click on the "Image" button for the "Activity Content" TinyMCE editor
+    And I click on "Browse repositories" "button" in the "Image properties" "dialogue"
+    And I upload "lib/editor/tiny/tests/behat/fixtures/moodle-logo.png" to the file picker for TinyMCE
     And I set the field "Describe this image for someone who cannot see it" to "It's the Moodle"
     # Wait for the page to "settle".
     And I wait until the page is ready
@@ -153,17 +147,13 @@ Feature: In a course, students can see and respond to a question and see others'
     And I set the field "Response type" to "Free text"
     And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
-    And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
+    When I am on the "C1" "course" page logged in as "student1"
     # Seeing it on course view (inline).
     Then I should see "The weather"
     And I should see "What is the weather like outside?"
     And "//img[contains(@src, 'moodle-logo.png')]" "xpath_element" should exist
     And I should see "Thoughts on the Weather"
     And I should not see "Share your thoughts"
-
-    And I log out
 
   @javascript
   Scenario: Create an activity (inline view).

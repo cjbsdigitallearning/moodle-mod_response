@@ -14,22 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Settings for the response activity - text subplugin.
- *
- * @package   responsetype_text
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response\type\text;
 use mod_response\responsetype\abstractinfo;
 use stdClass;
 use moodle_url;
 use mod_response\helper;
 use context_module;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines everything for showing a specific instance of a text activity.
@@ -51,7 +41,7 @@ class information extends abstractinfo {
     public function load_activity(&$response) {
         global $DB;
 
-        $response->activity = $DB->get_record('responsetype_text', array('response' => $response->id));
+        $response->activity = $DB->get_record('responsetype_text', ['response' => $response->id]);
 
         return true;
     }
@@ -73,7 +63,7 @@ class information extends abstractinfo {
         $users = $this->sanitise_int_array($users, false);
         if (empty($users)) {
             // Nothing to do, don't even bother querying.
-            return array();
+            return [];
         }
 
         list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
@@ -110,7 +100,7 @@ class information extends abstractinfo {
     public function load_all_responses($response) {
         global $DB;
 
-        $responses = array();
+        $responses = [];
 
         // First load any responses we actually have.
         $query = "SELECT ru.userid, rtu.id AS response_user_id, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
@@ -119,10 +109,10 @@ class information extends abstractinfo {
                    WHERE ru.response = :response
                      AND ru.timecompleted > :timecompleted
                 ORDER BY ru.timecreated";
-        $params = array(
+        $params = [
             'response' => $response->id,
             'timecompleted' => 0,
-        );
+        ];
         $responses = $DB->get_records_sql($query, $params);
 
         // Now get user data.
@@ -154,21 +144,21 @@ class information extends abstractinfo {
         }
 
         require_once($CFG->libdir . '/formslib.php');
-        $params = array(
-            new moodle_url('/mod/response/submit.php', array('r' => $response->id)), // The action item.
+        $params = [
+            new moodle_url('/mod/response/submit.php', ['r' => $response->id]), // The action item.
             clone $response, // Custom data, which we do need.
             'post', // Form method.
             '', // Target of the form.
             null, // Generic attributes.
             true, // Whether the form is editable.
             $ajaxformdata, // Passing through AJAX data.
-        );
+        ];
         $mform = helper::instance_factory('text', 'text_form', $params);
 
         if (!empty($response->user_responses[$userid]) && !empty($response->is_editing)) {
-            $data = array(
-                'responsetype_text_' . $response->id => array('text' => $response->user_responses[$userid]->response_text),
-            );
+            $data = [
+                'responsetype_text_' . $response->id => ['text' => $response->user_responses[$userid]->response_text],
+            ];
             $mform->set_data($data);
         }
 
@@ -266,7 +256,7 @@ class information extends abstractinfo {
         global $DB;
 
         $userresponses = $DB->get_records('responsetype_text_user', ['response' => $cm->instance, 'userid' => $userid]);
-        $DB->delete_records('responsetype_text_user', array('response' => $cm->instance, 'userid' => $userid));
+        $DB->delete_records('responsetype_text_user', ['response' => $cm->instance, 'userid' => $userid]);
 
         // Delete any attached files.
         $context = context_module::instance($cm->id);

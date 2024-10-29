@@ -14,21 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Generic form helper class for the user-facing forms in respnse activities.
- *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_response;
 use moodleform;
 use stdClass;
 use mod_response\simpleeditor;
 use mod_response\completions;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * This class handles some of the behaviours we want for response activities.
@@ -65,7 +55,7 @@ abstract class abstractform extends moodleform {
         // Contrary to the documentation, the default ID for a form is simply mform#, e.g. mform1.
         // This makes sure whatever form we make has a more specific ID.
         if (!is_array($attributes)) {
-            $attributes = array();
+            $attributes = [];
         }
         $attributes['id'] = 'mod_response_form_' . $customdata->id;
         $attributes['class'] = str_replace('\\', '_', get_class($this));
@@ -74,55 +64,29 @@ abstract class abstractform extends moodleform {
     }
 
     /**
-     * This makes the 'simpleeditor' element available to our forms.
-     */
-    public function initialise_simple_editor() {
-        global $CFG;
-
-        require_once("$CFG->libdir/form/editor.php");
-        \MoodleQuickForm::registerElementType('simpleeditor', "$CFG->libdir/form/editor.php", 'mod_response\\simpleeditor');
-    }
-
-    /**
-     * This adds a simple editor to the form. Primarily we get an Atto
-     * editor instance, which can autosave, but optionally with a subset of formatting.
+     * Add an editor to the form for the user's response.
      *
-     * @param string $elementname Name for the element.
-     * @param string $elementlabel Label for the element.
-     * @param string $toolbar The toolbar to use for this particular instance.
+     * @param string $name The name for this instance of the editor.
+     * @return void
      */
-    public function add_simple_editor(string $elementname, ?string $elementlabel = null, ?string $toolbar = null) {
-        $this->initialise_simple_editor();
-
-        if (!empty($toolbar)) {
-            $editoroptions = helper::get_editor_options(null);
-            $editoroptions['atto:toolbar'] = $toolbar;
-        } else {
-            $editoroptions = array(
-                'subdirs' => 0,
-                'maxbytes' => 0,
-                'maxfiles' => 0,
-                'changeformat' => 0,
-                'context' => null,
-                'noclean' => 0,
-                'trusttext' => 0,
-                'enable_filemanagement' => false,
-                'atto:toolbar' => !empty($toolbar) ? $toolbar : '',
-            );
-        }
-
-        $styles = array(
-            'class' => 'fullwidtheditor',
-        );
-        if (!empty($editoroptions['atto:toolbar'])) {
-            $styles['class'] .= ' hastoolbar';
-        } else {
-            $styles['class'] .= ' hasnotoolbar';
-        }
-
+    public function add_response_editor(string $name): void {
         $mform = $this->_form;
-        $mform->addElement('simpleeditor', $elementname, $elementlabel, $styles, $editoroptions);
-        $mform->setType($elementname, PARAM_RAW);
+        [$course, $cm] = get_course_and_cm_from_instance($this->_customdata->id, 'response');
+
+        $editoroptions = [
+            'maxfiles' => -1,
+            'maxbytes' => $course->maxbytes,
+            'context' => \core\context\module::instance($cm->id),
+            'enable_filemanagement' => true,
+        ];
+        $mform->addElement(
+            'editor',
+            $name,
+            get_string('youranswer', 'response'),
+            ['class' => 'fullwidtheditor'],
+            $editoroptions,
+        );
+        $mform->setType($name, PARAM_RAW);
     }
 
     /**
@@ -200,11 +164,11 @@ abstract class abstractform extends moodleform {
 
         // Now some housekeeping.
         if (($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) === 0) {
-            $completions->people_all = array();
+            $completions->people_all = [];
             $completions->number_all = 0;
         }
         if (($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) === 0) {
-            $completions->people_group = array();
+            $completions->people_group = [];
             $completions->number_group = 0;
         }
 
@@ -240,7 +204,7 @@ abstract class abstractform extends moodleform {
         $mform->addElement('html', '<div class="maximumwordsprompt" data-message="' . $prompt . '"></div>');
 
         // Load our JavaScript for counting words.
-        $PAGE->requires->js_call_amd('mod_response/formwordcount', 'init', array('#mod_response_form_' . $responseid));
+        $PAGE->requires->js_call_amd('mod_response/formwordcount', 'init', ['#mod_response_form_' . $responseid]);
     }
 
     /**
@@ -253,7 +217,7 @@ abstract class abstractform extends moodleform {
         $disable = function ($form, $disable) {
             if (!empty($form->_elements)) {
                 foreach ($form->_elements as $idx => $element) {
-                    if (in_array($element->_type, array('hidden', 'html', 'static'))) {
+                    if (in_array($element->_type, ['hidden', 'html', 'static'])) {
                         continue;
                     }
                     if (!empty($element->_elements)) {
@@ -262,9 +226,9 @@ abstract class abstractform extends moodleform {
                         if (!empty($element->_attributes)) {
                             $element->_attributes['disabled'] = 'disabled';
                         } else {
-                            $element->_attributes = array(
+                            $element->_attributes = [
                                 'disabled' => 'disabled',
-                            );
+                            ];
                         }
                     }
                     $form->_elements[$idx] = $element;
@@ -285,10 +249,10 @@ abstract class abstractform extends moodleform {
             }
         }
         // We do this here because mutating an array while iterating over it isn't good.
-        $editorattrs = array(
+        $editorattrs = [
             'disabled' => 'disabled',
             'style' => 'width:100%;height:200px;resize:none',
-        );
+        ];
         foreach ($editors as $editorname) {
             $editor = $this->_form->getElement($editorname);
             $editorlabel = $editor->_label;

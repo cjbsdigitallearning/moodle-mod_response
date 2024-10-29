@@ -17,18 +17,13 @@
 /**
  * Upgrade code for responsetype_text
  *
- * @package   responsetype_text
- * @copyright 2020 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Stub for upgrade code
+ * @package   responsetype_text
+ * @copyright 2020 Catalyst IT Europe Ltd.
+ * @author 2020 Peter Spicer <peter.spicer@catalyst-eu.net>
  * @param int $oldversion
  * @return bool
- */
+ * */
 function xmldb_responsetype_text_upgrade($oldversion) {
     global $CFG, $DB;
 
@@ -52,6 +47,28 @@ function xmldb_responsetype_text_upgrade($oldversion) {
         }
 
         upgrade_plugin_savepoint(true, 2020090302, 'responsetype', 'text');
+    }
+
+    if ($oldversion < 2024091200) {
+
+        // Define field editorconfig to be dropped from responsetype_text.
+        $table = new xmldb_table('responsetype_text');
+        $field = new xmldb_field('editorconfig');
+
+        // Conditionally launch drop field editorconfig.
+        if ($dbmanager->field_exists($table, $field)) {
+            $dbmanager->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('overrideeditorconfig');
+
+        // Conditionally launch drop field overrideeditorconfig.
+        if ($dbmanager->field_exists($table, $field)) {
+            $dbmanager->drop_field($table, $field);
+        }
+
+        // Text savepoint reached.
+        upgrade_plugin_savepoint(true, 2024091200, 'responsetype', 'text');
     }
 
     return true;

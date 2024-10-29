@@ -6,8 +6,8 @@ Feature: Users should be able to complete courses
 
   Background:
     Given the following "courses" exist:
-      | fullname | shortname | category | groupmode |
-      | Course 1 | C1 | 0 | 1 |
+      | fullname | shortname | category | groupmode | enablecompletion |
+      | Course 1 | C1        | 0        | 1         | 1                |
     And the following "users" exist:
       | username | firstname | lastname | email |
       | teacher1 | Teacher | 1 | teacher1@example.com |
@@ -18,17 +18,13 @@ Feature: Users should be able to complete courses
       | student1 | C1 | student |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I navigate to "Edit settings" in current page administration
-    And I set the following fields to these values:
-      | Enable completion tracking | Yes |
-    And I press "Save and display"
     And I add a "Response" to section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Completion tracking | Show activity as complete when conditions are met |
+      | Add requirements | 1 |
       | Student must submit an answer to complete this activity | 1 |
     And I press "Save and return to course"
     And I log out
@@ -45,7 +41,7 @@ Feature: Users should be able to complete courses
     And I wait "2" seconds
     Then I should see "You wrote"
     And I should see "overcast and bleak"
-    And the "The weather" "response" activity with "auto" completion should be marked as complete
+    And "Done" "button" should exist in the "The weather" "activity"
 
   @javascript
   Scenario: Student completes not inline, marked completed.
@@ -54,7 +50,6 @@ Feature: Users should be able to complete courses
     And I follow "The weather"
     And I set the field "Your answer" to "It is overcast and bleak outside."
     And I press "Submit"
-    And I am on "Course 1" course homepage
     Then I should see "You wrote"
     And I should see "overcast and bleak"
-    And the "The weather" "response" activity with "auto" completion should be marked as complete
+    And I should see "Done: Submit an answer"

@@ -29,6 +29,7 @@ $string['cannotparticipate'] = 'This is a preview of the activity, it cannot be 
 $string['caption'] = 'Caption for Response';
 $string['completed1'] = '1 person has completed this activity.';
 $string['completedn'] = '{$a} people have completed this activity.';
+$string['completiondetail:submission'] = 'Submit an answer';
 $string['configmaxprofileimages'] = 'While completing a response activity, a student can be shown a number of profile images of other students that have completed that activity already. If a lot of students complete an activity, it might be better to show users a few profile pictures and the wording "+5 others" or however many there were. This setting lets you set the maximum number of profile images that will be shown.';
 $string['content'] = 'Activity Content';
 $string['contentheader'] = 'Content';
