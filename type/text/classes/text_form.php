@@ -66,7 +66,10 @@ class text_form extends abstractform {
 
         $this->add_precomplete_completion($submitarea);
 
-        $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));
+        $classarray = [
+            "class" => "form-group",
+        ];
+        $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'), $classarray);
         $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
     }
 
