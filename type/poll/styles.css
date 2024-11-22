@@ -1,51 +1,63 @@
 /* Styles for the student completing the activity. */
-.responsetype-poll.has-form .user-choice {
+.path-mod-response .responsetype-poll.has-form .user-choice,
+.modtype_response .responsetype-poll.has-form .user-choice {
     font-weight: 600;
 }
 
-.activity.modtype_response .responsetype-poll.has-form .maximumwordsprompt {
+.path-mod-response .activity.modtype_response .responsetype-poll.has-form .maximumwordsprompt,
+.modtype_response .activity.modtype_response .responsetype-poll.has-form .maximumwordsprompt {
     margin: 0;
     padding: 0;
 }
-.user-response .form-group[data-groupname^="poll_choices"] .form-inline {
+.path-mod-response .user-response .form-group[data-groupname^="poll_choices"] .form-inline,
+.modtype_response .user-response .form-group[data-groupname^="poll_choices"] .form-inline {
     flex: 0 0 100%;
     width: 100%;
     display: block;
 }
-.user-response .form-group[data-groupname^="poll_choices"] label {
+.path-mod-response .user-response .form-group[data-groupname^="poll_choices"] label,
+.modtype_response .user-response .form-group[data-groupname^="poll_choices"] label {
     align-items: normal;
     justify-content: left;
 }
-.user-response.responsetype-poll .mform > .form-group {
+.path-mod-response .user-response.responsetype-poll .mform > .form-group,
+.modtype_response .user-response.responsetype-poll .mform > .form-group {
     margin-left: 0;
 }
-.user-response.responsetype-poll .mform .form-inline .form-check-input {
+.path-mod-response .user-response.responsetype-poll .mform .form-inline .form-check-input,
+.modtype_response .user-response.responsetype-poll .mform .form-inline .form-check-input {
     margin-top: 4px;
     margin-right: 5px;
 }
-.user-response.responsetype-poll .mform .femptylabel .col-md-4 {
+.path-mod-response .user-response.responsetype-poll .mform .femptylabel .col-md-4,
+.modtype_response .user-response.responsetype-poll .mform .femptylabel .col-md-4 {
     flex: 0 0 0%;
     max-width: 0;
 }
-.user-response.responsetype-poll .mform .femptylabel .col-md-8 {
+.path-mod-response .user-response.responsetype-poll .mform .femptylabel .col-md-8,
+.modtype_response .user-response.responsetype-poll .mform .femptylabel .col-md-8 {
     flex: 0 0 100%;
     max-width: 100%;
 }
 
 /* Styles for showing the answers to students. */
-.user-response.responsetype-poll .col-sm-1.text-center {
+.path-mod-response .user-response.responsetype-poll .col-sm-1.text-center,
+.modtype_response .user-response.responsetype-poll .col-sm-1.text-center {
     min-width: 100px;
     margin-bottom: 20px;
 }
-.user-response.responsetype-poll .user-answer {
+.path-mod-response .user-response.responsetype-poll .user-answer,
+.modtype_response .user-response.responsetype-poll .user-answer {
     display:inline;
     font-weight: 600;
 }
-.user-response.responsetype-poll .user-reflection, .activity-course .responsetype-poll .user-reflection {
+.path-mod-response .user-response.responsetype-poll .user-reflection, .activity-course .responsetype-poll .user-reflection,
+.modtype_response .user-response.responsetype-poll .user-reflection, .activity-course .responsetype-poll .user-reflection {
     display: block;
 }
 
-.user-response.responsetype-poll .response-time {
+.path-mod-response .user-response.responsetype-poll .response-time,
+.modtype_response .user-response.responsetype-poll .response-time {
     clear:both;
     font-size: 0.85em;
     font-style: italic;
@@ -55,41 +67,50 @@
 }
 
 /* Styles for the overall summary. */
-.activity-course .responsetype-poll .user-wrote {
+.path-mod-response .activity-course .responsetype-poll .user-wrote,
+.modtype_response .activity-course .responsetype-poll .user-wrote {
     float:left;
     width: 100%;
 }
-.activity-course .responsetype-poll .user-answer {
+.path-mod-response .activity-course .responsetype-poll .user-answer,
+.modtype_response .activity-course .responsetype-poll .user-answer {
     display:inline;
     font-weight: 600;
 }
 
-.activity-title.responsetype-poll .row:nth-of-type(2) {
+.path-mod-response .activity-title.responsetype-poll .row:nth-of-type(2),
+.modtype_response .activity-title.responsetype-poll .row:nth-of-type(2) {
     margin-top: 40px;
 }
-.user-response.responsetype-poll .user-wrapper {
+.path-mod-response .user-response.responsetype-poll .user-wrapper,
+.modtype_response .user-response.responsetype-poll .user-wrapper {
     background: #fff;
     padding: 10px 10px 0;
     margin-bottom: 15px;
 }
-.user-response.responsetype-poll .aggregate {
+.path-mod-response .user-response.responsetype-poll .aggregate,
+.modtype_response .user-response.responsetype-poll .aggregate {
     padding-bottom: 30px;
     margin-bottom: 30px;
     border-bottom: 1px solid #ddd;
 }
-.user-response.responsetype-poll .aggregate-container canvas {
+.path-mod-response .user-response.responsetype-poll .aggregate-container canvas,
+.modtype_response .user-response.responsetype-poll .aggregate-container canvas {
     height: 1px;
 }
 
 /* Styles for the teacher summary. */
-.view-all.responsetype-poll .view-all-response .user-wrote {
+.path-mod-response .view-all.responsetype-poll .view-all-response .user-wrote,
+.modtype_response .view-all.responsetype-poll .view-all-response .user-wrote {
     float: left;
 }
-.view-all.responsetype-poll .view-all-response .user-answer {
+.path-mod-response .view-all.responsetype-poll .view-all-response .user-answer,
+.modtype_response .view-all.responsetype-poll .view-all-response .user-answer {
     display:inline;
     font-weight: 600;
 }
-.view-all #viewall_chart {
+.path-mod-response .view-all #viewall_chart,
+.modtype_response .view-all #viewall_chart {
     margin-top: 30px;
     margin-bottom: 40px;
     margin-left: 10%;

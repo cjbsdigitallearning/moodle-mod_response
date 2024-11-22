@@ -1,17 +1,21 @@
 /* Styles for showing the answers to students. */
-.user-response.responsetype-text .col-sm-1.text-center {
+.path-mod-response .user-response.responsetype-text .col-sm-1.text-center,
+.modtype_response .user-response.responsetype-text .col-sm-1.text-center {
     min-width: 100px;
     margin-bottom: 20px;
 }
-.user-response.responsetype-text .user-wrote {
+.path-mod-response .user-response.responsetype-text .user-wrote,
+.modtype_response .user-response.responsetype-text .user-wrote {
     font-weight: bold;
     float: left;
     padding-right: 5px;
 }
-.user-response.responsetype-text .user-answer {
+.path-mod-response .user-response.responsetype-text .user-answer,
+.modtype_response .user-response.responsetype-text .user-answer {
     display: inline;
 }
-.user-response.responsetype-text .response-time {
+.path-mod-response .user-response.responsetype-text .response-time,
+.modtype_response .user-response.responsetype-text .response-time {
     clear:both;
     font-size: 0.85em;
     font-style: italic;
@@ -19,16 +23,19 @@
     margin-top: 15px;
     margin-bottom: 15px;
 }
-.user-response.responsetype-text .user-answer p:first-of-type {
+.path-mod-response .user-response.responsetype-text .user-answer p:first-of-type,
+.modtype_response .user-response.responsetype-text .user-answer p:first-of-type {
     margin-top: 0;
 }
 
 /* Styles for the overall summary. */
-.activity-course .responsetype-text .user-wrote {
+.path-mod-response .activity-course .responsetype-text .user-wrote,
+.modtype_response .activity-course .responsetype-text .user-wrote {
     font-weight: bold;
     float: left;
     padding-right: 5px;
 }
-.activity-course .responsetype-text .user-answer {
+.path-mod-response .activity-course .responsetype-text .user-answer,
+.modtype_response .activity-course .responsetype-text .user-answer {
     display: inline;
 }
