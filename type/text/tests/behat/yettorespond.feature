@@ -75,6 +75,7 @@ Feature: Users should be able to view which text activities they are yet to resp
     # Viewing the summary
     And I follow "View course summary"
     And I should see "The weather"
+    And I follow "The weather"
     And I set the field "Your answer" to "It is overcast outside right now."
     And I press "Submit"
     # Viewing the summary
