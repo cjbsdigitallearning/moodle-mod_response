@@ -42,7 +42,6 @@
         * reflection_text - reflection text of the student
         * timecompleted_datetime - date and time of completion
         * delete_link - URL to be able to delete the response if user has the capability
-    * context_link - URL to the activity in context
     * aggregate - stringified JSON object containing all the chart data
     * colours - stringified JSON array of colours to use in the chart
 
@@ -62,13 +61,12 @@
                 "delete_link": "http://your.moodle.here/mod/response/deleteanswer.php?id=102&u=3"
             }
         ],
-        "context_link": "http://your.moodle.here/course/view.php?id=2#module-10",
         "aggregate": "{\"all\":{\"title\":\"Answers given by all students\",\"labels\":[\"Sunny\",\"Cloudy\",\"Stormy\",\"Raining\",\"Other\"],\"data\":[0,2,0,0,0]} }",
         "colours": "[\"#f3c300\",\"#875692\",\"#f38400\",\"#a1caf1\",\"#be0032\",\"#c2b280\",\"#7f180d\",\"#008856\",\"#e68fac\",\"#0067a5\"]"
     }
 }}
 <section class="response-activity view-all responsetype-poll">
-    <a class="btn btn-default pull-right" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a><h2>{{{icon}}} {{{heading}}}</h2>
+    <h2>{{{icon}}} {{{heading}}}</h2>
     {{{group_selector}}}
     <div class="question">{{{question}}}</div>
 

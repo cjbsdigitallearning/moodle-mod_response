@@ -20,8 +20,6 @@ use stdClass;
 use renderable;
 use renderer_base;
 use templatable;
-use mod_response\helper;
-use moodle_url;
 use pix_icon;
 use context_module;
 
@@ -81,15 +79,6 @@ class viewall extends abstractoutput implements renderable, templatable {
             $data->all_responses[$id]->response_text = format_text($response->response_text);
             $data->all_responses[$id]->timecompleted_date = userdate($timestamp, $dateformat, 99, false, false);
             $data->all_responses[$id]->timecompleted_datetime = userdate($timestamp, $datetimeformat, 99, false, false);
-        }
-
-        // Link back to the activity itself.
-        if ($this->data->course->format !== 'singleactivity') {
-            $course = $this->data->course;
-            $cm = $this->data->cm;
-            $data->context_link = new moodle_url('/course/view.php', ['id' => $course->id], 'module-' . $cm->id);
-        } else {
-            $data->context_link = new moodle_url('/view.php', ['id' => $cm->id]);
         }
 
         return $data;

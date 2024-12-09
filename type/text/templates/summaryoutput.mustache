@@ -32,7 +32,6 @@
     * activity_question - the question prompt given in the activity
     * user_response - response text
     * timemodified_date - date/time the response was modified
-    * context_link - URL to the activity in context
     * response_id - id of the response (as per response table)
 
     Example context (json):
@@ -42,8 +41,7 @@
         "activity_question": "What's the weather doing today?",
         "user_response": "It's sunny outside and it's warm for October.",
         "timemodified_date": "02/10/17",
-        "context_link": "http://your.moodle.here/course/view.php?id=2#module-10",
-        "response_id": "1",
+        "response_id": "1"
     }
 }}
 <div class="activity-title responsetype-text" data-response="{{response_id}}">
@@ -66,7 +64,6 @@
             <div class="clearfix"></div>
             <div class="context-link text-right">
                 <span class="time-completed">{{{timemodified_date}}}</span>
-                <a class="btn btn-default" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a>
             </div>
         </div>
     </div>
