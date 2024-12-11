@@ -38,7 +38,6 @@
         * response_text - response text of the student
         * timecompleted_datetime - date and time of completion
         * delete_link - URL to be able to delete the response if user has the capability
-    * context_link - URL to the activity in context
 
     Example context (json):
     {
@@ -55,11 +54,10 @@
                 "delete_link": "http://your.moodle.here/mod/response/deleteanswer.php?id=102&u=3"
             }
         ],
-        "context_link": "http://your.moodle.here/course/view.php?id=2#module-10",
     }
 }}
 <section class="response-activity view-all responsetype-text">
-    <a class="btn btn-default pull-right" href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a><h2>{{{icon}}} {{{heading}}}</h2>
+    <h2>{{{icon}}} {{{heading}}}</h2>
     {{{group_selector}}}
     <div class="question">{{{question}}}</div>
 

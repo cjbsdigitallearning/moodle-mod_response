@@ -92,15 +92,6 @@ class viewall extends abstractoutput implements renderable, templatable {
         $data->aggregate = json_encode($data->aggregate);
         $data->chart_colours = $this->stringify_chart_colorset();
 
-        // Link back to the activity itself.
-        if ($this->data->course->format !== 'singleactivity') {
-            $course = $this->data->course;
-            $cm = $this->data->cm;
-            $data->context_link = new moodle_url('/course/view.php', ['id' => $course->id], 'module-' . $cm->id);
-        } else {
-            $data->context_link = new moodle_url('/view.php', ['id' => $cm->id]);
-        }
-
         return $data;
     }
 }

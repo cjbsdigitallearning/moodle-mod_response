@@ -94,7 +94,6 @@ $string['togglepeerresultsgroup'] = 'Group';
 $string['togglepeerresultsstudygroup'] = 'Study group';
 $string['viewallresponses'] = 'View all responses';
 $string['viewcoursesummary'] = 'View course summary';
-$string['viewincontext'] = 'View in context';
 $string['viewownpagedescription'] = 'Display description on own page?';
 $string['yettorespond'] = 'Yet to respond to';
 $string['youranswer'] = 'Your answer';
