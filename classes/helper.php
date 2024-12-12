@@ -358,4 +358,55 @@ class helper {
             $response->edit_url = new moodle_url('/mod/response/view.php', ['id' => $cm->id, 'editing' => 1]);
         }
     }
+
+    /**
+     * Get list of users with responses in the course.
+     *
+     * @param int $courseid
+     * @return array
+     */
+    public static function get_all_userids_with_responses_in_course(int $courseid) {
+        global $DB;
+        $sql = "SELECT u.id FROM {user} u
+                 JOIN {response_user} ru ON ru.userid = u.id
+                 JOIN {response} r ON r.id = ru.response AND r.course = ?
+                 JOIN {user_enrolments} ue ON u.id = ue.userid
+           INNER JOIN {enrol} e ON ue.enrolid = e.id AND e.courseid = ?";
+        $params = [$courseid, $courseid];
+        return $DB->get_fieldset_sql($sql, $params) ?: [];
+    }
+
+    public static function filter_responses(array $responses, array $filters, int $courseid) {
+        // Return responses from respective user if userid is set.
+        if ($userid = $filters['userid']) {
+            return array_filter($responses, function($response) use ($userid) {
+                return $response->userid == $userid;
+            });
+        }
+
+        // Filter by first name initial.
+        if ($ifirst = $filters['ifirst']) {
+            $responses = array_filter($responses, function($response) use ($ifirst) {
+                return stripos($response->first_name, $ifirst) === 0;
+            });
+        }
+
+        // Filter by last name initial.
+        if ($ilast = $filters['ilast']) {
+            $responses = array_filter($responses, function($response) use ($ilast) {
+                return stripos($response->last_name, $ilast) === 0;
+            });
+        }
+
+        // Filter by search.
+        if ($search = $filters['search']) {
+            $searchusers = search_users($courseid, 0, $search);
+            $userids = array_column($searchusers, 'id');
+            $responses = array_filter($responses, function($response) use ($userids) {
+                return in_array($response->userid, $userids);
+            });
+        }
+
+        return $responses;
+    }
 }

@@ -16,6 +16,7 @@
 
 namespace mod_response\output;
 
+use core\output\comboboxsearch;
 use context_module;
 use plugin_renderer_base;
 use stdClass;
@@ -211,5 +212,65 @@ class renderer extends plugin_renderer_base {
         $data = $rawdata->export_for_template($this);
         $component = 'responsetype_' . $data->responsetype;
         return parent::render_from_template($component . '/inlinesubmission', $data);
+    }
+
+    /**
+     * Render the tertiary nav for the manage categories page.
+     *
+     * @param \mod_response\output\action_bar $actionbar
+     * @return string The renderered template
+     */
+    public function render_action_bar(\mod_response\output\action_bar $actionbar): string {
+        return $this->render_from_template($actionbar->get_template(), $actionbar->export_for_template($this));
+    }
+
+
+    /**
+     * Using this initials selector means you'll have to retain the use of the templates & JS to handle form submission.
+     * If a simple redirect on each selection is desired the standard user_search() within the user renderer is what you are after.
+     *
+     * @param object $course The course object.
+     * @param context $context Our current context.
+     * @param string $slug The slug for the report that called this function.
+     * @return stdClass The data to output.
+     */
+    public function initials_selector(
+        object $course,
+        \context $context,
+        string $slug
+    ): stdClass {
+        global $SESSION, $COURSE;
+        // User search.
+        $searchvalue = optional_param('search', null, PARAM_NOTAGS);
+        $url = new \moodle_url($slug, ['id' => $context->instanceid]);
+        $firstinitial = $SESSION->modresponse["filterfirstname-{$context->id}"] ?? '';
+        $lastinitial  = $SESSION->modresponse["filtersurname-{$context->id}"] ?? '';
+
+        $renderer = $this->page->get_renderer('core_user');
+        $initialsbar = $renderer->partial_user_search($url, $firstinitial, $lastinitial, true);
+
+        $currentfilter = '';
+        if ($firstinitial !== '' && $lastinitial !== '') {
+            $currentfilter = get_string('filterbothactive', 'mod_response', ['first' => $firstinitial, 'last' => $lastinitial]);
+        } else if ($firstinitial !== '') {
+            $currentfilter = get_string('filterfirstactive', 'mod_response', ['first' => $firstinitial]);
+        } else if ($lastinitial !== '') {
+            $currentfilter = get_string('filterlastactive', 'mod_response', ['last' => $lastinitial]);
+        }
+
+        $this->page->requires->js_call_amd('mod_response/searchwidget/initials', 'init', [$slug, $searchvalue]);
+
+        $formdata = (object) [
+            'courseid' => $COURSE->id,
+            'cmid' => $context->instanceid,
+            'initialsbars' => $initialsbar,
+        ];
+        $dropdowncontent = $this->render_from_template('mod_response/initials_dropdown_form', $formdata);
+
+        return (object) [
+             'buttoncontent' => $currentfilter !== '' ? $currentfilter : get_string('filterbyname', 'mod_response'),
+             'buttonheader' => $currentfilter !== '' ? get_string('name') : null,
+             'dropdowncontent' => $dropdowncontent,
+        ];
     }
 }

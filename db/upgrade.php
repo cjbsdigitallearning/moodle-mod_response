@@ -115,5 +115,9 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 20200020401, 'mod', 'response');
     }
 
+    if ($oldversion < 20241211002) {
+        upgrade_plugin_savepoint(true, 20241211002, 'mod', 'response');
+    }
+
     return true;
 }

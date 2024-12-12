@@ -15,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * External functions and service declaration for Response
  *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Documentation: {@link https://moodledev.io/docs/apis/subsystems/external/description}
+ *
+ * @package    mod_response
+ * @category   webservice
+ * @copyright  2024 Michael Kotlyar <michael.kotlyar@catalyst-eu.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 20241211002;
-$plugin->release   = '1.0.1';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->maturity  = MATURITY_ALPHA;
+$functions = [
+    'mod_response_get_all_users_with_responses_in_course' => [
+        'classname' => \mod_response\external\get_all_users_with_responses_in_course::class,
+        'description' => 'Returns the users with responses for the course.',
+        'type' => 'read',
+        'ajax' => true,
+    ],
+];

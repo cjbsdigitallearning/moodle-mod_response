@@ -29,6 +29,12 @@ require_once($CFG->dirroot.'/mod/response/lib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course module ID.
 $r = optional_param('r', 0, PARAM_INT); // Response instance ID.
+$userid = optional_param('userid', '', PARAM_TEXT); // User id if selected in user search popup.
+$search = optional_param('search', '', PARAM_TEXT); // User search.
+$firstinitial = optional_param('ifirst', '', PARAM_ALPHA); // First initial.
+$lastinitial = optional_param('ilast', '', PARAM_ALPHA); // Last initial.
+
+$PAGE->requires->js_call_amd('mod_response/searchwidget/user', 'init');
 
 if ($r) {
     if (!$response = $DB->get_record('response', ['id' => $r])) {
@@ -53,6 +59,14 @@ require_capability('mod/response:viewall', $context);
 $response->cm = $cm;
 $response->course = $course;
 
+// Set initials.
+if (isset($firstinitial)) {
+    $SESSION->modresponse["filterfirstname-{$context->id}"] = $firstinitial;
+}
+if (isset($lastinitial)) {
+    $SESSION->modresponse["filtersurname-{$context->id}"] = $lastinitial;
+}
+
 // Set up and show the form.
 $PAGE->set_title($course->shortname . ': ' . $response->name);
 $PAGE->set_heading($course->fullname);
@@ -60,6 +74,9 @@ $PAGE->set_heading($course->fullname);
 $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
+
+$actionbar = new \mod_response\output\action_bar($context);
+echo $output->render_action_bar($actionbar);
 
 $response->group_selector = groups_print_activity_menu($cm, $PAGE->url, true);
 $group = groups_get_activity_group($cm);
@@ -74,6 +91,15 @@ if ($group == 0) {
     $members = groups_get_members($group, 'u.id');
     $response->all_responses = $instance->load_response_for_users($response, array_keys($members), true, true);
 }
+
+// Filter responses according to query paramaters.
+$filters = [
+    'userid' => $userid,
+    'search' => $search,
+    'ifirst' => $firstinitial,
+    'ilast' => $lastinitial,
+];
+$response->all_responses = helper::filter_responses($response->all_responses, $filters, $course->id);
 
 // If they can delete responses, we need to build suitable links.
 if (has_capability('mod/response:manage', $context)) {

@@ -155,6 +155,15 @@
 }
 
 /* Styles for the teacher summary. */
+#page-mod-response-viewall .usersearchdropdown {
+    top: 100% !important;
+    transform: none !important;
+}
+
+#page-mod-response-viewall .initialsdropdown {
+    width: 460px;
+}
+
 .view-all .view-all-response {
     padding-top: 30px;
     padding-bottom: 30px;
