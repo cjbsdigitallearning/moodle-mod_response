@@ -376,35 +376,35 @@ class helper {
         return $DB->get_fieldset_sql($sql, $params) ?: [];
     }
 
+    /**
+     * Filters list of responses with filter settings.
+     *
+     * @param array $responses The list of responses to filter
+     * @param array $filters The filters to apply 'userid', 'ifirst', 'ilast', and 'search'
+     * @param integer $courseid ID of the course, used to retrieve users that belong to the course the response is in.
+     * @return array
+     */
     public static function filter_responses(array $responses, array $filters, int $courseid) {
         // Return responses from respective user if userid is set.
-        if ($userid = $filters['userid']) {
-            return array_filter($responses, function($response) use ($userid) {
-                return $response->userid == $userid;
-            });
+        if (isset($filters['userid']) && $userid = $filters['userid']) {
+            return array_filter($responses, static fn($response) => $response->userid == $userid);
         }
 
         // Filter by first name initial.
-        if ($ifirst = $filters['ifirst']) {
-            $responses = array_filter($responses, function($response) use ($ifirst) {
-                return stripos($response->first_name, $ifirst) === 0;
-            });
+        if (isset($filters['ifirst']) && $ifirst = $filters['ifirst']) {
+            $responses = array_filter($responses, static fn($response) => stripos($response->first_name, $ifirst) === 0);
         }
 
         // Filter by last name initial.
-        if ($ilast = $filters['ilast']) {
-            $responses = array_filter($responses, function($response) use ($ilast) {
-                return stripos($response->last_name, $ilast) === 0;
-            });
+        if (isset($filters['ilast']) && $ilast = $filters['ilast']) {
+            $responses = array_filter($responses, static fn($response) => stripos($response->last_name, $ilast) === 0);
         }
 
         // Filter by search.
-        if ($search = $filters['search']) {
+        if (isset($filters['search']) && $search = $filters['search']) {
             $searchusers = search_users($courseid, 0, $search);
             $userids = array_column($searchusers, 'id');
-            $responses = array_filter($responses, function($response) use ($userids) {
-                return in_array($response->userid, $userids);
-            });
+            $responses = array_filter($responses, static fn($response) => in_array($response->userid, $userids));
         }
 
         return $responses;
