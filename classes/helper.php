@@ -358,4 +358,55 @@ class helper {
             $response->edit_url = new moodle_url('/mod/response/view.php', ['id' => $cm->id, 'editing' => 1]);
         }
     }
+
+    /**
+     * Get list of users with responses in the course.
+     *
+     * @param int $courseid
+     * @return array
+     */
+    public static function get_all_userids_with_responses_in_course(int $courseid) {
+        global $DB;
+        $sql = "SELECT u.id FROM {user} u
+                 JOIN {response_user} ru ON ru.userid = u.id
+                 JOIN {response} r ON r.id = ru.response AND r.course = ?
+                 JOIN {user_enrolments} ue ON u.id = ue.userid
+           INNER JOIN {enrol} e ON ue.enrolid = e.id AND e.courseid = ?";
+        $params = [$courseid, $courseid];
+        return $DB->get_fieldset_sql($sql, $params) ?: [];
+    }
+
+    /**
+     * Filters list of responses with filter settings.
+     *
+     * @param array $responses The list of responses to filter
+     * @param array $filters The filters to apply 'userid', 'ifirst', 'ilast', and 'search'
+     * @param integer $courseid ID of the course, used to retrieve users that belong to the course the response is in.
+     * @return array
+     */
+    public static function filter_responses(array $responses, array $filters, int $courseid) {
+        // Return responses from respective user if userid is set.
+        if (isset($filters['userid']) && $userid = $filters['userid']) {
+            return array_filter($responses, static fn($response) => $response->userid == $userid);
+        }
+
+        // Filter by first name initial.
+        if (isset($filters['ifirst']) && $ifirst = $filters['ifirst']) {
+            $responses = array_filter($responses, static fn($response) => stripos($response->first_name, $ifirst) === 0);
+        }
+
+        // Filter by last name initial.
+        if (isset($filters['ilast']) && $ilast = $filters['ilast']) {
+            $responses = array_filter($responses, static fn($response) => stripos($response->last_name, $ilast) === 0);
+        }
+
+        // Filter by search.
+        if (isset($filters['search']) && $search = $filters['search']) {
+            $searchusers = search_users($courseid, 0, $search);
+            $userids = array_column($searchusers, 'id');
+            $responses = array_filter($responses, static fn($response) => in_array($response->userid, $userids));
+        }
+
+        return $responses;
+    }
 }
