@@ -93,6 +93,16 @@ function response_add_instance($moduleinstance, $mform = null) {
     $dummyinstance->response = $newinstance->id;
     $subplugin->add_instance($dummyinstance, $mform);
 
+    // Add completion event to calendar.
+    if (!empty($moduleinstance->completionexpected)) {
+        \core_completion\api::update_completion_date_event(
+            $moduleinstance->coursemodule,
+            'response',
+            $newinstance->id,
+            $moduleinstance->completionexpected
+        );
+    }
+
     return $newinstance->id;
 }
 
@@ -136,6 +146,14 @@ function response_update_instance($moduleinstance, $mform = null) {
     $subplugin = helper::instance_factory($moduleinstance->responsetype, 'configuration');
     $subplugin->update_instance($moduleinstance, $mform);
 
+    // Update completion event in calendar.
+    \core_completion\api::update_completion_date_event(
+        $moduleinstance->coursemodule,
+        'response',
+        $newinstance->id,
+        $moduleinstance->completionexpected
+    );
+
     return true;
 }
 
@@ -156,6 +174,10 @@ function response_delete_instance($id) {
     $subplugin->delete_instance($id);
 
     $DB->delete_records('response', ['id' => $id]);
+
+    // Delete completion event from calendar.
+    $cm = get_coursemodule_from_instance('response', $id);
+    \core_completion\api::update_completion_date_event($cm->id, 'response', $id, null);
 
     return true;
 }
