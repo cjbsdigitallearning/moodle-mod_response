@@ -5,3 +5,5 @@ include:
   ref: master
 stages:
 - test
+variables:
+  MOODLE_REPO: https://gitlab-ci-token:${CI_JOB_TOKEN}@git.catalyst-eu.net/moodle/moodle-4.3-catalyst-eu.git
