@@ -115,5 +115,27 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 20200020401, 'mod', 'response');
     }
 
+    if ($oldversion < 20250131000) {
+
+        $sql = "SELECT cm.*
+                  FROM {course_modules} cm
+                  JOIN {modules} m ON m.id = cm.module AND m.name  = 'response'
+                 WHERE cm.completionexpected IS NOT NULL";
+
+        if ($coursemodules = $DB->get_records_sql($sql)) {
+            foreach ($coursemodules as $cm) {
+                $completionexpected = !empty($cm->completionexpected) ? $cm->completionexpected : null;
+                \core_completion\api::update_completion_date_event(
+                    $cm->id,
+                    'response',
+                    $cm->instance,
+                    $completionexpected,
+                );
+            }
+        }
+
+        upgrade_plugin_savepoint(true, 20250131000, 'mod', 'response');
+    }
+
     return true;
 }
