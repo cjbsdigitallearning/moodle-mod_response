@@ -147,7 +147,7 @@ function response_update_instance($moduleinstance, $mform = null) {
     $subplugin->update_instance($moduleinstance, $mform);
 
     // Update completion event in calendar.
-    $completionexpected = !empty($data->completionexpected) ? $moduleinstance->completionexpected : null;
+    $completionexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event(
         $moduleinstance->coursemodule,
         'response',
