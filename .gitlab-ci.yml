@@ -1,7 +1,7 @@
 ---
 include:
-- file: /pluginci/pluginci.yml
-  project: clients/project-tools/project-scripts
-  ref: master
+- file: /pluginci.yml
+  project: clients/project-tools/plugin-ci
+  ref: main
 stages:
 - test
