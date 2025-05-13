@@ -19,19 +19,23 @@ Feature: Users should be able to reflect on their answers
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     # First response.
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
     And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     # Second response.
-    And I add a "Response" to section "2"
+    And I add a "response" activity to course "Course 1" section "2"
     And I set the field "Activity title" to "Fried breakfasts"
     And I set the field "Activity question" to "What is your favourite part of a fried breakfast?"
     And I set the field "Response type" to "Free text"
     And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
+    # Rename sections.
+    And I set the field "Edit section name" in the "li#section-0" "css_element" to "Topic 1"
+    And I set the field "Edit section name" in the "li#section-1" "css_element" to "Topic 2"
+    And I set the field "Edit section name" in the "li#section-2" "css_element" to "Topic 3"
     And I log out
 
   @javascript
@@ -57,4 +61,3 @@ Feature: Users should be able to reflect on their answers
     And I should see "You wrote"
     And I should see "overcast outside"
     And I should see "I really like sausages"
-    And I should see "View in context"

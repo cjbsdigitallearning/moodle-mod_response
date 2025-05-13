@@ -79,6 +79,7 @@ class action_bar implements templatable, renderable {
                 $this->context,
                 '/mod/response/viewall.php'
             );
+            $labelname = get_string('viewallresponses', 'mod_response');
             $initialselector = new comboboxsearch(
                 false,
                 $initialscontent->buttoncontent,
@@ -87,6 +88,10 @@ class action_bar implements templatable, renderable {
                 'initialswidget',
                 'initialsdropdown',
                 $initialscontent->buttonheader,
+                true,
+                $labelname,
+                $labelname,
+                'view-all-responses',
             );
             $data['initialselector'] = $initialselector->export_for_template($output);
 

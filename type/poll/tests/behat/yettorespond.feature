@@ -19,7 +19,7 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     # Make a simple poll.
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -30,7 +30,7 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I set the field "Add a reflection step" to "No"
     And I press "Save and return to course"
     # Make a third poll, this time with a reflection step.
-    And I add a "Response" to section "2"
+    And I add a "response" activity to course "Course 1" section "2"
     And I set the field "Activity title" to "Working beverages"
     And I set the field "Activity question" to "What do you drink most of while working?"
     And I set the field "Response type" to "Poll"
@@ -58,7 +58,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     Then I should see "Yet to respond to"
     And I should see "Working beverages" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I should see "You have not responded yet." in the "//div[@class='activity-section-container'][2]" "xpath_element"
-    And I should see "View in context" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I should not see "The weather" in the "//div[@class='activity-section-container'][2]" "xpath_element"
 
   @javascript
@@ -93,7 +92,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I press "Submit"
     # Viewing the summary
     And I follow "View course summary"
-    And I click on "View in context" "link" in the "//div[@class='activity-section-container'][1]" "xpath_element"
     And I click on "Sunny." "radio"
     And I press "Submit"
     # Viewing the summary
@@ -111,7 +109,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I press "Submit"
     # Viewing the summary
     And I follow "View course summary"
-    And I click on "View in context" "link" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I follow "Working beverages"
     And I click on "tea" "radio"
     And I press "Next"

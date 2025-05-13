@@ -42,7 +42,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students nothing about completion status.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -65,7 +65,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students the number of other completions.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -87,7 +87,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students other completions (but not a number).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -110,7 +110,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students the number of other completions when there is more than the minimum number of people.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -165,7 +165,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students other completions in their group only.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -194,7 +194,7 @@ Feature: Students should see some incentive to reply
   Scenario: Showing students other completions in their group only (but not a number).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |

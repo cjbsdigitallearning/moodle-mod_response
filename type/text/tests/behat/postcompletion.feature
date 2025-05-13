@@ -23,7 +23,7 @@ Feature: Students should see others' responses
   Scenario: Not showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -50,7 +50,7 @@ Feature: Students should see others' responses
   Scenario: Showing students answers of other students as configured at activity level.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -88,7 +88,7 @@ Feature: Students should see others' responses
       | mod/response:viewother | Prevent | student | Course | C1 |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -128,7 +128,7 @@ Feature: Students should see others' responses
       | student6 | C1 | student |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |
@@ -136,7 +136,7 @@ Feature: Students should see others' responses
       | Response display | Inline - within the module section |
       | All | 1 |
     And I press "Save and return to course"
-    And I add a "Response" to section "2"
+    And I add a "response" activity to course "Course 1" section "2"
     And I set the following fields to these values:
       | Activity title | Fried breakfasts |
       | Activity question | What is your favourite part of a fried breakfast? |

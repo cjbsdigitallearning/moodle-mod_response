@@ -22,7 +22,7 @@ Feature: Users might choose to withdraw and submit a new answer
       | mod/response:deleteown | Allow | editingteacher | Course | C1 |
     And I am on the "C1" "course" page logged in as "teacher1"
     And I turn editing mode on
-    And I add a "Response" to section "1" and I fill the form with:
+    And I add a "response" activity to course "Course 1" section "1" and I fill the form with:
      | Activity title        | The weather                        |
      | Activity question     | What is the weather like outside?  |
      | Response type         | Poll                               |

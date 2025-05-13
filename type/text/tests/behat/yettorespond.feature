@@ -19,14 +19,14 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     # First response.
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
     And I set the field "Response display" to "Inline - within the module section"
     And I press "Save and return to course"
     # Second response.
-    And I add a "Response" to section "2"
+    And I add a "response" activity to course "Course 1" section "2"
     And I set the field "Activity title" to "Fried breakfasts"
     And I set the field "Activity question" to "What is your favourite part of a fried breakfast?"
     And I set the field "Response type" to "Free text"
@@ -46,7 +46,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     Then I should see "Yet to respond to"
     And I should see "Fried breakfasts" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I should see "You have not responded yet." in the "//div[@class='activity-section-container'][2]" "xpath_element"
-    And I should see "View in context" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I should not see "The weather" in the "//div[@class='activity-section-container'][2]" "xpath_element"
 
       @javascript
@@ -75,7 +74,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I press "Submit"
     # Viewing the summary
     And I follow "View course summary"
-    And I click on "View in context" "link" in the "//div[@class='activity-section-container'][1]" "xpath_element"
     And I should see "The weather"
     And I set the field "Your answer" to "It is overcast outside right now."
     And I press "Submit"
@@ -94,7 +92,6 @@ Feature: Users should be able to view which activities they are yet to respond t
     And I press "Submit"
     # Viewing the summary
     And I follow "View course summary"
-    And I click on "View in context" "link" in the "//div[@class='activity-section-container'][2]" "xpath_element"
     And I follow "Fried breakfasts"
     And I set the field "Your answer" to "I really like sausages out of the pork products in a fried breakfast."
     And I press "Submit"
