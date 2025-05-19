@@ -40,6 +40,7 @@ function response_supports($feature) {
         case FEATURE_SHOW_DESCRIPTION:
         case FEATURE_IDNUMBER:
         case FEATURE_GROUPS:
+        case FEATURE_COMPLETION:
         case FEATURE_COMPLETION_HAS_RULES:
         case FEATURE_BACKUP_MOODLE2:
             return true;
