@@ -93,6 +93,16 @@ function response_add_instance($moduleinstance, $mform = null) {
     $dummyinstance->response = $newinstance->id;
     $subplugin->add_instance($dummyinstance, $mform);
 
+    // Add completion event to calendar.
+    if (!empty($moduleinstance->completionexpected)) {
+        \core_completion\api::update_completion_date_event(
+            $moduleinstance->coursemodule,
+            'response',
+            $newinstance->id,
+            $moduleinstance->completionexpected
+        );
+    }
+
     return $newinstance->id;
 }
 
@@ -136,6 +146,15 @@ function response_update_instance($moduleinstance, $mform = null) {
     $subplugin = helper::instance_factory($moduleinstance->responsetype, 'configuration');
     $subplugin->update_instance($moduleinstance, $mform);
 
+    // Update completion event in calendar.
+    $completionexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
+    \core_completion\api::update_completion_date_event(
+        $moduleinstance->coursemodule,
+        'response',
+        $newinstance->id,
+        $completionexpected,
+    );
+
     return true;
 }
 
@@ -156,6 +175,10 @@ function response_delete_instance($id) {
     $subplugin->delete_instance($id);
 
     $DB->delete_records('response', ['id' => $id]);
+
+    // Delete completion event from calendar.
+    $cm = get_coursemodule_from_instance('response', $id);
+    \core_completion\api::update_completion_date_event($cm->id, 'response', $id, null);
 
     return true;
 }
@@ -661,4 +684,40 @@ function mod_response_output_fragment_completion($args) {
     }
 
     return $output;
+}
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param \core_calendar\action_factory $factory
+ * @return \core_calendar\local\event\entities\action_interface|null
+ */
+function mod_response_core_calendar_provide_event_action(calendar_event $event,
+                                                      \core_calendar\action_factory $factory, $userid = 0) {
+    global $USER;
+
+    if (empty($userid)) {
+        $userid = $USER->id;
+    }
+
+    $cm = get_fast_modinfo($event->courseid, $userid)->instances['response'][$event->instance];
+
+    $completion = new \completion_info($cm->get_course());
+
+    $completiondata = $completion->get_data($cm, false, $userid);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+        get_string('view'),
+        new \moodle_url('/mod/response/view.php', ['id' => $cm->id]),
+        1,
+        true
+    );
 }
