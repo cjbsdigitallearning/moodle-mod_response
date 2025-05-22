@@ -282,15 +282,16 @@ class mod_response_mod_form extends moodleform_mod {
      */
     public function add_completion_rules() {
         $mform = $this->_form;
+        $suffix = $this->get_suffix();
 
         $group = [];
-        $group[] = $mform->createElement('advcheckbox', 'requiresubmission', null, get_string('requiresubmission_desc', 'response'),
+        $group[] = $mform->createElement('advcheckbox', 'requiresubmission' . $suffix, null, get_string('requiresubmission_desc', 'response'),
                 ['group' => 'requiresubmissiongroup']);
 
-        $mform->addGroup($group, 'requiresubmissiongroup', get_string('requiresubmission', 'response'), ' &nbsp; ', false);
-        $mform->addHelpButton('requiresubmissiongroup', 'requiresubmission', 'response');
+        $mform->addGroup($group, 'requiresubmissiongroup' . $suffix, get_string('requiresubmission', 'response'), ' &nbsp; ', false);
+        $mform->addHelpButton('requiresubmissiongroup' . $suffix, 'requiresubmission', 'response');
 
-        return ['requiresubmissiongroup'];
+        return ['requiresubmissiongroup' . $suffix];
     }
 
     /**
@@ -300,6 +301,7 @@ class mod_response_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) {
-        return !empty($data['requiresubmission']);
+        $suffix = $this->get_suffix();
+        return !empty($data['requiresubmission' . $suffix]);
     }
 }
