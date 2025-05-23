@@ -18,7 +18,7 @@ Feature: Users should be able to complete courses
       | student1 | C1 | student |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
       | Activity title | The weather |
       | Activity question | What is the weather like outside? |

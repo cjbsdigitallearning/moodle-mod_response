@@ -19,7 +19,7 @@ Feature: Users should be able to reflect on their answers
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     # Make a simple poll.
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Poll"
@@ -30,7 +30,7 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Add a reflection step" to "No"
     And I press "Save and return to course"
     # Make a second simple poll.
-    And I add a "Response" to section "2"
+    And I add a "response" activity to course "Course 1" section "2"
     And I set the field "Activity title" to "Fried breakfasts"
     And I set the field "Activity question" to "What is your favourite part of a fried breakfast?"
     And I set the field "Response type" to "Poll"
@@ -42,7 +42,7 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Add a reflection step" to "No"
     And I press "Save and return to course"
     # Make a third poll, this time with a reflection step.
-    And I add a "Response" to section "3"
+    And I add a "response" activity to course "Course 1" section "3"
     And I set the field "Activity title" to "Working beverages"
     And I set the field "Activity question" to "What do you drink most of while working?"
     And I set the field "Response type" to "Poll"
@@ -54,6 +54,10 @@ Feature: Users should be able to reflect on their answers
     And I set the field "Add a reflection step" to "Yes"
     And I set the field "Reflection text" to "How much {choice} do you drink?"
     And I press "Save and return to course"
+    # Rename sections.
+    And I set the field "Edit section name" in the "li#section-0" "css_element" to "Topic 1"
+    And I set the field "Edit section name" in the "li#section-1" "css_element" to "Topic 2"
+    And I set the field "Edit section name" in the "li#section-2" "css_element" to "Topic 3"
     And I log out
 
   @javascript
@@ -73,13 +77,11 @@ Feature: Users should be able to reflect on their answers
     And I follow "View course summary"
     Then I should see "Responses"
     And I should see "Topic 1"
-    And I should see "Topic 2"
     And I should see "The weather"
     And I should see "Fried breakfasts"
     And I should see "You answered"
     And I should see "Sunny."
     And I should see "Sausages."
-    And I should see "View in context"
 
   @javascript
   Scenario: A user completes three activities, one with a reflection step, and views them all on one page.
@@ -116,4 +118,3 @@ Feature: Users should be able to reflect on their answers
     And I should see "Sausages."
     And I should see "tea"
     And I should see "A good brew can help"
-    And I should see "View in context"

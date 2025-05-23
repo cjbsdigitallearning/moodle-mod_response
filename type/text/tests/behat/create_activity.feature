@@ -21,7 +21,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Prepare creation of an activity and check the selection system works.
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Response type" to "Free text"
     Then I should see "Response - Free text"
     And I should not see "Response - Poll"
@@ -30,7 +30,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with default values (separate page view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
@@ -51,7 +51,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with a wordcount (separate page view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
@@ -76,7 +76,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with a description and a wordcount (separate page view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity description" to "Describe the weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -109,7 +109,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with text page content (inline view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity Content" to "Describe the weather"
     And I set the field "Activity question" to "What is the weather like outside?"
@@ -132,16 +132,22 @@ Feature: In a course, students can see and respond to a question and see others'
   @javascript @_file_upload @editor_tiny
   Scenario: Create an activity with image page content (inline view).
     Given I am on the "C1" "course" page logged in as "teacher1"
+    And the following "user private file" exists:
+      | user     | teacher1                                             |
+      | filepath | lib/editor/tiny/tests/behat/fixtures/moodle-logo.png |
     And I turn editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
+    And I expand all toolbars for the "Activity Content" TinyMCE editor
     And I click on the "Image" button for the "Activity Content" TinyMCE editor
-    And I click on "Browse repositories" "button" in the "Image properties" "dialogue"
-    And I upload "lib/editor/tiny/tests/behat/fixtures/moodle-logo.png" to the file picker for TinyMCE
-    And I set the field "Describe this image for someone who cannot see it" to "It's the Moodle"
+    And I click on "Browse repositories" "button" in the "Insert image" "dialogue"
+    And I select "Private files" repository in file picker
+    And I click on "moodle-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "How would you describe this image to someone who can't see it?" to "It's the Moodle"
     # Wait for the page to "settle".
     And I wait until the page is ready
-    And I click on "Save image" "button"
+    And I click on "Save" "button" in the ".modal-dialog" "css_element"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Caption for Response" to "Thoughts on the Weather"
     And I set the field "Response type" to "Free text"
@@ -159,7 +165,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity (inline view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
@@ -180,7 +186,7 @@ Feature: In a course, students can see and respond to a question and see others'
   Scenario: Create an activity with a wordcount (inline view).
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Response" to section "1"
+    And I add a "response" activity to course "Course 1" section "1"
     And I set the field "Activity title" to "The weather"
     And I set the field "Activity question" to "What is the weather like outside?"
     And I set the field "Response type" to "Free text"
