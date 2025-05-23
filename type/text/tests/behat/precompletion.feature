@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Students should see some incentive to reply
+Feature: Students should see some incentive to reply to text activity
   In order to encourage me to complete an activity
   As a student
   I need to see who else has already completed an activity before I have

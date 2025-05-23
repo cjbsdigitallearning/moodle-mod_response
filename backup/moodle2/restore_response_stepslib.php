@@ -82,8 +82,28 @@ class restore_response_activity_structure_step extends restore_activity_structur
         $new->caption = $data['caption'];
         $new->question = $data['question'];
 
-        $new->displaycompletion = $data['displaycompletion'];
-        $new->displaypeerresults = $data['displaypeerresults'];
+        // New fields to convert old field values in the case we're storing an old backup.
+        $new->displaycompletionbefore = $data['displaycompletionbefore'] ?? RESPONSE_DISPLAY_COMPLETIONS_NONE;
+        $new->displaycompletionafter = $data['displaycompletionafter'] ?? 0;
+
+        if (isset($data['displaycompletion'])) {
+            $oldnewvalues = [
+                [RESPONSE_DISPLAY_COMPLETIONS_NUMBER, ['number', 'numbergrp']],
+                [RESPONSE_DISPLAY_COMPLETIONS_NAME, ['full', 'fullgrp']],
+            ];
+            foreach ($oldnewvalues as $oldnewvalue) {
+                [$newvalue, $oldvalues] = $oldnewvalue;
+                if (in_array($data['displaycompletion'], $oldvalues)) {
+                    $new->displaycompletionbefore = $newvalue;
+                    break;
+                }
+            }
+        }
+
+        if (isset($data['displaypeerresults']) && in_array($data['displaypeerresults'], [1, 2])) {
+            $new->displaycompletionafter = 1;
+        }
+
         $new->requiresubmission = $data['requiresubmission'];
 
         $newitemid = $DB->insert_record('response', $new);

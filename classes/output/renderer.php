@@ -85,25 +85,30 @@ class renderer extends plugin_renderer_base {
      * Rendering the pre-completion view for other people who have
      * completed an activity, e.g. "[] [] (+ 2 others) have completed..."
      *
-     * @param object $completion The completion data
-     * @param boolean $all All people or only group
+     * @param array $completions The completions
      * @return string The rendered HTML
      */
-    public function render_precompletion($completion, $all = true) {
-        $sel = $all ? "all" : "group";
+    public function render_precompletion($completions) {
         $data = new stdClass();
-        $data->people = !empty($completion->{'people_' . $sel}) ? $completion->{'people_' . $sel} : [];
-        $data->number = count($data->people);
 
-        $data->people_other = !empty($completion->{'people_' . $sel . '_other'}) ? $completion->{'people_' . $sel . '_other'} : [];
-        $data->number_other = count($data->people_other);
+        // Get first 5 people (unless there are under 5 completions).
+        if (($number = count($completions)) <= 5) {
+            $data->people = array_values($completions);
+            $data->people_other = [];
+            $data->number = $number;
+            $data->number_other = 0;
+        } else {
+            $data->people = array_slice($completions, 0, 5);
+            $data->people_other = array_slice($completions, 5, $number);
+            $data->number = 5;
+            $data->number_other = $number - 5;
+        }
 
         // We need to do a bit of language juggling that's really not nice for the template.
         $data->plus_x_other = $data->number_other == 1 ? 'other1completed' : 'otherncompleted';
         $data->plus_x_other_string = get_string($data->plus_x_other, 'response', $data->number_other);
 
-        $totalcompletions = ($data->number + $data->number_other);
-        $data->others_completed = $totalcompletions == 1 ? 'hascompletedthisactivity' : 'havecompletedthisactivity';
+        $data->others_completed = $number == 1 ? 'hascompletedthisactivity' : 'havecompletedthisactivity';
         $data->others_completed_string = get_string($data->others_completed, 'response');
 
         return parent::render_from_template('response/precompletion', $data);
@@ -114,34 +119,30 @@ class renderer extends plugin_renderer_base {
      * to show who completed it and potentially review their
      * answers.
      *
-     * @param object $completion The completion data
+     * @param array $completions The completion data
      * @return string The rendered HTML
      */
-    public function render_postcompletion($completion) {
+    public function render_postcompletion($completions) {
         $data = new stdClass();
-        $data->people_all = !empty($completion->people_all) ? array_values($completion->people_all) : [];
-        $data->number_all = count($data->people_all);
-        $data->people_group = !empty($completion->people_group) ? array_values($completion->people_group) : [];
-        $data->number_group = count($data->people_group);
-        $data->response_id = $completion->response_id;
 
-        $data->number_all_other = 0;
-        if ($data->number_all) {
-            $data->people_all_other = !empty($completion->people_all_other) ? $completion->people_all_other : [];
-            $data->number_all_other = count($data->people_all_other);
+        // Get first 5 people (unless there are under 5 completions).
+        if (($number = count($completions)) <= 5) {
+            $data->people = array_values($completions);
+            $data->people_other = [];
+            $data->number = $number;
+            $data->number_other = 0;
+        } else {
+            $data->people = array_slice($completions, 0, 5);
+            $data->people_other = array_slice($completions, 5, $number);
+            $data->number = 5;
+            $data->number_other = $number - 5;
         }
 
-        $data->number_group_other = 0;
-        if ($data->number_group) {
-            $data->people_group_other = !empty($completion->people_group_other) ? $completion->people_group_other : [];
-            $data->number_group_other = count($data->people_group_other);
-        }
+        $data->plus_x_other_all = $data->number == 1 ? 'other1completed' : 'otherncompleted';
+        $data->plus_x_other_string_all = get_string($data->plus_x_other_all, 'response', $data->number_other);
 
-        $data->plus_x_other_all = $data->number_all_other == 1 ? 'other1completed' : 'otherncompleted';
-        $data->plus_x_other_string_all = get_string($data->plus_x_other_all, 'response', $data->number_all_other);
-
-        $data->plus_x_other_group = $data->number_group_other == 1 ? 'other1completed' : 'otherncompleted';
-        $data->plus_x_other_string_group = get_string($data->plus_x_other_group, 'response', $data->number_group_other);
+        $data->plus_x_other_group = $data->number_other == 1 ? 'other1completed' : 'otherncompleted';
+        $data->plus_x_other_string_group = get_string($data->plus_x_other_group, 'response', $data->number_other);
 
         return parent::render_from_template('response/postcompletion', $data);
     }

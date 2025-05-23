@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: Teachers should be able to remove inappropriate answers
+Feature: Teachers should be able to remove inappropriate poll answers
   In order for me to remove hate speech or profanity in answers
   As a teacher
   I need to see all answers and remove inappropriate answers

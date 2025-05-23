@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Users should be able to view which activities they are yet to respond to
+Feature: Users should be able to view which text activities they are yet to respond to
   In order to for me to ensure I complete all response activities
   As a student
   I need to see in the summary which activities I have yet to respond to

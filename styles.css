@@ -171,3 +171,12 @@
     margin-left: 5%;
     width: 90%;
 }
+
+/* Group selector adjustments */
+#page-mod-response-view #selectgroup {
+    gap: 0.5rem;
+}
+
+#page-mod-response-view #selectgroup label {
+    margin-bottom: .15rem;
+}

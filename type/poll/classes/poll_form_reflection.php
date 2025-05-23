@@ -73,7 +73,7 @@ class poll_form_reflection extends abstractform {
         $mform->setType('response', PARAM_INT);
 
         $submitarea = [];
-        $this->add_precomplete_completion($USER->id, $submitarea);
+        $this->add_precomplete_completion($submitarea);
         // Put them in less obvious order, so they get floated appropriately in the form.
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'));
         $submitarea[] = &$mform->createElement('submit', 'back', get_string('back'));

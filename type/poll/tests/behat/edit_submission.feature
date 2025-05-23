@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: Users should be able to edit their answers if permitted
+Feature: Users should be able to edit their poll answers if permitted
   In order for me to fix typos I notice in my answer
   As a user with the relevant permission
   I need to edit my answer and save the corrected version

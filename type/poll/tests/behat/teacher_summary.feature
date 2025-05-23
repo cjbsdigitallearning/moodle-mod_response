@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: Teachers need to be able to review all answers
+Feature: Teachers need to be able to review all poll answers
   In order for me to guide my class
   As a teacher
   I need to see all their answers together at once

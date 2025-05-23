@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: Students should see others' responses
+Feature: Students should see others' poll responses
   In order to further my learning and have a broader mindset
   As a student
   I need to see the other students' answers and compare them to mine
@@ -33,8 +33,7 @@ Feature: Students should see others' responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Study group | 0 |
-      | All | 0 |
+      | Display completions after response? | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -64,8 +63,8 @@ Feature: Students should see others' responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 1 |
+      | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -106,8 +105,8 @@ Feature: Students should see others' responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 1 |
+      | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -139,8 +138,7 @@ Feature: Students should see others' responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Study group | 0 |
-      | All | 0 |
+      | Display completions after response? | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -176,8 +174,8 @@ Feature: Students should see others' responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 1 |
+      | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -226,8 +224,7 @@ Feature: Students should see others' responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 1 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
