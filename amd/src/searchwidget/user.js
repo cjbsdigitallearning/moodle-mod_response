@@ -38,12 +38,13 @@ const cmID = document.querySelector(selectors.formDropdown).dataset.cmid;
 
 export default class User extends UserSearch {
 
-    constructor() {
+    constructor(resetpath = false) {
         super();
+        this.resetpath = resetpath ? resetpath : '/mod/response/viewall.php';
     }
 
-    static init() {
-        return new User();
+    static init(resetpath) {
+        return new User(resetpath);
     }
 
     /**
@@ -61,7 +62,7 @@ export default class User extends UserSearch {
      * @returns {string|*}
      */
     selectAllResultsLink() {
-        return Url.relativeUrl('/mod/response/viewall.php', {
+        return Url.relativeUrl(this.resetpath, {
             id: cmID,
             search: this.getSearchTerm()
         }, false);
@@ -74,7 +75,7 @@ export default class User extends UserSearch {
      * @returns {string|*}
      */
     selectOneLink(userID) {
-        return Url.relativeUrl('/mod/response/viewall.php', {
+        return Url.relativeUrl(this.resetpath, {
             id: cmID,
             userid: userID,
         }, false);

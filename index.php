@@ -73,7 +73,7 @@ if (course_format_uses_sections($course->format)) {
             $responselist[$response->section]->section_title = get_section_name($course, $response->section);
             $responselist[$response->section]->responses = [];
         }
-        $activity = get_response_data($course, $response, $USER->id);
+        $activity = helper::get_response_data($course, $response, $USER->id);
         if (isset($activity->response)) {
             $responselist[$response->section]->responses[] = $activity;
         } else {
@@ -86,7 +86,7 @@ if (course_format_uses_sections($course->format)) {
     $responselist[0]->section_title = '';
     $responselist[0]->responses = [];
     foreach ($responses as $response) {
-        $activity = get_response_data($course, $response, $USER->id);
+        $activity = helper::get_response_data($course, $response, $USER->id);
         if (isset($activity->response)) {
             $responselist[0]->responses[] = $activity;
         } else {
@@ -114,61 +114,3 @@ $output = $PAGE->get_renderer('mod_response');
 echo $output->render_summarycourse($responselist);
 
 echo $OUTPUT->footer();
-
-/**
- * Builds a simplified response object to pass out to templates for rendering
- * a given activity in a course summary.
- *
- * @param object $course The course in question
- * @param object $response The response object for a given response activity
- * @param int $userid The user ID whose response is being examined
- * @param object $renderer The renderer to apply, typically the mod_response one
- * @return object A simple object to pass to the summary template, with an individual activity having already been templated.
- */
-function get_response_data($course, $response, $userid, $renderer = null) {
-    global $PAGE;
-    if (empty($renderer)) {
-        $renderer = $PAGE->get_renderer('mod_response');
-    }
-
-    $cm = get_coursemodule_from_instance('response', $response->id);
-
-    $return = new stdClass();
-    $return->activity_title = $cm->name;
-    $return->question = $response->question;
-    $instance = helper::instance_factory($response->responsetype, 'information');
-
-    // Determine if the user has responded.
-    // We actually can't rely on completion status if it wasn't tracked by the completion system, so use ours.
-    $response->user_responses = $instance->load_response_for_users($response, [$userid]);
-    if (!empty($response->user_responses[$userid]) || !empty($response->user_responses[$userid]->timecompleted)) {
-        $return->response = $response->user_responses[$userid];
-    }
-    $instance->load_activity($response);
-
-    $instance->load_aggregate_data($response, $userid);
-
-    $return->cm_id = $cm->id;
-    $return->course_id = $course->id;
-    $return->section_id = null;
-
-    $sections = course_get_format($course->id)->get_sections();
-    foreach ($sections as $sectionobj) {
-        if ($sectionobj->id == $cm->section) {
-            $return->section_id = $sectionobj->section;
-        }
-    }
-
-    // When showing in context, the link varies depending on course format.
-    $return->view_in_course = !empty($course->format) && $course->format != 'singleactivity';
-    $return->responsetype = $response->responsetype;
-    $return->aggregate = !empty($response->aggregate) ? $response->aggregate : new stdClass();
-    $return->activity = $response->activity;
-    $return->displaypeerresults = $response->displaypeerresults;
-    $return->icon = new pix_icon('icon', '', 'responsetype_' . $response->responsetype);
-
-    $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);
-    $return->render = $renderer->render($renderable);
-
-    return $return;
-}

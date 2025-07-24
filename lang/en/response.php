@@ -83,6 +83,7 @@ $string['response:manage'] = 'Manage responses';
 $string['response:participate'] = 'Participate in response activity';
 $string['response:view'] = 'View response activity';
 $string['response:viewall'] = 'View all completed responses';
+$string['response:viewallresponses'] = 'View all response activity responses';
 $string['response:viewother'] = 'View responses of others';
 $string['responsedisplay'] = 'Response display';
 $string['responsetype'] = 'Response type';

@@ -38,13 +38,19 @@ class action_bar implements templatable, renderable {
     /** @var string $usersearch The content that the current user is looking for. */
     protected string $usersearch = '';
 
+    /** @var string $resetpath The path the action bar redirects to when submitted. */
+    protected string $resetpath = '/mod/response/viewall.php';
+
     /**
      * The class constructor.
      *
      * @param \context_module $context The context object.
      */
-    public function __construct(\context_module $context) {
+    public function __construct(\context_module $context, string $resetpath = '') {
         $this->context = $context;
+        if (!empty($resetpath)) {
+            $this->resetpath = $resetpath;
+        }
         $this->usersearch = optional_param('search', '', PARAM_NOTAGS);
     }
 
@@ -77,7 +83,7 @@ class action_bar implements templatable, renderable {
             $initialscontent = $responsesrenderer->initials_selector(
                 $cm,
                 $this->context,
-                '/mod/response/viewall.php'
+                $this->resetpath
             );
             $labelname = get_string('viewallresponses', 'mod_response');
             $initialselector = new comboboxsearch(
@@ -95,7 +101,7 @@ class action_bar implements templatable, renderable {
             );
             $data['initialselector'] = $initialselector->export_for_template($output);
 
-            $resetlink = new moodle_url('/mod/response/viewall.php', ['id' => $cmid]);
+            $resetlink = new moodle_url($this->resetpath, ['id' => $cmid]);
             $searchinput = $OUTPUT->render_from_template('core_user/comboboxsearch/user_selector', [
                 'currentvalue' => $this->usersearch,
                 'courseid' => $cm->course,
@@ -117,7 +123,7 @@ class action_bar implements templatable, renderable {
             if (!empty($SESSION->modresponse["filterfirstname-{$this->context->id}"]) ||
                     !empty($SESSION->modresponse["filterlastname-{$this->context->id}"]) ||
                     $this->usersearch) {
-                $reset = new moodle_url('/mod/response/viewall.php', [
+                $reset = new moodle_url($this->resetpath, [
                     'id' => $cmid,
                     'search' => '',
                     'ifirst' => '',
