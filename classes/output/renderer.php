@@ -51,7 +51,8 @@ class renderer extends plugin_renderer_base {
      * @return The rendered HTML for this activity step.
      */
     public function render_summaryoutput($page) {
-
+        $data = $page->export_for_template($this);
+        $component = 'responsetype_' . $data->responsetype;
 
         return parent::render_from_template($component . '/' . $data->template, $data);
     }
