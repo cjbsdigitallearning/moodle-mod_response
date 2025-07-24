@@ -20,6 +20,7 @@ use core\output\comboboxsearch;
 use context_module;
 use plugin_renderer_base;
 use stdClass;
+use mod_response\helper;
 
 /**
  * Rendering a response activity.
@@ -50,8 +51,7 @@ class renderer extends plugin_renderer_base {
      * @return The rendered HTML for this activity step.
      */
     public function render_summaryoutput($page) {
-        $data = $page->export_for_template($this);
-        $component = 'responsetype_' . $data->responsetype;
+
 
         return parent::render_from_template($component . '/' . $data->template, $data);
     }
@@ -272,5 +272,46 @@ class renderer extends plugin_renderer_base {
              'buttonheader' => $currentfilter !== '' ? get_string('name') : null,
              'dropdowncontent' => $dropdowncontent,
         ];
+    }
+
+    /**
+     * Renderer for viewallresponses view.
+     *
+     * @param array $userresponses List of response objects.
+     * @param string $format Course format ID e.g. 'weeks' $course->format
+     * @return string
+     */
+    public function render_view_all_users(array $userresponses, string $format): string {
+        $output = '';
+
+        if (course_format_uses_sections($format)) {
+            foreach ($userresponses as $section) {
+                $output .= $this->heading($section->section_title, 3, 'activity-section');
+                foreach ($section->responses as $response) {
+                    $output .= $this->render_viewallresponses_response_module($response);
+                }
+            }
+        } else {
+            foreach ($userresponses as $response) {
+                $output .= $this->render_viewallresponses_response_module($response);
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Renderer for single response module.
+     *
+     * @param object $response
+     * @return string
+     */
+    protected function render_viewallresponses_response_module(object $response): string {
+        $instance = helper::instance_factory($response->responsetype, 'information');
+        $instance->load_activity($response);
+        $renderable = helper::instance_factory($response->responsetype, 'viewallresponses', [$response, $instance]);
+        $data = $renderable->export_for_template($this);
+        $component = 'responsetype_' . $data->responsetype;
+        return parent::render_from_template($component . '/viewallresponses', $data);
     }
 }

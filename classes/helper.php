@@ -20,6 +20,7 @@ use coding_exception;
 use stdClass;
 use ReflectionClass;
 use moodle_url;
+use renderer_base;
 
 /**
  * Helpers for mod_response; essentially an autoloadable version of locallib.php.
@@ -409,4 +410,145 @@ class helper {
 
         return $responses;
     }
+
+    /**
+     * Builds a simplified response object to pass out to templates for rendering
+     * a given activity in a course summary.
+     *
+     * @param object $course The course in question
+     * @param object $response The response object for a given response activity
+     * @param int $userid The user ID whose response is being examined
+     * @param ?renderer_base $renderer Option to use existing renderer.
+     * @return object A simple object to pass to the summary template, with an individual activity having already been templated.
+     */
+    public static function get_response_data(object $course, object $response, int $userid,
+            ?renderer_base $renderer = null): object {
+        global $PAGE;
+        if (empty($renderer)) {
+            $renderer = $PAGE->get_renderer('mod_response');
+        }
+
+        $cm = get_coursemodule_from_instance('response', $response->id);
+
+        $return = new stdClass();
+        $return->activity_title = $cm->name;
+        $return->question = $response->question;
+        $instance = helper::instance_factory($response->responsetype, 'information');
+
+        // Determine if the user has responded.
+        // We actually can't rely on completion status if it wasn't tracked by the completion system, so use ours.
+        $response->user_responses = $instance->load_response_for_users($response, [$userid]);
+        if (!empty($response->user_responses[$userid]) || !empty($response->user_responses[$userid]->timecompleted)) {
+            $return->response = $response->user_responses[$userid];
+        }
+        $instance->load_activity($response);
+
+        $instance->load_aggregate_data($response, $userid);
+
+        $return->cm_id = $cm->id;
+        $return->course_id = $course->id;
+        $return->section_id = null;
+
+        $sections = course_get_format($course->id)->get_sections();
+        foreach ($sections as $sectionobj) {
+            if ($sectionobj->id == $cm->section) {
+                $return->section_id = $sectionobj->section;
+            }
+        }
+
+        // When showing in context, the link varies depending on course format.
+        $return->view_in_course = !empty($course->format) && $course->format !== 'singleactivity';
+        $return->responsetype = $response->responsetype;
+        $return->aggregate = !empty($response->aggregate) ? $response->aggregate : new stdClass();
+        $return->activity = $response->activity;
+        $return->displaypeerresults = $response->displaypeerresults;
+        $return->icon = new \pix_icon('icon', '', 'responsetype_' . $response->responsetype);
+
+        $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);
+        $return->render = $renderer->render($renderable);
+
+        return $return;
+    }
+
+    /**
+     * Ger all responses in course with filters.
+     *
+     * @param object $course Standard course object.
+     * @param array $filters Filter values from filter form.
+     * @return array
+     */
+    public static function get_course_responses(stdClass $course, array $filters): array {
+        $responses = get_all_instances_in_course('response', $course);
+
+        $sectionresponses = [];
+        $responselist = [];
+
+        // Create an object to store the items that don't have a response yet.
+        $noresponseobj = (object) [
+            'section_title' => get_string('yettorespond', 'mod_response'),
+            'responses' => [],
+        ];
+        
+        if (course_format_uses_sections($course->format)) {
+            // This course format uses sections, so we need to arrange for this.
+
+            foreach ($responses as &$response) {
+                // Get and filter user responses to response module.
+                $instance = self::instance_factory($response->responsetype, 'information');
+                $instance->load_activity($response);
+                $loadedresponses = $instance->load_all_responses($response);
+                $loadedresponses = self::filter_responses($loadedresponses, $filters, $course->id);
+                $response->user_responses = $loadedresponses;
+
+                $responseid = $response->id;
+                $responsesection = $response->section;
+
+                // If they can delete responses, we need to build suitable links.
+                $context = \context_module::instance($response->coursemodule);
+                if (has_capability('mod/response:manage', $context)) {
+                    foreach ($response->user_responses as $userid => $user_response) {
+                        $deletelink = new moodle_url('/mod/response/deleteanswer.php', ['id' => $response->coursemodule, 'u' => $userid]);
+                        $response->user_responses[$userid]->delete_link = $deletelink;
+                    }
+                }
+
+                // Add response to list, categorised by section.
+                if (isset($sectionresponses[$responsesection])) {
+                    $sectionresponses[$responsesection]->responses[$responseid] = $response;
+                } else {
+                    $responsesectionobj = (object) [
+                        'section_title' => get_section_name($course, $responsesection),
+                        'responses' => [$responseid => $response],
+                    ];
+                    $sectionresponses[$responsesection] = $responsesectionobj;
+                }
+
+            }
+        } else {
+            // No sections here, so present it flat.
+            $responselist[] = new stdClass();
+            $responselist[0]->section_title = '';
+            $responselist[0]->responses = [];
+            foreach ($responses as &$response) {
+                $instance = self::instance_factory($response->responsetype, 'information');
+                $loadedresponses = $instance->load_all_responses($response);
+                $loadedresponses = self::filter_responses($loadedresponses, $filters, $course->id);
+
+                $response->user_responses = [];
+                foreach ($loadedresponses as $loadresponse) {
+                    $activity = helper::get_response_data($course, $response, $loadresponse->userid);
+                    if (isset($activity->response)) {
+                        $response->user_responses[] = $activity;
+                    } else {
+                        $noresponseobj->responses[] = $activity;
+                    }
+                }
+            }
+            $sectionresponses[] = $responselist;
+        }
+
+        return $sectionresponses;
+    }
+
+
 }

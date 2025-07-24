@@ -75,6 +75,12 @@ $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
 
+$viewallresponseslink = new \action_link(
+    new moodle_url('/mod/response/viewallresponses.php', ['id' => $cm->id]),
+    get_string('response:viewallresponses', 'response'),
+);
+echo $output->render($viewallresponseslink);
+
 $actionbar = new \mod_response\output\action_bar($context);
 echo $output->render_action_bar($actionbar);
 
