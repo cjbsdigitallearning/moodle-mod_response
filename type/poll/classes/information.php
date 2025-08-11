@@ -436,4 +436,81 @@ class information extends abstractinfo {
 
         return true;
     }
+
+    /**
+     * User response fields.
+     * @param object $response A response.
+     * @return array The response fields.
+     */
+    public function get_response_fields(object $response): array {
+        $fields['choice'] = 'choice';
+        if ($response->activity->reflection_step == 1) {
+            $fields[$this->get_usertext_fieldname()] = $this->get_usertext_fieldname();
+        }
+
+        return $fields;
+    }
+
+    /**
+     * User response values.
+     * @param object $response A response including the user response.
+     * @return array
+     */
+    public function get_response_values(object $response): array {
+        global $DB;
+        $choice = $DB->get_record(
+            'responsetype_poll_choice',
+            [
+                'response' => $response->activity->response,
+                'responsenum' => $response->response->choice,
+            ]
+        );
+        $values = [
+            'choice' => $choice->choice,
+        ];
+        if ($response->activity->reflection_step == 1) {
+            $values[$this->get_usertext_fieldname()] = $response->response->reflection_text;
+        }
+        return $values;
+    }
+
+    /**
+     * The file component.
+     *
+     * @return string
+     */
+    public function get_filecomponent(): string {
+        return 'responsetype_poll_user';
+    }
+
+    /**
+     * The file area.
+     *
+     * @return string
+     */
+    public function get_filearea(): string {
+        return 'response_poll';
+    }
+
+    /**
+     * Does the plugin have any user text fields.
+     *
+     * @param object $response A response.
+     * @return bool
+     */
+    public function has_user_text(object $response): bool {
+        if ($response->activity->reflection_step == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the field name containing user text.
+     *
+     * @return string The field name.
+     */
+    public function get_usertext_fieldname(): string {
+        return 'reflection';
+    }
 }

@@ -594,5 +594,17 @@ class helper {
         return $sectionresponses;
     }
 
-
+    /**
+     * Get IDs for all responses in the course.
+     *
+     * @param array $responses Course responses.
+     * @return string
+     */
+    public static function get_course_response_ids(array $responses): string {
+        $ids = [];
+        foreach ($responses as $response) {
+            $ids[] = $response->id;
+        }
+        return implode(',', $ids);
+    }
 }

@@ -26,6 +26,7 @@ use mod_response\helper;
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
+require_login();
 
 // Check user capability.
 $cmid = required_param('id', PARAM_INT); // Course module ID.
@@ -44,17 +45,17 @@ $ilast = optional_param('ilast', null, PARAM_NOTAGS); // Last initial.
 
 $filters = [];
 foreach (['userid', 'search', 'ifirst', 'ilast'] as $param) {
-  if (!empty(${$param})) {
-    $filters[$param] = ${$param};
-  }
+    if (!empty(${$param})) {
+        $filters[$param] = ${$param};
+    }
 }
 
 // Set initials.
 if (!is_null($ifirst)) {
-  $SESSION->modresponse["filterfirstname-{$context->id}"] = $ifirst;
+    $SESSION->modresponse["filterfirstname-{$context->id}"] = $ifirst;
 }
 if (!is_null($ilast)) {
-  $SESSION->modresponse["filtersurname-{$context->id}"] = $ilast;
+    $SESSION->modresponse["filtersurname-{$context->id}"] = $ilast;
 }
 
 $PAGE->set_url('/mod/response/viewallresponses.php', ['id' => $cmid, ...$filters]);
@@ -72,8 +73,8 @@ $output = $PAGE->get_renderer('mod_response');
 echo $output->header();
 
 $viewalllink = new \action_link(
-  new moodle_url('/mod/response/viewall.php', ['id' => $cm->id]),
-  get_string('response:viewall', 'response'),
+    new moodle_url('/mod/response/viewall.php', ['id' => $cm->id]),
+    get_string('response:viewall', 'response'),
 );
 echo $output->render($viewalllink);
 
@@ -82,6 +83,22 @@ $actionbar = new \mod_response\output\action_bar($context, '/mod/response/viewal
 echo $output->render_action_bar($actionbar);
 
 $responses = helper::get_course_responses($course, $filters);
+
+if (has_capability('mod/response:viewall', $context, $USER)) {
+    $responsesids = get_all_instances_in_course('response', $course);
+    // Params for the download.
+    $urlparams['ids'] = helper::get_course_response_ids($responsesids);
+    $urlparams['course'] = $course->id;
+    $urlparams['sesskey'] = sesskey();
+    $url = new moodle_url('/mod/response/download.php', $urlparams);
+    $button = new single_button($url, get_string('downloadresponsesall', 'response'), 'post');
+    echo html_writer::tag(
+        'div',
+        $output->render($button),
+        ['class' => 'mdl-right']
+    );
+}
+
 echo $output->render_view_all_users($responses, $course->format);
 
 echo $output->footer();

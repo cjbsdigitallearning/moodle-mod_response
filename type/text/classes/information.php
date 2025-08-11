@@ -298,4 +298,63 @@ class information extends abstractinfo {
 
         return true;
     }
+
+    /**
+     * User response fields.
+     * @param object $response A response.
+     * @return array The response fields.
+     */
+    public function get_response_fields(object $response): array {
+         return [
+             $this->get_usertext_fieldname() => 'response_text',
+         ];
+    }
+
+    /**
+     * User response values.
+     * @param object $response A response including the user response.
+     * @return array
+     */
+    public function get_response_values(object $response): array {
+        return [
+            $this->get_usertext_fieldname() => $response->response->response_text,
+        ];
+    }
+
+    /**
+     * The file component.
+     *
+     * @return string
+     */
+    public function get_filecomponent(): string {
+        return 'responsetype_text_user';
+    }
+
+    /**
+     * The file area.
+     *
+     * @return string
+     */
+    public function get_filearea(): string {
+        return 'response_text';
+    }
+
+    /**
+     * Does the plugin have any user text fields.
+     *
+     * @param object $response A response.
+     * @return bool
+     */
+    public function has_user_text(object $response): bool {
+        return true;
+    }
+
+    /**
+     * Get the field name containing user text.
+     *
+     * @return string The field name.
+     */
+    public function get_usertext_fieldname(): string {
+        return 'response';
+    }
 }
