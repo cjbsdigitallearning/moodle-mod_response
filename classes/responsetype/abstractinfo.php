@@ -271,4 +271,67 @@ abstract class abstractinfo {
         }
         return $users;
     }
+
+    /**
+     * User response fields.
+     * @param object $response A response.
+     * @return array The response fields.
+     */
+    public function get_response_fields(object $response): array {
+        return [];
+    }
+
+    /**
+     * User response values.
+     * @param object $response A response including the user response.
+     * @return array
+     */
+    public function get_response_values(object $response): array {
+        return [];
+    }
+
+    /**
+     * The file component.
+     *
+     * @return string
+     */
+    public function get_filecomponent(): string {
+        return '';
+    }
+
+    /**
+     * The file area.
+     *
+     * @return string
+     */
+    public function get_filearea(): string {
+        return '';
+    }
+
+    /**
+     * Script for serving files (defaults to pluginfile.php) .
+     *
+     * @return string
+     */
+    public function get_filetype(): string {
+        return 'pluginfile.php';
+    }
+
+    /**
+     * Does the plugin have any user text fields.
+     *
+     * @return bool
+     */
+    public function has_user_text($response): bool {
+        return false;
+    }
+
+    /**
+     * Get the field name containing user text.
+     *
+     * @return string The field name.
+     */
+    public function get_usertext_fieldname(): string {
+        return '';
+    }
 }

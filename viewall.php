@@ -78,8 +78,24 @@ echo $output->header();
 $viewallresponseslink = new \action_link(
     new moodle_url('/mod/response/viewallresponses.php', ['id' => $cm->id]),
     get_string('response:viewallresponses', 'response'),
-);
+    null,
+        ['class' => 'clearfix mdl-align'],
+    );
 echo $output->render($viewallresponseslink);
+
+if (has_capability('mod/response:viewall', $context, $USER)) {
+    // Params for the download.
+    $urlparams['id'] = $response->id;
+    $urlparams['course'] = $course->id;
+
+    $downloadresponseslink = new \action_link(
+        new moodle_url('/mod/response/download.php', $urlparams),
+        get_string('downloadresponses', 'response'),
+        null,
+        ['class' => 'clearfix mdl-align'],
+    );
+    echo $output->render($downloadresponseslink);
+}
 
 $actionbar = new \mod_response\output\action_bar($context);
 echo $output->render_action_bar($actionbar);

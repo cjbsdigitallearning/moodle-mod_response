@@ -550,5 +550,11 @@ class helper {
         return $sectionresponses;
     }
 
-
+    public static function get_course_response_ids ($responses) {
+        $ids = [];
+        foreach ($responses as $response) {
+            $ids[] = $response->id;
+        }
+        return implode(',', $ids);
+    }
 }

@@ -26,6 +26,7 @@ use mod_response\helper;
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
+require_login();
 
 // Check user capability.
 $cmid = required_param('id', PARAM_INT); // Course module ID.
@@ -74,8 +75,24 @@ echo $output->header();
 $viewalllink = new \action_link(
   new moodle_url('/mod/response/viewall.php', ['id' => $cm->id]),
   get_string('response:viewall', 'response'),
+    null,
+    ['class' => 'clearfix mdl-align'],
 );
 echo $output->render($viewalllink);
+
+if (has_capability('mod/response:viewall', $context, $USER)) {
+    // Params for the download.
+    $urlparams['id'] = $response->id;
+    $urlparams['course'] = $course->id;
+
+    $downloadresponseslink = new \action_link(
+        new moodle_url('/mod/response/download.php', $urlparams),
+        get_string('downloadresponsesall', 'response'),
+        null,
+        ['class' => 'clearfix mdl-align'],
+    );
+    echo $output->render($downloadresponseslink);
+}
 
 $PAGE->requires->js_call_amd('mod_response/searchwidget/user', 'init', ['/mod/response/viewallresponses.php']);
 $actionbar = new \mod_response\output\action_bar($context, '/mod/response/viewallresponses.php');
