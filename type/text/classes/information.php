@@ -213,7 +213,7 @@ class information extends abstractinfo {
                 $context->id,
                 'responsetype_text_user',
                 'response_text',
-                $responseidentifier,
+                $responseidentifier, // I think this is problematic?
                 helper::get_editor_options($context),
                 $newinstance->response_text
             );
@@ -268,5 +268,23 @@ class information extends abstractinfo {
         }
 
         return true;
+    }
+
+    public function get_response_fields() {
+        $fields = [
+            'response' => 'response_text',
+        ];
+
+        return $fields;
+    }
+
+    public function get_response_values($response) {
+        return [
+            'response' => $response->response->response_text,
+        ];
+    }
+
+    public function get_file_area() {
+        return 'poll_user';
     }
 }

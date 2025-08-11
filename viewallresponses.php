@@ -84,4 +84,10 @@ echo $output->render_action_bar($actionbar);
 $responses = helper::get_course_responses($course, $filters);
 echo $output->render_view_all_users($responses, $course->format);
 
+// Need to keep hold of these values.
+$urlparams['course'] = $course->id;
+global $OUTPUT;
+$url = new moodle_url('/mod/response/download.php', $urlparams);
+echo $OUTPUT->single_button($url, 'Export responses');
+
 echo $output->footer();

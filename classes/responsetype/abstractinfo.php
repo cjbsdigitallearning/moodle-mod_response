@@ -271,4 +271,12 @@ abstract class abstractinfo {
         }
         return $users;
     }
+
+    public function get_response_fields() {
+        return [];
+    }
+
+    public function get_response_values($response) {
+        return [];
+    }
 }

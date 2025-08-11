@@ -120,5 +120,12 @@ if (has_capability('mod/response:manage', $context)) {
 $renderable = helper::instance_factory($response->responsetype, 'viewall', [$response, $instance]);
 
 echo $output->render($renderable);
+// Need to keep hold of these values.
+$urlparams['id'] = $id;
+$urlparams['r'] = $r;
+$urlparams['course'] = $course->id;
+global $OUTPUT;
+$url = new moodle_url('/mod/response/download.php', $urlparams);
+echo $OUTPUT->single_button($url, 'Export responses');
 
 echo $output->footer();

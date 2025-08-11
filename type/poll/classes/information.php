@@ -419,4 +419,25 @@ class information extends abstractinfo {
 
         return true;
     }
+
+    public function get_response_fields() {
+        return [
+            'response' => 'choice',
+            'reflection_text' => 'reflection_text',
+        ];
+    }
+
+    public function get_response_values($response) {
+        global $DB;
+        $choice = $DB->get_record('responsetype_poll_choice', ['id' => $response->cm_id, 'responsenum' => $response->response->choice]);
+        $values = [
+            'response' => $choice->choice,
+            'reflection_text' => $response->response->reflection_text,
+        ];
+        return $values;
+    }
+
+    public function get_file_area() {
+        return 'poll_user';
+    }
 }
