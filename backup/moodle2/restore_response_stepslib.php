@@ -14,14 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Define the general structure of how to restore a response activity.
- *
- * @package     mod_response
- * @category    backup
- * @copyright   2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+use mod_response\display_completion;
 
 /**
  * Structure step to restore one response activity.
@@ -83,13 +76,13 @@ class restore_response_activity_structure_step extends restore_activity_structur
         $new->question = $data['question'];
 
         // New fields to convert old field values in the case we're storing an old backup.
-        $new->displaycompletionbefore = $data['displaycompletionbefore'] ?? RESPONSE_DISPLAY_COMPLETIONS_NONE;
+        $new->displaycompletionbefore = $data['displaycompletionbefore'] ?? display_completion::NONE->value;
         $new->displaycompletionafter = $data['displaycompletionafter'] ?? 0;
 
         if (isset($data['displaycompletion'])) {
             $oldnewvalues = [
-                [RESPONSE_DISPLAY_COMPLETIONS_NUMBER, ['number', 'numbergrp']],
-                [RESPONSE_DISPLAY_COMPLETIONS_NAME, ['full', 'fullgrp']],
+                [display_completion::NUMBER->value, ['number', 'numbergrp']],
+                [display_completion::NAME->value, ['full', 'fullgrp']],
             ];
             foreach ($oldnewvalues as $oldnewvalue) {
                 [$newvalue, $oldvalues] = $oldnewvalue;

@@ -90,9 +90,10 @@ class renderer extends plugin_renderer_base {
      */
     public function render_precompletion($completions) {
         $data = new stdClass();
+        $number = count($completions);
 
         // Get first 5 people (unless there are under 5 completions).
-        if (($number = count($completions)) <= 5) {
+        if ($number <= 5) {
             $data->people = array_values($completions);
             $data->people_other = [];
             $data->number = $number;

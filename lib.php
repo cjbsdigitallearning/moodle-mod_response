@@ -24,11 +24,6 @@
 
 use mod_response\helper;
 
-// These values are potentially combined when in the database.
-define('RESPONSE_DISPLAY_COMPLETIONS_NONE', 0);
-define('RESPONSE_DISPLAY_COMPLETIONS_NUMBER', 1);
-define('RESPONSE_DISPLAY_COMPLETIONS_NAME', 2);
-
 /**
  * Outlines features supported by the response activity.
  *

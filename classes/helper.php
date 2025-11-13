@@ -15,12 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_response;
+
 use core_component;
 use coding_exception;
 use stdClass;
 use ReflectionClass;
 use moodle_url;
 use renderer_base;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Options for how users view the response completions.
+ *
+ * @package    mod_response
+ * @copyright  2025 Michael Kotlyar <michael.kotlyar@catalyst-eu.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+enum display_completion: int {
+    case NONE   = 0;
+    case NUMBER = 1;
+    case NAME   = 2;
+}
 
 /**
  * Helpers for mod_response; essentially an autoloadable version of locallib.php.
@@ -30,7 +46,6 @@ use renderer_base;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
-
     /**
      * Cleans the response text given by users. In general we only want
      * to preserve the p tags in a post, not the full formatting. (We pass
@@ -229,7 +244,7 @@ class helper {
         $when = $before ? 'before' : 'after';
         $property = 'displaycompletion' . $when;
         $display = $response->$property;
-        if ($display == RESPONSE_DISPLAY_COMPLETIONS_NONE) {
+        if ($display == display_completion::NONE->value) {
             return false;
         }
 
@@ -281,9 +296,9 @@ class helper {
      */
     public static function display_completion_options() {
         return [
-            RESPONSE_DISPLAY_COMPLETIONS_NONE => get_string('displaycompletionnone', 'response'),
-            RESPONSE_DISPLAY_COMPLETIONS_NAME => get_string('displaycompletionfull', 'response'),
-            RESPONSE_DISPLAY_COMPLETIONS_NUMBER => get_string('displaycompletionnumber', 'response'),
+            display_completion::NONE->value => get_string('displaycompletionnone', 'response'),
+            display_completion::NAME->value => get_string('displaycompletionfull', 'response'),
+            display_completion::NUMBER->value => get_string('displaycompletionnumber', 'response'),
         ];
     }
 

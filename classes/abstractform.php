@@ -15,10 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_response;
+
+use mod_response\completions;
+use mod_response\display_completion;
+use mod_response\simpleeditor;
 use moodleform;
 use stdClass;
-use mod_response\simpleeditor;
-use mod_response\completions;
 
 /**
  * This class handles some of the behaviours we want for response activities.
@@ -102,7 +104,9 @@ abstract class abstractform extends moodleform {
      * @param array $submitarea The submission area group from the form
      */
     public function add_precomplete_completion(&$submitarea) {
-        if (($displaybefore = $this->_customdata->displaycompletionbefore) == RESPONSE_DISPLAY_COMPLETIONS_NONE) {
+        $displaybefore = $this->_customdata->displaycompletionbefore;
+
+        if ($displaybefore == display_completion::NONE->value) {
             return;
         }
 
@@ -112,13 +116,14 @@ abstract class abstractform extends moodleform {
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
         $group = groups_get_activity_group($cm);
         $completions = completions::get_completions_by_groupmode($cm, $group);
+        $number = count($completions);
 
-        if ($number = count($completions) > 0) {
-            if ($displaybefore == RESPONSE_DISPLAY_COMPLETIONS_NAME) {
+        if ($number > 0) {
+            if ($displaybefore == display_completion::NAME->value) {
                 $renderer = $PAGE->get_renderer('mod_response');
                 $displaystring = $renderer->render_precompletion($completions);
                 $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
-            } else if ($displaybefore == RESPONSE_DISPLAY_COMPLETIONS_NUMBER) {
+            } else if ($displaybefore == display_completion::NUMBER->value) {
                 $display = $number == 1 ? 'completed1' : 'completedn';
                 $displaystring = get_string($display, 'response', $number);
                 $displaystring = '<div class="display-completion number">' . $displaystring . '</div>';

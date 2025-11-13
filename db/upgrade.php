@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use mod_response\display_completion;
+
 /**
  * Upgrade instructions for historical versions of mod_response to current functionality.
  *
@@ -170,9 +172,9 @@ function xmldb_response_upgrade($oldversion) {
 
         // Populate new 'displaycompletionbefore' fields with converted values.
         $oldnewvalues = [
-            [RESPONSE_DISPLAY_COMPLETIONS_NONE, ['none']],
-            [RESPONSE_DISPLAY_COMPLETIONS_NUMBER, ['number', 'numbergrp']],
-            [RESPONSE_DISPLAY_COMPLETIONS_NAME, ['full', 'fullgrp']],
+            [display_completion::NONE->value, ['none']],
+            [display_completion::NUMBER->value, ['number', 'numbergrp']],
+            [display_completion::NAME->value, ['full', 'fullgrp']],
         ];
         foreach ($oldnewvalues as $oldnewvalue) {
             [$newvalue, $oldvalues] = $oldnewvalue;
