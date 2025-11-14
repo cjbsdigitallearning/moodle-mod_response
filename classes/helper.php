@@ -16,27 +16,13 @@
 
 namespace mod_response;
 
-use core_component;
 use coding_exception;
+use core_component;
+use mod_response\display_completion;
+use moodle_url;
 use stdClass;
 use ReflectionClass;
-use moodle_url;
 use renderer_base;
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Options for how users view the response completions.
- *
- * @package    mod_response
- * @copyright  2025 Michael Kotlyar <michael.kotlyar@catalyst-eu.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-enum display_completion: int {
-    case NONE   = 0;
-    case NUMBER = 1;
-    case NAME   = 2;
-}
 
 /**
  * Helpers for mod_response; essentially an autoloadable version of locallib.php.
