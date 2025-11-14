@@ -217,6 +217,35 @@ class information extends abstractinfo {
                 helper::get_editor_options($context),
                 $newinstance->response_text
             );
+
+            // If we have an old response ID, update any existing file itemids.
+            if ($response->user_responses[$userid]->response_user_id) {
+                // Get existing old files.
+                $fs = get_file_storage();
+                $oldfiles = $fs->get_area_files(
+                    $context->id,
+                    'responsetype_text_user',
+                    'response_text',
+                    $response->user_responses[$userid]->response_user_id,
+                );
+
+                if ($oldfiles) {
+                    foreach ($oldfiles as $file) {
+                        // Create new copies of the files with the new itemid.
+                        $fileupdate['itemid'] = $responseidentifier;
+                        $fs->create_file_from_storedfile($fileupdate, $file->get_id());
+                    }
+
+                    // Delete files with the old itemid.
+                    $fs->delete_area_files(
+                        $context->id,
+                        'responsetype_text_user',
+                        'response_text',
+                        $response->user_responses[$userid]->response_user_id,
+                    );
+                }
+            }
+
             $DB->update_record('responsetype_text_user', $newinstance);
         }
 
