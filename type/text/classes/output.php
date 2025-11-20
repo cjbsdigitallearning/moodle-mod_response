@@ -132,7 +132,7 @@ class output extends abstractoutput implements renderable, templatable {
 
             // We also want to handle the completion stuff.
             $data->postcompletion = '';
-            if (!empty($this->data->displaypeerresults) && !empty($this->data->postcompletion)) {
+            if (!empty($this->data->displaycompletionafter) && !empty($this->data->postcompletion)) {
                 $data->postcompletion = $this->data->postcompletion->render();
             }
         }

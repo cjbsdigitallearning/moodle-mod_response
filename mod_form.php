@@ -90,27 +90,16 @@ class mod_response_mod_form extends moodleform_mod {
 
         // Completions before response settings.
         $options = helper::display_completion_options();
-        $mform->addElement('select', 'displaycompletion', get_string('displaycompletion', 'response'), $options);
-        if (!empty($responseconfig->displaycompletion)) {
-            $mform->setDefault('displaycompletion', $responseconfig->displaycompletion);
+        $mform->addElement('select', 'displaycompletionbefore', get_string('displaycompletion', 'response'), $options);
+        if (isset($responseconfig->displaycompletionbefore)) {
+            $mform->setDefault('displaycompletionbefore', $responseconfig->displaycompletionbefore);
         }
 
-        // Then the scope of response visibility.
-        $togglepeerresults = [];
-        foreach (helper::peer_result_options() as $key => $label) {
-            $togglepeerresults[] = $mform->createElement('advcheckbox',
-                                                         'togglepeerresults['. $key . ']',
-                                                         '',
-                                                         $label,
-                                                         ['group' => 1],
-                                                         [0, 1]);
+        // Completions after response settings.
+        $mform->addElement('selectyesno', 'displaycompletionafter', get_string('displaycompletionafter', 'response'));
+        if (isset($responseconfig->displaycompletionafter)) {
+            $mform->setDefault('displaycompletionafter', $responseconfig->displaycompletionafter);
         }
-        $mform->addGroup($togglepeerresults,
-                         'togglepeerresults',
-                         get_string('togglepeerresults', 'response'),
-                         ['<br />'],
-                         false);
-        // We set the default later as it's based on having data.
 
         // Now the response type selector.
         $this->load_subplugins();
@@ -164,27 +153,6 @@ class mod_response_mod_form extends moodleform_mod {
      */
     public function data_preprocessing(&$defaultvalues) {
         parent::data_preprocessing($defaultvalues);
-
-        // There are some things we want to unpack as well.
-        if (empty($defaultvalues['id'])) {
-            // This is when we don't have a pre-existing one and need to pull from defaults.
-            $responseconfig = get_config('response');
-            if (!empty($responseconfig->togglepeerresults)) {
-                foreach (explode(',', $responseconfig->togglepeerresults) as $peerresult) {
-                    $defaultvalues['togglepeerresults'][$peerresult] = 1;
-                }
-            }
-        } else if (isset($defaultvalues['displaypeerresults'])) {
-            // This is when we already have some values.
-            $defaultvalues['displaypeerresults'] = (int) $defaultvalues['displaypeerresults'];
-
-            if ($defaultvalues['displaypeerresults'] & RESPONSE_PEER_RESULTS_GROUP) {
-                $defaultvalues['togglepeerresults']['studygroup'] = 1;
-            }
-            if ($defaultvalues['displaypeerresults'] & RESPONSE_PEER_RESULTS_ALL) {
-                $defaultvalues['togglepeerresults']['all'] = 1;
-            }
-        }
 
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('responsecontent');

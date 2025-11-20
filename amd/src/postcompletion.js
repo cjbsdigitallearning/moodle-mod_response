@@ -45,9 +45,12 @@ define(
                 var userid = $(this).data('id');
 
                 if (userid) {
-                    fragment.loadFragment('mod_response', 'answer', contextid, {userid: userid}).done(function(html, js) {
+                    fragment
+                    .loadFragment('mod_response', 'answer', contextid, {userid})
+                    .done(function(html, js) {
                         template.replaceNodeContents($form.find('.user-container'), html, js);
-                    }.bind(this)).fail(notification.exception);
+                    }.bind(this))
+                    .fail(notification.exception);
                 }
             });
         }

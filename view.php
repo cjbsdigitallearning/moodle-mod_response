@@ -77,6 +77,12 @@ $output = $PAGE->get_renderer('mod_response');
 
 echo $output->header();
 
+// Group selector.
+if (groups_get_activity_groupmode($cm)) {
+    groups_get_activity_group($cm, true);
+    echo html_writer::div(groups_print_activity_menu($cm, $PAGE->url, true), 'response-groupselector mb-2');
+}
+
 // Display any activity information (eg completion requirements / dates).
 $cminfo = cm_info::create($cm);
 

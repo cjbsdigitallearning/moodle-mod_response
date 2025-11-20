@@ -104,14 +104,14 @@ class completions {
     protected static function load_user_data_for_completion(&$completions) {
         global $DB, $PAGE;
 
-        $useridlist = array_keys($completions->people_all);
+        $useridlist = array_keys($completions);
         if (empty($useridlist)) {
             return;
         }
 
         foreach ($useridlist as $userid) {
-            $completions->people_all[$userid]->name = '';
-            $completions->people_all[$userid]->picture = '';
+            $completions[$userid]->name = '';
+            $completions[$userid]->picture = '';
         }
 
         $fields = implode(',', fields::get_picture_fields());
@@ -119,9 +119,9 @@ class completions {
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
 
         foreach ($records as $user) {
-            $completions->people_all[$user->id]->name = $user->firstname . ' ' . $user->lastname;
+            $completions[$user->id]->name = $user->firstname . ' ' . $user->lastname;
             $userpicture = new user_picture($user);
-            $completions->people_all[$user->id]->picture = (string) $userpicture->get_url($PAGE);
+            $completions[$user->id]->picture = (string) $userpicture->get_url($PAGE);
         }
     }
 
@@ -172,55 +172,33 @@ class completions {
     }
 
     /**
-     * Retrieve the data for displaying completion as numbers,
-     * e.g. '10 people have completed this activity.';
+     * Returns list of completions based on groupmode of activity.
      *
-     * @param int $id Response activity as per response table
-     * @param int $userid User ID to look up (to match groups)
-     * @return object An object containing the completion information
+     * @param stdClass $cm
+     * @param int $groupid
+     * @return array
      */
-    public static function get_displaycompletion_number($id, $userid = null) {
-        $completions = new stdClass();
+    public static function get_completions_by_groupmode(stdClass $cm, int $groupid = 0): array {
+        $completions = self::fetch_completions($cm->instance);
+        $intersectuserids = [];
 
-        $completions->people_all = self::fetch_completions($id, $userid);
-        $completions->number_all = count($completions->people_all);
-        $completions->people_group_other = [];
-        $completions->people_all_other = [];
-
-        $membersingroup = helper::get_users_in_same_group($id, $userid);
-
-        self::sift_groups_out($completions, $membersingroup);
-
-        return $completions;
-    }
-
-    /**
-     * Retrieve the data for displaying completion as people,
-     * including names and profile picture URLs.
-     *
-     * @param int $id Response activity as per resposne table
-     * @param int $userid User ID to look up (to match groups)
-     * @param bool $splitusers If true, split the users on the value of
-     *     the mod_response/maxprofileimages configuration item
-     * @return object An object containing the completion information
-     */
-    public static function get_displaycompletion_full($id, $userid, $splitusers = true) {
-        $completions = new stdClass();
-
-        $completions->people_all = self::fetch_completions($id, $userid);
-        $completions->number_all = count($completions->people_all);
-        $completions->people_group_other = [];
-        $completions->people_all_other = [];
-
-        $membersingroup = helper::get_users_in_same_group($id, $userid);
-
-        self::load_user_data_for_completion($completions);
-        self::sift_groups_out($completions, $membersingroup);
-
-        if ($splitusers) {
-            self::slice_people_lists($completions);
+        switch ($cm->groupmode) {
+            case SEPARATEGROUPS:
+                $intersectuserids = helper::get_users_in_same_group($cm->instance);
+                $completions = array_intersect_key($completions, array_flip($intersectuserids));
+                break;
+            case VISIBLEGROUPS:
+                if (!($groupid <= 0) && groups_group_visible($groupid, $cm->course)) {
+                    $intersectuserids = groups_get_members($groupid, 'u.id');
+                    $completions = array_intersect_key($completions, $intersectuserids);
+                }
+                break;
+            case NOGROUPS:
+            default:
+                break;
         }
 
+        self::load_user_data_for_completion($completions);
         return $completions;
     }
 }

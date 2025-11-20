@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Users should be able to complete courses
+Feature: Users should be able to complete text response to complete courses
   In order for me to complete a course
   As a student
   I need to have my answers mark its activities as completed

@@ -14,14 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Define the general structure of how to restore a response activity.
- *
- * @package     mod_response
- * @category    backup
- * @copyright   2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+use mod_response\display_completion;
 
 /**
  * Structure step to restore one response activity.
@@ -82,8 +75,28 @@ class restore_response_activity_structure_step extends restore_activity_structur
         $new->caption = $data['caption'];
         $new->question = $data['question'];
 
-        $new->displaycompletion = $data['displaycompletion'];
-        $new->displaypeerresults = $data['displaypeerresults'];
+        // New fields to convert old field values in the case we're storing an old backup.
+        $new->displaycompletionbefore = $data['displaycompletionbefore'] ?? display_completion::NONE->value;
+        $new->displaycompletionafter = $data['displaycompletionafter'] ?? 0;
+
+        if (isset($data['displaycompletion'])) {
+            $oldnewvalues = [
+                [display_completion::NUMBER->value, ['number', 'numbergrp']],
+                [display_completion::NAME->value, ['full', 'fullgrp']],
+            ];
+            foreach ($oldnewvalues as $oldnewvalue) {
+                [$newvalue, $oldvalues] = $oldnewvalue;
+                if (in_array($data['displaycompletion'], $oldvalues)) {
+                    $new->displaycompletionbefore = $newvalue;
+                    break;
+                }
+            }
+        }
+
+        if (isset($data['displaypeerresults']) && in_array($data['displaypeerresults'], [1, 2])) {
+            $new->displaycompletionafter = 1;
+        }
+
         $new->requiresubmission = $data['requiresubmission'];
 
         $newitemid = $DB->insert_record('response', $new);

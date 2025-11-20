@@ -92,25 +92,7 @@ function responsetype_text_pluginfile(stdClass $course,
     }
 
     // Now, can the user actually see it? This involves verifying peer results etc.
-    $cansee = false;
-    if ($userid == $USER->id) {
-        $cansee = true;
-    }
-    // View all capabilities can see all.
-    if (has_capability('mod/response:viewall', $context)) {
-        $cansee = true;
-    }
-    $displaypeerresults = (int) $response->displaypeerresults;
-    if ($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) {
-        $cansee = true;
-    }
-    if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) {
-        // Is the user in the same group?
-        $membersingroup = helper::get_users_in_same_group($response->id, $USER->id);
-        if (in_array($userid, $membersingroup)) {
-            $cansee = true;
-        }
-    }
+    $cansee = helper::can_see($USER->id, $userid, $cm, $response, false);
     if (!$cansee) {
         return false;
     }

@@ -15,10 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_response;
+
+use mod_response\completions;
+use mod_response\display_completion;
+use mod_response\simpleeditor;
 use moodleform;
 use stdClass;
-use mod_response\simpleeditor;
-use mod_response\completions;
 
 /**
  * This class handles some of the behaviours we want for response activities.
@@ -101,37 +103,27 @@ abstract class abstractform extends moodleform {
      * @param int $userid The user viewing the form
      * @param array $submitarea The submission area group from the form
      */
-    public function add_precomplete_completion($userid, &$submitarea) {
-        global $PAGE;
-        $mform = $this->_form;
+    public function add_precomplete_completion(&$submitarea) {
+        $displaybefore = $this->_customdata->displaycompletionbefore;
 
-        // If we're displaying all the user data, we have a lot of work to do.
-        if (strpos($this->_customdata->displaycompletion, 'full') === 0) {
-            $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid);
-            if ($this->_customdata->displaycompletion == 'full') {
-                $number = $completions->number_all;
-                $all = true;
-            } else {
-                $number = $completions->number_group;
-                $all = false;
-            }
-            if ($number > 0) {
-                $renderer = $PAGE->get_renderer('mod_response');
-
-                $displaystring = $renderer->render_precompletion($completions, $all);
-                $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
-            }
+        if ($displaybefore == display_completion::NONE->value) {
+            return;
         }
 
-        // If we're only displaying the number of completions, we only have a little work to do.
-        if (strpos($this->_customdata->displaycompletion, 'number') === 0) {
-            $completions = completions::get_displaycompletion_number($this->_customdata->activity->response, $userid);
-            if ($this->_customdata->displaycompletion == 'number') {
-                $number = $completions->number_all;
-            } else {
-                $number = $completions->number_group;
-            }
-            if ($number > 0) {
+        global $PAGE;
+
+        $mform = $this->_form;
+        $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
+        $group = groups_get_activity_group($cm);
+        $completions = completions::get_completions_by_groupmode($cm, $group);
+        $number = count($completions);
+
+        if ($number > 0) {
+            if ($displaybefore == display_completion::NAME->value) {
+                $renderer = $PAGE->get_renderer('mod_response');
+                $displaystring = $renderer->render_precompletion($completions);
+                $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
+            } else if ($displaybefore == display_completion::NUMBER->value) {
                 $display = $number == 1 ? 'completed1' : 'completedn';
                 $displaystring = get_string($display, 'response', $number);
                 $displaystring = '<div class="display-completion number">' . $displaystring . '</div>';
@@ -147,32 +139,18 @@ abstract class abstractform extends moodleform {
      * activity is complete. We use the form system for consistent
      * styling purposes.
      *
-     * @param int $userid The user viewing the form
      * @param array $submitarea The submission area group from the form
      * @param object $response The response object
      * @return object $completions The data about the completions being displayed
      */
-    public function add_postcompletion_completion($userid, &$submitarea, $response) {
+    public function add_postcompletion_completion(&$submitarea) {
         global $PAGE;
         $mform = $this->_form;
+        $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
+        $group = groups_get_activity_group($cm);
+        $completions = completions::get_completions_by_groupmode($cm, $group);
 
-        // Whether we're doing one or both of group or all, we have one place to get all the data.
-        $completions = completions::get_displaycompletion_full($this->_customdata->activity->response, $userid);
-        $completions->response_id = $response->id;
-
-        $displaypeerresults = (int) $response->displaypeerresults;
-
-        // Now some housekeeping.
-        if (($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) === 0) {
-            $completions->people_all = [];
-            $completions->number_all = 0;
-        }
-        if (($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) === 0) {
-            $completions->people_group = [];
-            $completions->number_group = 0;
-        }
-
-        if ($completions->number_all || $completions->number_group) {
+        if (count($completions) > 0) {
             $renderer = $PAGE->get_renderer('mod_response');
             $displaystring = $renderer->render_postcompletion($completions);
             $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);

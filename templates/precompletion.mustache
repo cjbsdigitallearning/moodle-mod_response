@@ -29,18 +29,18 @@
     * none
 
     Context variables required for this template:
-    * number_all - number of people who have completed the response (no groups),
+    * number - number of people who have completed the response (no groups),
        excluding any split for the '+x others'
-    * people_all - array of people to show, containing:
+    * people - array of people to show, containing:
        * picture - URL of their profile picture
        * name - name of the person who has completed the activity
-       Like number_all, this is the initial block of people, not the '+x others' list
+       Like number, this is the initial block of people, not the '+x others' list
     * number_all_other - number of the people that make up the '+x others' list
-    * people_all_other - people in the '+x others list', same structure as people_all
+    * people_all_other - people in the '+x others list', same structure as people
     * others_completed_string - the appropriate 'has/have completed this activity' string
 
     It is perfectly possible to return an empty 'number_group' and 'people_group' and only have a
-    single person in people_all for when the current user is the first to complete an activity.
+    single person in people for when the current user is the first to complete an activity.
 
     Example context (json):
     {

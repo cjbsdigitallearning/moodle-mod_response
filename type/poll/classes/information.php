@@ -246,31 +246,48 @@ class information extends abstractinfo {
         }
 
         // Let's sift that data into the aggregate for all users.
-        $displaypeerresults = isset($override) ? $override : $response->displaypeerresults;
-        if ($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) {
-            $response->aggregate->all = [];
-            // First, make some defaults using all valid choices.
-            foreach ($response->activity->poll_choices as $choice) {
-                $response->aggregate->all[$choice->responsenum] = 0;
-            }
-            // And aggregate.
-            foreach ($rawallusers as $choice) {
-                $response->aggregate->all[$choice]++;
-            }
-        }
+        $displaycompletionafter = isset($override) ? $override : $response->displaycompletionafter;
+        $displaycompletionafter = (int) $displaycompletionafter;
+        $cm = get_coursemodule_from_instance('response', $response->id);
 
-        // Now let's work out about groups.
-        if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) {
-            $response->aggregate->group = [];
-            // First, make some defaults using all valid choices.
-            foreach ($response->activity->poll_choices as $choice) {
-                $response->aggregate->group[$choice->responsenum] = 0;
-            }
-            // Then fetch users in the groups and sift out the data.
-            $groupusers = helper::get_users_in_same_group($response->id, $userid);
-            foreach ($groupusers as $groupuser) {
-                if (isset($rawallusers[$groupuser])) {
-                    $response->aggregate->group[$rawallusers[$groupuser]]++;
+        if ($displaycompletionafter) {
+            if ($cm->groupmode == NOGROUPS) {
+                $response->aggregate->all = [];
+                // First, make some defaults using all valid choices.
+                foreach ($response->activity->poll_choices as $choice) {
+                    $response->aggregate->all[$choice->responsenum] = 0;
+                }
+                // And aggregate.
+                foreach ($rawallusers as $choice) {
+                    $response->aggregate->all[$choice]++;
+                }
+            } else if ($cm->groupmode == VISIBLEGROUPS) {
+                $groupid = groups_get_activity_group($cm);
+                $response->aggregate->group = [];
+                // First, make some defaults using all valid choices.
+                foreach ($response->activity->poll_choices as $choice) {
+                    $response->aggregate->group[$choice->responsenum] = 0;
+                }
+                // Then fetch users in the groups and sift out the data.
+                // $groupusers = helper::get_users_in_group($cm, $group);
+                $groupusers = groups_get_members($groupid);
+                foreach ($groupusers as $groupuser) {
+                    if (isset($rawallusers[$groupuser])) {
+                        $response->aggregate->group[$rawallusers[$groupuser]]++;
+                    }
+                }
+            } else {
+                $response->aggregate->group = [];
+                // First, make some defaults using all valid choices.
+                foreach ($response->activity->poll_choices as $choice) {
+                    $response->aggregate->group[$choice->responsenum] = 0;
+                }
+                // Then fetch users in the groups and sift out the data.
+                $groupusers = helper::get_users_in_same_group($response->id, $userid);
+                foreach ($groupusers as $groupuser) {
+                    if (isset($rawallusers[$groupuser])) {
+                        $response->aggregate->group[$rawallusers[$groupuser]]++;
+                    }
                 }
             }
         }

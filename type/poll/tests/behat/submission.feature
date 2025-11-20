@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: In a course, students can see and respond to a question
+Feature: In a course, students can see and respond to a poll question
   In order to submit to a response activity
   As a student
   I need to answer the prompt question and possibly reflect on my answer

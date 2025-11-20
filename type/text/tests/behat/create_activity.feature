@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: In a course, students can see and respond to a question and see others' responses
+Feature: In a course, students can see and respond to a question and see others' text responses
   In order to pose a question
   As a teacher
   I need to create an activity

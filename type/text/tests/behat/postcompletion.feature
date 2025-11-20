@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Students should see others' responses
+Feature: Students should see others' text responses
   In order to further my learning and have a broader mindset
   As a student
   I need to see the other students' answers and compare them to mine
@@ -29,8 +29,7 @@ Feature: Students should see others' responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 0 |
-      | All | 0 |
+      | Display completions after response? | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -56,8 +55,8 @@ Feature: Students should see others' responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 1 |
+      | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -94,8 +93,7 @@ Feature: Students should see others' responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 0 |
-      | All | 1 |
+      | Display completions after response? | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"

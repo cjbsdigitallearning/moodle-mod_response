@@ -72,7 +72,7 @@ class poll_form_choicesbeforereflection extends abstractform {
         }
 
         $submitarea = [];
-        $this->add_precomplete_completion($USER->id, $submitarea);
+        $this->add_precomplete_completion($submitarea);
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('next'));
         $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
     }

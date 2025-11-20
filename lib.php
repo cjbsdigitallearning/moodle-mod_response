@@ -24,10 +24,6 @@
 
 use mod_response\helper;
 
-// These values are potentially combined when in the database.
-define('RESPONSE_PEER_RESULTS_GROUP', 0x01);
-define('RESPONSE_PEER_RESULTS_ALL', 0x02);
-
 /**
  * Outlines features supported by the response activity.
  *
@@ -397,8 +393,7 @@ function response_cm_info_view(cm_info $cm) {
         // Can they edit their response?
         helper::check_can_edit_own_response($customdata, $context, $cm);
 
-        // Show the peer results.
-        if (!empty($customdata->displaypeerresults)) {
+        if (!empty($customdata->displaycompletionafter)) {
             require_once($CFG->libdir . '/formslib.php');
             $responseclone = clone $customdata;
             $responseclone->context = $context;
@@ -580,7 +575,7 @@ function mod_response_output_fragment_answer($args) {
 
     $userid = !empty($args['userid']) ? (int) $args['userid'] : 0;
     if (empty($userid)) {
-        throw new moodle_exception('invalidcoursemodule', 'error');
+        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
     }
 
     // Now we need to verify the user could conceivably could see these answers.
@@ -590,31 +585,17 @@ function mod_response_output_fragment_answer($args) {
 
     // First, did the viewing user complete the activity?
     if (empty($response->user_responses[$USER->id])) {
-        throw new moodle_exception('invalidcoursemodule', 'error');
+        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
     }
     // Did the user whose completion is requested complete the activity?
     if (empty($response->user_responses[$userid])) {
-        throw new moodle_exception('invalidcoursemodule', 'error');
+        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
     }
 
-    // Now, can the user actually see it? This involves verifying peer results etc.
-    $cansee = false;
-    if ($userid == $USER->id) {
-        $cansee = true;
-    }
-    $displaypeerresults = (int) $response->displaypeerresults;
-    if ($displaypeerresults & RESPONSE_PEER_RESULTS_ALL) {
-        $cansee = true;
-    }
-    if ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP) {
-        // Is the user in the same group?
-        $membersingroup = helper::get_users_in_same_group($response->id, $USER->id);
-        if (in_array($userid, $membersingroup)) {
-            $cansee = true;
-        }
-    }
+    $cansee = helper::can_see($USER->id, $userid, $cm, $response, false);
+
     if (!$cansee) {
-        throw new moodle_exception('invalidcoursemodule', 'error');
+        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
     }
 
     // If we're here, we can see the response.
