@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Students should see others' responses, filtered by group or not
+Feature: Students should see others' text responses, filtered by group or not
   In order to further my learning and have a broader mindset
   As a student
   I need to see answers from my study group and compare them to everyone else
@@ -101,8 +101,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 1 |
-      | All | 0 |
+      | Display completions after response? | 1 |
       | Group mode | Separate groups |
     And I press "Save and return to course"
     And I log out
@@ -146,8 +145,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 1 |
-      | All | 1 |
+      | Display completions after response? | 1 |
       | Group mode | Separate groups |
     And I press "Save and return to course"
     And I log out
@@ -196,8 +194,7 @@ Feature: Students should see others' responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Study group | 1 |
-      | All | 1 |
+      | Display completions after response? | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out

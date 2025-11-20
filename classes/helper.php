@@ -15,11 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_response;
-use core_component;
+
 use coding_exception;
+use core_component;
+use mod_response\display_completion;
+use moodle_url;
 use stdClass;
 use ReflectionClass;
-use moodle_url;
 use renderer_base;
 
 /**
@@ -30,7 +32,6 @@ use renderer_base;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
-
     /**
      * Cleans the response text given by users. In general we only want
      * to preserve the p tags in a post, not the full formatting. (We pass
@@ -185,7 +186,8 @@ class helper {
                         'responsedisplay',
                         'viewownpagedescription',
                         'question',
-                        'displaycompletion',
+                        'displaycompletionbefore',
+                        'displaycompletionafter',
                         'caption',
                     ];
 
@@ -197,15 +199,6 @@ class helper {
         $newinstance->content = $moduleinstance->responsecontent['text'];
         $newinstance->contentformat = $moduleinstance->responsecontent['format'];
 
-        // Toggle peer results is two things in the UI and needs to be one here.
-        $newinstance->displaypeerresults = 0;
-        if ($moduleinstance->togglepeerresults['studygroup']) {
-            $newinstance->displaypeerresults |= RESPONSE_PEER_RESULTS_GROUP;
-        }
-        if ($moduleinstance->togglepeerresults['all']) {
-            $newinstance->displaypeerresults |= RESPONSE_PEER_RESULTS_ALL;
-        }
-
         if (!empty($moduleinstance->completionunlocked)) {
             $newinstance->requiresubmission = 0;
             if ($moduleinstance->completion == COMPLETION_TRACKING_AUTOMATIC) {
@@ -214,6 +207,47 @@ class helper {
         }
 
         return $newinstance;
+    }
+
+    /**
+     * Determine if user can see peer response before/after completion.
+     *
+     * @param integer $viewerid ID of user viewing the response
+     * @param integer $vieweeid
+     * @param stdClass $cm
+     * @param stdClass $response
+     * @param int $groupid In the case of groupmode = VISIBLEGROUPS, we use this value to determine which groups to view - 0 = all.
+     * @param boolean $before Determine if we are retrieving $response->displaycompletionbefore or $response->displaycompletionafter.
+     * @return boolean
+     */
+    public static function can_see(int $viewerid, int $vieweeid, stdClass $cm, stdClass $response, int $groupid = 0, bool $before = true): bool {
+        // User can see their own response.
+        if ($viewerid == $vieweeid) {
+            return true;
+        }
+
+        // Return false if relative display setting is NONE.
+        $when = $before ? 'before' : 'after';
+        $property = 'displaycompletion' . $when;
+        $display = $response->$property;
+        if ($display == display_completion::NONE->value) {
+            return false;
+        }
+
+        // Determine based on groupmode.
+        switch ($cm->groupmode) {
+            case VISIBLEGROUPS:
+                if (groups_group_visible($groupid, $cm->course, $cm, $vieweeid)) {
+                    return true;
+                }
+                return has_capability('moodle/course:viewhiddengroups', \context_course::instance($cm->course));
+            case SEPARATEGROUPS:
+                return in_array($viewerid, helper::get_users_in_same_group($response->id, $vieweeid));
+            case NOGROUPS:
+            default:
+                return true;
+        }
+
     }
 
     /**
@@ -248,25 +282,9 @@ class helper {
      */
     public static function display_completion_options() {
         return [
-            'full' => get_string('displaycompletionfull', 'response'),
-            'fullgrp' => get_string('displaycompletionfullgroup', 'response'),
-            'number' => get_string('displaycompletionnumber', 'response'),
-            'numbergrp' => get_string('displaycompletionnumbergroup', 'response'),
-            'none' => get_string('displaycompletionnone', 'response'),
-        ];
-    }
-
-    /**
-     * Provides a list of possible checkboxes for toggling
-     * peer results. Kept as a separate list to declutter the group
-     * definition.
-     *
-     * @return array List of peer toggle options.
-     */
-    public static function peer_result_options() {
-        return [
-            'studygroup' => get_string('togglepeerresultsstudygroup', 'response'),
-            'all' => get_string('togglepeerresultsall', 'response'),
+            display_completion::NONE->value => get_string('displaycompletionnone', 'response'),
+            display_completion::NAME->value => get_string('displaycompletionfull', 'response'),
+            display_completion::NUMBER->value => get_string('displaycompletionnumber', 'response'),
         ];
     }
 
@@ -279,10 +297,11 @@ class helper {
      * @return array A list of member ids in the same group
      */
     public static function get_users_in_same_group($id, $userid = null) {
-        if (empty($id) || empty($userid)) {
-            return [];
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->id;
         }
-
+        
         // Now, figure out which groups the user is in.
         $cm = get_coursemodule_from_instance('response', $id, 0, false, MUST_EXIST);
         $groups = groups_get_user_groups($cm->course, $userid);
@@ -294,6 +313,31 @@ class helper {
                 }
             }
         }
+        // Having worked out which people are in the same groups the user is, flatten it down.
+        $memberlist = [];
+        foreach ($groupmembers as $memberid) {
+            $memberlist[] = $memberid->id;
+        }
+
+        return $memberlist;
+    }
+
+    /**
+     * Given a response and a user who can access that response activity,
+     * identify which other users are in the same groups.
+     *
+     * @param int $id Response activity as per resposne table
+     * @param int $userid User ID to look up
+     * @return array A list of member ids in the same group
+     */
+    public static function get_users_in_group($cm, $groupid) {
+        if (groups_group_visible($groupid, $cm->course)) {
+            return;
+        }
+
+        // Now, figure out which groups the user is in.
+        $groupmembers = groups_get_members($groupid, $cm->course, 'u.id', 'u.id ASC');
+
         // Having worked out which people are in the same groups the user is, flatten it down.
         $memberlist = [];
         foreach ($groupmembers as $memberid) {

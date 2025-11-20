@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Users should be able to edit their answers if permitted
+Feature: Users should be able to edit their text answers if permitted
   In order to for me to fix typos I notice in my answer
   As a student
   I need to edit my answer and save the corrected version

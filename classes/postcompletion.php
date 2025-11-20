@@ -44,22 +44,20 @@ class postcompletion extends abstractform {
 
         $submitarea = [];
 
-        $displaypeerresults = (int) $this->_customdata->displaypeerresults;
+        $displaycompletionafter = (int) $this->_customdata->displaycompletionafter;
 
         if (!has_capability('mod/response:viewother', $this->_customdata->context)) {
             return;
         }
 
-        $completions = $this->add_postcompletion_completion($USER->id, $submitarea, $this->_customdata);
+        $completions = $this->add_postcompletion_completion($submitarea);
 
         if (!empty($submitarea)) {
             $mform->addElement('hidden', 'context', $this->_customdata->context->id);
             $mform->setType('context', PARAM_INT);
+            $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
 
-            if (
-                ($displaypeerresults & RESPONSE_PEER_RESULTS_GROUP && $completions->people_group)
-                && $displaypeerresults & RESPONSE_PEER_RESULTS_ALL
-            ) {
+            if ($displaycompletionafter && $cm->groupmode == NOGROUPS && $completions->people_group) {
                 $submitarea[] = &$mform->createElement('submit', 'response' . $this->_customdata->context->id . 'group',
                     get_string('togglepeerresultsgroup', 'response'), ['data-completion' => 'group']);
             }

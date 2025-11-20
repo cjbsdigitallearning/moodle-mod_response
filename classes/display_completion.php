@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace mod_response;
+
 /**
- * Plugin version and other meta-data are defined here.
+ * Options for how users view the response completions.
  *
- * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_response
+ * @copyright  2025 Michael Kotlyar <michael.kotlyar@catalyst-eu.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 20250522000;
-$plugin->release   = '1.0.1';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->maturity  = MATURITY_ALPHA;
+enum display_completion: int {
+    case NONE   = 0;
+    case NUMBER = 1;
+    case NAME   = 2;
+}

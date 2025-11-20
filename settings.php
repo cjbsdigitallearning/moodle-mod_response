@@ -36,16 +36,17 @@ if ($ADMIN->fulltree) {
                                              get_string('modeditdefaults', 'admin'),
                                              get_string('condifmodeditdefaults', 'admin')));
 
+    // Show completions before response.
     $options = helper::display_completion_options();
-    $settings->add(new admin_setting_configselect('response/displaycompletion',
+    $settings->add(new admin_setting_configselect('response/displaycompletionbefore',
                                                   get_string('displaycompletion', 'response'),
                                                   get_string('displaycompletion_desc', 'response'), 'full', $options));
 
-    $options = helper::peer_result_options();
-    $settings->add(new admin_setting_configmulticheckbox('response/togglepeerresults',
-                                                         get_string('togglepeerresults', 'response'),
-                                                         get_string('togglepeerresults_desc', 'response'),
-                                                         [], $options));
+    // Show completions after response.
+    $options = [get_string('no'), get_string('yes')];
+    $settings->add(new admin_setting_configselect('response/displaycompletionafter',
+                                                  get_string('displaycompletionafter', 'response'),
+                                                  get_string('displaycompletionafter_desc', 'response'), 'full', $options));
 
     $subplugins = helper::get_type_subplugins();
     $sorter = function ($a, $b) {

@@ -27,8 +27,8 @@
     * userid - required for being able to select which response to see
 
     Context variables required for this template:
-    * number_all - number of people in the 'all' group
-    * people_all - array of people to show, containing:
+    * number - number of people in the 'all' group
+    * people - array of people to show, containing:
        * userid - user id of the person
        * picture - URL of their profile picture
        * name - name of the person who has completed the activity
@@ -37,12 +37,12 @@
     * response_id - id of the response instance (not the course module instance)
 
     It is perfectly possible to return an empty 'number_group' and 'people_group' and only have a
-    single person in people_all for when the current user is the first to complete an activity.
+    single person in people for when the current user is the first to complete an activity.
 
     Example context (json):
     {
-        "number_all": 1,
-        "people_all": [
+        "number": 1,
+        "people": [
             {
                 "userid": 2,
                 "picture": "https://your.moodle.here/pluginfile.php/.../",
@@ -54,14 +54,14 @@
     }
 }}
 <div class="display-completion profile">
-    {{# number_all }}
+    {{# number }}
         <div class="profiles all">
             <div class="first-x">
-                {{# people_all }}
+                {{# people }}
                 <a href="#" class="userresponse" data-id="{{{userid}}}" role="button"><img src="{{{picture}}}" alt="{{name}}" title="{{name}}"></a>
-                {{/ people_all }}
+                {{/ people }}
             </div>
-            {{# number_all_other }}
+            {{# number_other }}
                 <div class="others hide">
                     {{# people_all_other }}
                     <a href="#" class="userresponse" data-id="{{{userid}}}" role="button"><img src="{{{picture}}}" alt="{{name}}" title="{{name}}"></a>
@@ -71,14 +71,14 @@
                     <button type="button" class="btn btn-default plus-x-other">{{plus_x_other_string_all}}</button> {{others_completed_string}}
                 </div>
                 <button type="button" class="btn btn-default plus-x-other hide">{{# str }} showless, form {{/ str }}</button>
-            {{/ number_all_other }}
-            {{^ number_all_other }}
+            {{/ number_other }}
+            {{^ number_other }}
                 <div class="plus-x-others">
                     {{others_completed_string}}
                 </div>
-            {{/ number_all_other}}
+            {{/ number_other}}
         </div>
-    {{/ number_all }}
+    {{/ number }}
     {{# number_group }}
         <div class="profiles group">
             <div class="first-x">

@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_text
-Feature: Users might choose to withdraw and submit a new answer
+Feature: Users might choose to withdraw and submit a new text answer
   In order for me to submit a newer, better answer
   As a student
   I need to remove my existing answer to an activity

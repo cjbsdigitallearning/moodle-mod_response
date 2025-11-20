@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use mod_response\display_completion;
+
 /**
  * Upgrade instructions for historical versions of mod_response to current functionality.
  *
@@ -135,6 +137,90 @@ function xmldb_response_upgrade($oldversion) {
         }
 
         upgrade_plugin_savepoint(true, 20250131000, 'mod', 'response');
+    }
+
+    if ($oldversion < 20250522000) {
+        // Add 'displaycompletionbefore' and 'displaycompletionafter' fields.
+        $table = new xmldb_table('response');
+        $displaycompletionbeforefield = new xmldb_field(
+            'displaycompletionbefore',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            '0',
+            'timemodified'
+        );
+        $displaycompletionafterfield = new xmldb_field(
+            'displaycompletionafter',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            0,
+            'displaycompletionbefore'
+        );
+
+        if (!$dbmanager->field_exists($table, $displaycompletionbeforefield)) {
+            $dbmanager->add_field($table, $displaycompletionbeforefield);
+        }
+        if (!$dbmanager->field_exists($table, $displaycompletionafterfield)) {
+            $dbmanager->add_field($table, $displaycompletionafterfield);
+        }
+
+        // Populate new 'displaycompletionbefore' fields with converted values.
+        $oldnewvalues = [
+            [display_completion::NONE->value, ['none']],
+            [display_completion::NUMBER->value, ['number', 'numbergrp']],
+            [display_completion::NAME->value, ['full', 'fullgrp']],
+        ];
+        foreach ($oldnewvalues as $oldnewvalue) {
+            [$newvalue, $oldvalues] = $oldnewvalue;
+            [$insql, $inparams] = $DB->get_in_or_equal($oldvalues);
+            $sql = "UPDATE {response}
+                       SET displaycompletionbefore = ?
+                     WHERE displaycompletion $insql";
+            $DB->execute($sql, [$newvalue, $newvalue, ...$inparams]);
+        }
+
+        // Populate new 'displaycompletionafter' fields with converted values.
+        $sql = "UPDATE {response}
+                   SET displaycompletionafter = displaypeerresults";
+        $DB->execute($sql);
+
+        $sql = "UPDATE {response}
+                   SET displaycompletionafter = 1
+                 WHERE displaypeerresults = 2";
+        $DB->execute($sql);
+
+        // Delete 'displaycompletion' and 'displaypeerresults' column.
+        $fields = ['displaycompletion', 'displaypeerresults'];
+        foreach ($fields as $fieldname) {
+            $field = new xmldb_field($fieldname);
+            if ($dbmanager->field_exists($table, $field)) {
+                $dbmanager->drop_field($table, $field);
+            }
+        }
+
+        // Convert and set new configs, unset old configs.
+        $config = get_config('mod_response');
+
+        foreach ($oldnewvalues as $oldnewvalue) {
+            [$newvalue, $oldvalues] = $oldnewvalue;
+            if (in_array($config->displaycompletion, $oldvalues)) {
+                set_config('displaycompletionbefore', $newvalue, 'mod_response');
+                break;
+            }
+        }
+
+        set_config('displaycompletionafter', (int) $config->displaypeerresults == 0 ? 0 : 1, 'mod_response');
+
+        unset_config('displaycompletion', 'mod_response');
+        unset_config('displaypeerresults', 'mod_response');
+
+        upgrade_plugin_savepoint(true, 20250522000, 'mod', 'response');
     }
 
     return true;

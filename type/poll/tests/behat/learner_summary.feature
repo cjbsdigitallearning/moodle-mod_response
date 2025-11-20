@@ -1,5 +1,5 @@
 @mod @mod_response @responsetype @responsetype_poll
-Feature: Users should be able to reflect on their answers
+Feature: Users should be able to reflect on their poll answers
   In order for me to reflect on multiple activities that might be interlinked
   As a student
   I need to see all my answers together at once
