@@ -17,7 +17,7 @@
 namespace mod_response;
 
 use context_module;
-use FilesystemIterator;
+use mod_response\responsetype\abstractinfo;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use stdClass;
@@ -31,12 +31,6 @@ use ZipArchive;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class download {
-    /** @var context_module */
-    public context_module $context;
-    /** @var stdClass */
-    public stdClass $response;
-    /** @var object */
-    public object $subplugin;
     /** @var string */
     public string $filetype;
     /** @var string */
@@ -48,7 +42,7 @@ class download {
     /** @var string */
     public string $tempcoursedir;
     /** @var string */
-    public $tempresponsedir;
+    public string $tempresponsedir;
     /** @var array */
     public array $csvheadings;
     /** @var string */
@@ -58,13 +52,17 @@ class download {
      * The class constructor.
      *
      * @param context_module $context Context object.
-     * @param \stdClass $response Response object.
-     * @param object $subplugin Subplugin object.
+     * @param stdClass $response Response object.
+     * @param abstractinfo $subplugin Subplugin object.
      */
-    public function __construct(context_module $context, \stdClass $response, object $subplugin) {
-        $this->context = $context;
-        $this->response = $response;
-        $this->subplugin = $subplugin;
+    public function __construct(
+        /** @var context_module */
+        public context_module $context,
+        /** @var stdClass */
+        public stdClass $response,
+        /** @var abstractinfo */
+        public abstractinfo $subplugin,
+    ) {
         // Add activity info to $response.
         $subplugin->load_activity($response);
         // File area info.
@@ -84,8 +82,6 @@ class download {
         );
         // Response fields.
         $this->usertextfield = $subplugin->get_usertext_fieldname();
-
-        return $this;
     }
 
     /**
@@ -324,7 +320,7 @@ class download {
         if ($zip->close()) {
             $filepath = "{$tempdir}/{$filename}";
             send_file($filepath, $filename, null, 0, false, true, '', true);
-            //Clean up.
+            // Clean up.
             remove_dir($this->tempcoursedir);
         }
     }
