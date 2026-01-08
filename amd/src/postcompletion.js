@@ -28,12 +28,12 @@ define(
                      .trigger('peer_change.response', { display: peer });
                 if (peer === 'group') {
                     $(this).data('completion', 'all');
-                    str.get_string('togglepeerresultsall', 'mod_response').then((label) => {
+                    str.get_string('allresponses', 'mod_response').then((label) => {
                         return $(this).val(label);
                     });
                 } else {
                     $(this).data('completion', 'group');
-                    str.get_string('togglepeerresultsgroup', 'mod_response').then((label) => {
+                    str.get_string('group').then((label) => {
                         return $(this).val(label);
                     });
                 }
