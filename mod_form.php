@@ -72,15 +72,24 @@ class mod_response_mod_form extends moodleform_mod {
         // Add the activity content.
         $mform->addElement('header', 'contentsection', get_string('contentheader', 'response'));
         $mform->setExpanded('contentsection');
-        $mform->addElement('editor', 'responsecontent',
+        $mform->addElement(
+            'editor',
+            'responsecontent',
             get_string('content', 'response'),
-            null, helper::get_editor_options($this->context));
+            null,
+            helper::get_editor_options($this->context),
+        );
 
         // Now split the items up so the response-specific stuff is in a response section.
         $mform->addElement('header', 'general', get_string('response', 'response'));
 
         // Add the caption.
-        $mform->addElement('text', 'caption', get_string('caption', 'response'), ['size' => '64']);
+        $mform->addElement(
+            'text',
+            'caption',
+            get_string('caption', 'response'),
+            ['size' => '64', 'placeholder' => get_string('shareyourthoughts', 'response')],
+        );
         $mform->setType('caption', PARAM_TEXT);
 
         // And add the question for the activity.
@@ -117,8 +126,14 @@ class mod_response_mod_form extends moodleform_mod {
 
         $mform->addElement('select', 'responsedisplay', get_string('responsedisplay', 'response'), $displayoptions);
 
-        $mform->addElement('advcheckbox', 'viewownpagedescription', '', get_string('viewownpagedescription', 'response'),
-                            null, ['0', '1']);
+        $mform->addElement(
+            'advcheckbox',
+            'viewownpagedescription',
+            '',
+            get_string('viewownpagedescription', 'response'),
+            null,
+            ['0', '1'],
+        );
 
         // Hide the viewownpagedescription checkbox if displayresponseinline selected.
         $mform->disabledIf('viewownpagedescription', 'responsedisplay', 'eq', 1);
@@ -157,8 +172,15 @@ class mod_response_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             $draftitemid = file_get_submitted_draft_itemid('responsecontent');
             $defaultvalues['responsecontent']['format'] = $defaultvalues['contentformat'];
-            $defaultvalues['responsecontent']['text']   = file_prepare_draft_area($draftitemid, $this->context->id, 'mod_response',
-                    'content', 0, helper::get_editor_options($this->context), $defaultvalues['content']);
+            $defaultvalues['responsecontent']['text'] = file_prepare_draft_area(
+                $draftitemid,
+                $this->context->id,
+                'mod_response',
+                'content',
+                0,
+                helper::get_editor_options($this->context),
+                $defaultvalues['content'],
+            );
             $defaultvalues['responsecontent']['itemid'] = $draftitemid;
         }
 
@@ -253,8 +275,13 @@ class mod_response_mod_form extends moodleform_mod {
         $suffix = $this->get_suffix();
 
         $group = [];
-        $group[] = $mform->createElement('advcheckbox', 'requiresubmission' . $suffix, null, get_string('requiresubmission_desc', 'response'),
-                ['group' => 'requiresubmissiongroup']);
+        $group[] = $mform->createElement(
+            'advcheckbox',
+            'requiresubmission' . $suffix,
+            null,
+            get_string('requiresubmission_desc', 'response'),
+            ['group' => 'requiresubmissiongroup'],
+        );
 
         $mform->addGroup($group, 'requiresubmissiongroup' . $suffix, get_string('requiresubmission', 'response'), ' &nbsp; ', false);
         $mform->addHelpButton('requiresubmissiongroup' . $suffix, 'requiresubmission', 'response');
