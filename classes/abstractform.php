@@ -141,9 +141,9 @@ abstract class abstractform extends moodleform {
      *
      * @param array $submitarea The submission area group from the form
      * @param object $response The response object
-     * @return object $completions The data about the completions being displayed
+     * @return array $completions The data about the completions being displayed
      */
-    public function add_postcompletion_completion(&$submitarea) {
+    public function add_postcompletion_completion(array &$submitarea): array {
         global $PAGE;
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);

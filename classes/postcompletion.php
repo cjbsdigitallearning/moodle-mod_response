@@ -57,9 +57,13 @@ class postcompletion extends abstractform {
             $mform->setType('context', PARAM_INT);
             $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
 
-            if ($displaycompletionafter && $cm->groupmode == NOGROUPS && $completions->people_group) {
-                $submitarea[] = &$mform->createElement('submit', 'response' . $this->_customdata->context->id . 'group',
-                    get_string('togglepeerresultsgroup', 'response'), ['data-completion' => 'group']);
+            if ($displaycompletionafter && $cm->groupmode == NOGROUPS && !empty($completions)) {
+                $submitarea[] = &$mform->createElement(
+                    'submit',
+                    'response' . $this->_customdata->context->id . 'group',
+                    get_string('group'),
+                    ['data-completion' => 'group'],
+                );
             }
 
             $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
