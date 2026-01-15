@@ -2,7 +2,6 @@ define(
     ['jquery', 'mod_response/Chart', 'mod_response/percentify'],
     function($, Chart, percentify) {
         return function (response, aggregate, colours, pclabel) {
-
             var set = '';
             if (aggregate.hasOwnProperty('group')) {
                 set = 'group';
