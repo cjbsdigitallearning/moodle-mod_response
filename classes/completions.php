@@ -126,52 +126,6 @@ class completions {
     }
 
     /**
-     * Copies the data across from the 'all users' to the
-     * 'grouped users' part of the object.
-     *
-     * @param object $completions Completions data
-     * @param array $membersingroup Array of members in group
-     */
-    protected static function sift_groups_out(&$completions, $membersingroup) {
-        // Now sift out groups.
-        $completions->people_group = [];
-        $members = array_flip($membersingroup); // As isset runs faster than in_array, flip the array and do it as a hash lookup.
-        foreach (array_keys($completions->people_all) as $user) {
-            if (isset($members[$user])) {
-                $completions->people_group[$user] = $completions->people_all[$user];
-            }
-        }
-        $completions->number_group = count($completions->people_group);
-    }
-
-    /**
-     * Having fetched all the member data, we might need to split
-     * it into 'the first x' and 'everyone else' as per config
-     * settings. This function manages that on the already-fetched
-     * data.
-     *
-     * @param object $completions Completions data
-     */
-    protected static function slice_people_lists(&$completions) {
-        $responseconfig = get_config('response');
-
-        if (empty($responseconfig->maxprofileimages)) {
-            return; // Nothing else to do here.
-        }
-
-        foreach (['group', 'all'] as $sel) {
-            $source = 'people_' . $sel;
-            $dest = 'people_' . $sel . '_other';
-            // Get full list.
-            $people = $completions->$source;
-            // Put the first x back.
-            $completions->$source = array_slice($people, 0, $responseconfig->maxprofileimages);
-            // And put the rest into the destination.
-            $completions->$dest = array_slice($people, $responseconfig->maxprofileimages);
-        }
-    }
-
-    /**
      * Returns list of completions based on groupmode of activity.
      *
      * @param stdClass $cm

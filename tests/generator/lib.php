@@ -53,12 +53,6 @@ class mod_response_generator extends testing_module_generator {
         if (!isset($record->displaycompletion)) {
             $record->displaycompletion = 'full';
         }
-        if (!isset($record->togglepeerresults)) {
-            $record->togglepeerresults = [
-                'studygroup' => 0,
-                'all' => 0,
-            ];
-        }
 
         return parent::create_instance($record, (array) $options);
     }

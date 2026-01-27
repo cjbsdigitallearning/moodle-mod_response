@@ -119,6 +119,7 @@ abstract class abstractform extends moodleform {
         $number = count($completions);
 
         if ($number > 0) {
+            $displaycompletionoptionadded = true;
             if ($displaybefore == display_completion::NAME->value) {
                 $renderer = $PAGE->get_renderer('mod_response');
                 $displaystring = $renderer->render_precompletion($completions);
@@ -128,6 +129,11 @@ abstract class abstractform extends moodleform {
                 $displaystring = get_string($display, 'response', $number);
                 $displaystring = '<div class="display-completion number">' . $displaystring . '</div>';
                 $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
+            } else {
+                $displaycompletionoptionadded = false;
+            }
+            if ($displaycompletionoptionadded) {
+                $mform->addHelpButton('displaycompletion', 'displaycompletion', 'response');
             }
         }
     }
@@ -141,9 +147,9 @@ abstract class abstractform extends moodleform {
      *
      * @param array $submitarea The submission area group from the form
      * @param object $response The response object
-     * @return object $completions The data about the completions being displayed
+     * @return array $completions The data about the completions being displayed
      */
-    public function add_postcompletion_completion(&$submitarea) {
+    public function add_postcompletion_completion(array &$submitarea): array {
         global $PAGE;
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
