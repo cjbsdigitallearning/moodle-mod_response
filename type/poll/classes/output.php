@@ -142,10 +142,6 @@ class output extends abstractoutput implements renderable, templatable {
                         }
                         $aggregate->$set->data[] = $amount;
                     }
-
-                    if (array_sum($aggregate->$set->data) == 0) {
-                        unset($aggregate->$set);
-                    }
                 }
             }
             $data->aggregate = json_encode($aggregate);

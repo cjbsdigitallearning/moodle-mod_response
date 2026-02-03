@@ -261,7 +261,8 @@ class information extends abstractinfo {
                 foreach ($rawallusers as $choice) {
                     $response->aggregate->all[$choice]++;
                 }
-            } else if ($cm->groupmode == VISIBLEGROUPS) {
+            }
+            if (in_array($cm->groupmode, [VISIBLEGROUPS, NOGROUPS])) {
                 $groupid = groups_get_activity_group($cm);
                 $response->aggregate->group = [];
                 // First, make some defaults using all valid choices.
