@@ -1,4 +1,5 @@
 /* Styles for the course layout itself. */
+.path-mod-response div.user-response,
 .activity.modtype_response div.user-response {
     width: 99.9%;
     display: table;
@@ -6,78 +7,98 @@
 }
 
 /* Hide the activity icon if displaying inline. */
+.path-mod-response.displayresponseinline .activityicon[src*="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"],
 .modtype_response.displayresponseinline .activityicon[src*="R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"] {
     display: none;
 }
 
-.card.response .card-footer:empty {
+.path-mod-response .card.response .card-footer:empty,
+.modtype_response .card.response .card-footer:empty {
     display:none;
 }
 
-.card.response .card-footer .form-group {
+.path-mod-response .card.response .card-footer .form-group,
+.modtype_response .card.response .card-footer .form-group {
     margin-bottom: 0;
 }
 
-.displayresponseinline .activityinstance a, .displayresponseinline .activityinstance a:hover {
+.path-mod-response .displayresponseinline .activityinstance a, .path-mod-response .displayresponseinline .activityinstance a:hover,
+.modtype_response .displayresponseinline .activityinstance a, .modtype_response .displayresponseinline .activityinstance a:hover {
     color: #373a3c;
     cursor: default;
     text-decoration: none;
 }
-.user-response .mform > .form-group.fullwidtheditor {
+.path-mod-response .user-response .mform > .form-group.fullwidtheditor,
+.modtype_response .user-response .mform > .form-group.fullwidtheditor {
     margin-left: -15px;
 }
-.user-response .fullwidtheditor .col-md-3 {
+.path-mod-response .user-response .fullwidtheditor .col-md-3,
+.modtype_response .user-response .fullwidtheditor .col-md-3 {
     display: none;
 }
-.user-response .fullwidtheditor .col-md-9 {
+.path-mod-response .user-response .fullwidtheditor .col-md-9,
+.modtype_response .user-response .fullwidtheditor .col-md-9 {
     flex: 0 0 100%;
     max-width: 100%;
 }
-.user-response .fullwidtheditor .col-md-9 > div {
+.path-mod-response .user-response .fullwidtheditor .col-md-9 > div,
+.modtype_response .user-response .fullwidtheditor .col-md-9 > div {
     width: 100%;
 }
 
 /* Fixing the Atto editor */
-.user-response .fullwidtheditor.hasnotoolbar div.editor_atto_toolbar {
+.path-mod-response .user-response .fullwidtheditor.hasnotoolbar div.editor_atto_toolbar,
+.modtype_response .user-response .fullwidtheditor.hasnotoolbar div.editor_atto_toolbar {
     padding: 0;
     border-bottom: none;
     min-height: 0;
 }
-.user-response .editor_atto_content {
+.path-mod-response .user-response .editor_atto_content,
+.modtype_response .user-response .editor_atto_content {
     resize: none;
     min-height: 200px !important;
     height: 200px !important;
 }
 
 /* Styles for the student completing the activity. */
-.response-activity .question {
+.path-mod-response .response-activity .question,
+.modtype_response .response-activity .question {
     margin-bottom: 20px;
 }
-.user-response .fdescription.required {
+.path-mod-response .user-response .fdescription.required,
+.modtype_response .user-response .fdescription.required {
     display: none;
 }
-.user-response .form-group .text-nowrap > abbr {
+.path-mod-response .user-response .form-group .text-nowrap > abbr,
+.modtype_response .user-response .form-group .text-nowrap > abbr {
     display: none;
 }
-.card.response [data-groupname^=buttonar] .display-completion {
+.path-mod-response .card.response [data-groupname^=buttonar] .display-completion,
+.modtype_response .card.response [data-groupname^=buttonar] .display-completion {
     display: inline-block;
     max-width: 75%;
 }
-.card.response .display-completion .first-x,
+.path-mod-response .card.response .display-completion .first-x,
+    .card.response .display-completion .others,
+    .card.response .display-completion .plus-x-others,
+.modtype_response .card.response .display-completion .first-x,
     .card.response .display-completion .others,
     .card.response .display-completion .plus-x-others {
     display: inline;
 }
-.card.response .display-completion .plus-x-others {
+.path-mod-response .card.response .display-completion .plus-x-others,
+.modtype_response .card.response .display-completion .plus-x-others {
     padding-left: 5px;
     vertical-align:middle;
     font-size: 90%;
 }
-.card.response .display-completion .plus-x-others .btn {
+.path-mod-response .card.response .display-completion .plus-x-others .btn,
+.modtype_response .card.response .display-completion .plus-x-others .btn {
     margin-left: 0;
     margin-right: 5px;
 }
-.card.response .display-completion .btn.plus-x-other {
+.path-mod-response .card.response .display-completion .btn.plus-x-other,
+.modtype_response .card.response .display-completion .btn.plus-x-other {
     background: #999999;
     color: #fff;
     padding: 2px 7px;
@@ -86,70 +107,87 @@
     line-height: 20px;
     font-weight:bold;
 }
-.card.response .display-completion > .btn.plus-x-other {
+.path-mod-response .card.response .display-completion > .btn.plus-x-other,
+.modtype_response .card.response .display-completion > .btn.plus-x-other {
     padding: 2px 8px;
     font-size: 81%;
 }
-.card.response .display-completion .others.hide {
+.path-mod-response .card.response .display-completion .others.hide,
+.modtype_response .card.response .display-completion .others.hide {
     display: none;
 }
-.card.response .display-completion img {
+.path-mod-response .card.response .display-completion img,
+.modtype_response .card.response .display-completion img {
     width: auto;
     height: 30px;
     margin-bottom: 4px;
 }
-.mform > .form-group[data-groupname^=buttonar] {
+.path-mod-response .mform > .form-group[data-groupname^=buttonar],
+.modtype_response .mform > .form-group[data-groupname^=buttonar] {
     margin: 20px 0 0;
 }
-.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-3 {
+.path-mod-response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-3,
+.modtype_response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-3 {
     display: none;
     flex: 0 0 0%;
 }
-.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 {
+.path-mod-response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9,
+.modtype_response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 {
     width: 100%;
     max-width: 100%;
     flex: 0 0 100%;
 }
-.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:first-of-type {
+.path-mod-response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:first-of-type,
+.modtype_response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:first-of-type {
     margin-left: auto;
 }
-.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:last-of-type {
+.path-mod-response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:last-of-type,
+.modtype_response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .form-group:last-of-type {
     margin-right: 0;
 }
-.card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .display-completion + .form-group {
+.path-mod-response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .display-completion + .form-group,
+.modtype_response .card.response .card-footer [data-groupname^=buttonar].femptylabel > .col-md-9 .display-completion + .form-group {
     margin-left: auto;
 }
 
 
-.user-response.has-form .maximumwordsprompt {
+.path-mod-response .user-response.has-form .maximumwordsprompt,
+.modtype_response .user-response.has-form .maximumwordsprompt {
     text-align: right;
     margin-bottom: 20px;
 }
 
 /* Styles for showing the answers to students. */
-.response .manage-links {
+.path-mod-response .response .manage-links,
+.modtype_response .response .manage-links {
     text-align: right;
     margin-top: 20px;
     margin-bottom: 30px;
 }
-.response .mod_response_postcompletion {
+.path-mod-response .response .mod_response_postcompletion,
+.modtype_response .response .mod_response_postcompletion {
     display: none;
 }
-.card.response .card-footer .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
+.path-mod-response .card.response .card-footer .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle,
+.modtype_response .card.response .card-footer .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     width: 20px;
 }
+.path-mod-response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle,
 .activity.modtype_response .mod_response_postcompletion [data-groupname^="buttonar"] .fitemtitle {
     display: none;
 }
-.card.response .profiles img[data-id] {
+.path-mod-response .card.response .profiles img[data-id],
+.modtype_response .card.response .profiles img[data-id] {
     cursor: pointer;
 }
-.card.response button.hide {
+.path-mod-response .card.response button.hide,
+.modtype_response .card.response button.hide {
     display: none;
 }
 
 /* Styles for the overall summary. */
-.activity-course .activity-title {
+.path-mod-response .activity-course .activity-title,
+.modtype_response .activity-course .activity-title {
     clear: both;
     margin-top: 20px;
 }
@@ -164,7 +202,8 @@
     width: 460px;
 }
 
-.view-all .view-all-response {
+.path-mod-response .view-all .view-all-response,
+.modtype_response .view-all .view-all-response {
     padding-top: 30px;
     padding-bottom: 30px;
     border-top: 1px solid #ddd;

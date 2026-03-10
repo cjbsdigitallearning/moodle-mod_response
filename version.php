@@ -28,4 +28,8 @@ $plugin->version   = 20250522000;
 $plugin->release   = '1.0.1';
 $plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
 $plugin->component = 'mod_response';
+$plugin->supported = [
+    403,
+    405,
+];
 $plugin->maturity  = MATURITY_ALPHA;
