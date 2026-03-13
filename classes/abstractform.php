@@ -114,7 +114,7 @@ abstract class abstractform extends moodleform {
 
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
-        $group = groups_get_activity_group($cm);
+        $group = groups_get_activity_group($cm, true);
         $completions = completions::get_completions_by_groupmode($cm, $group);
         $number = count($completions);
 
@@ -153,7 +153,7 @@ abstract class abstractform extends moodleform {
         global $PAGE;
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
-        $group = groups_get_activity_group($cm);
+        $group = groups_get_activity_group($cm, true);
         $completions = completions::get_completions_by_groupmode($cm, $group);
 
         if (count($completions) > 0) {

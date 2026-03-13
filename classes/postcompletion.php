@@ -43,29 +43,15 @@ class postcompletion extends abstractform {
         $mform->disable_form_change_checker();
 
         $submitarea = [];
-
-        $displaycompletionafter = (int) $this->_customdata->displaycompletionafter;
-
         if (!has_capability('mod/response:viewother', $this->_customdata->context)) {
             return;
         }
 
-        $completions = $this->add_postcompletion_completion($submitarea);
+        $this->add_postcompletion_completion($submitarea);
 
         if (!empty($submitarea)) {
             $mform->addElement('hidden', 'context', $this->_customdata->context->id);
             $mform->setType('context', PARAM_INT);
-            $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
-
-            if ($displaycompletionafter && $cm->groupmode == NOGROUPS && !empty($completions)) {
-                $submitarea[] = &$mform->createElement(
-                    'submit',
-                    'response' . $this->_customdata->context->id . 'group',
-                    get_string('group'),
-                    ['data-completion' => 'group'],
-                );
-            }
-
             $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
         }
     }

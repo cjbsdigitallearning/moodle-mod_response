@@ -142,7 +142,8 @@ class completions {
                 $completions = array_intersect_key($completions, array_flip($intersectuserids));
                 break;
             case VISIBLEGROUPS:
-                if (!($groupid <= 0) && groups_group_visible($groupid, $cm->course)) {
+                $course = get_course($cm->course);
+                if (!($groupid <= 0) && groups_group_visible($groupid, $course, $cm)) {
                     $intersectuserids = groups_get_members($groupid, 'u.id');
                     $completions = array_intersect_key($completions, $intersectuserids);
                 }
