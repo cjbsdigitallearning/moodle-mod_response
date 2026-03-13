@@ -219,7 +219,7 @@ class information extends abstractinfo {
             );
 
             // If we have an old response ID, update any existing file itemids.
-            if ($response->user_responses[$userid]->response_user_id) {
+            if (array_key_exists($userid, $response->user_responses) && $response->user_responses[$userid]->response_user_id) {
                 // Get existing old files.
                 $fs = get_file_storage();
                 $oldfiles = $fs->get_area_files(

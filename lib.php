@@ -575,7 +575,7 @@ function mod_response_output_fragment_answer($args) {
 
     $userid = !empty($args['userid']) ? (int) $args['userid'] : 0;
     if (empty($userid)) {
-        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
+        throw new moodle_exception('invaliduserid', 'error', '', $cm->id);
     }
 
     // Now we need to verify the user could conceivably could see these answers.
@@ -585,17 +585,17 @@ function mod_response_output_fragment_answer($args) {
 
     // First, did the viewing user complete the activity?
     if (empty($response->user_responses[$USER->id])) {
-        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
+        throw new moodle_exception('error:viewerhasnotcompleted', 'mod_response', '', $cm->id);
     }
     // Did the user whose completion is requested complete the activity?
     if (empty($response->user_responses[$userid])) {
-        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
+        throw new moodle_exception('error:subjecthasnotcompleted', 'mod_response', '', $cm->id);
     }
 
-    $cansee = helper::can_see($USER->id, $userid, $cm, $response, false);
+    $cansee = helper::can_see($USER->id, $userid, $cm, $response, before: false);
 
     if (!$cansee) {
-        throw new moodle_exception('invalidcoursemodule', 'error', '', $cm->id);
+        throw new moodle_exception('error:cannotviewresponse', 'mod_response', '', $cm->id);
     }
 
     // If we're here, we can see the response.
