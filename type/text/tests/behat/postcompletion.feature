@@ -55,7 +55,7 @@ Feature: Students should see others' text responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out

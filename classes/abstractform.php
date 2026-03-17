@@ -114,12 +114,11 @@ abstract class abstractform extends moodleform {
 
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
-        $group = groups_get_activity_group($cm);
+        $group = groups_get_activity_group($cm, true);
         $completions = completions::get_completions_by_groupmode($cm, $group);
         $number = count($completions);
 
         if ($number > 0) {
-            $displaycompletionoptionadded = true;
             if ($displaybefore == display_completion::NAME->value) {
                 $renderer = $PAGE->get_renderer('mod_response');
                 $displaystring = $renderer->render_precompletion($completions);
@@ -129,11 +128,6 @@ abstract class abstractform extends moodleform {
                 $displaystring = get_string($display, 'response', $number);
                 $displaystring = '<div class="display-completion number">' . $displaystring . '</div>';
                 $submitarea[] = &$mform->createElement('static', 'displaycompletion', '', $displaystring);
-            } else {
-                $displaycompletionoptionadded = false;
-            }
-            if ($displaycompletionoptionadded) {
-                $mform->addHelpButton('displaycompletion', 'displaycompletion', 'response');
             }
         }
     }
@@ -153,7 +147,7 @@ abstract class abstractform extends moodleform {
         global $PAGE;
         $mform = $this->_form;
         $cm = get_coursemodule_from_instance('response', $this->_customdata->activity->response);
-        $group = groups_get_activity_group($cm);
+        $group = groups_get_activity_group($cm, true);
         $completions = completions::get_completions_by_groupmode($cm, $group);
 
         if (count($completions) > 0) {

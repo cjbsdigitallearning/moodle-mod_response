@@ -101,7 +101,7 @@ Feature: Students should see others' text responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Separate groups |
     And I press "Save and return to course"
     And I log out
@@ -125,9 +125,6 @@ Feature: Students should see others' text responses, filtered by group or not
     Then "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
-    # TODO: Fix button issue.
-    # And "All" "button" should not be visible
-    # And "Group" "button" should not be visible
     And I log out
     And I log in as "student3"
     And I am on "Course 1" course homepage
@@ -136,8 +133,8 @@ Feature: Students should see others' text responses, filtered by group or not
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
 
   @javascript
-  Scenario: Making sure the group toggle functions correctly between group and all.
-    When I log in as "teacher1"
+  Scenario: Making sure the group toggle functions correctly between groups and all.
+    Given I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
@@ -145,8 +142,8 @@ Feature: Students should see others' text responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 1 |
-      | Group mode | Separate groups |
+      | Shared after response | 1 |
+      | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -166,23 +163,54 @@ Feature: Students should see others' text responses, filtered by group or not
     And I log out
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    Then ".group" "css_element" in the "div.display-completion" "css_element" should be visible
-    And ".all" "css_element" in the "div.display-completion" "css_element" should not be visible
-    And "img[title='Student 1']" "css_element" in the "div.display-completion .group" "css_element" should be visible
-    And "img[title='Student 2']" "css_element" in the "div.display-completion .group" "css_element" should be visible
+    And the field "group" matches value "Group 1"
+    And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
-    And I click on "All" "button"
-    And ".group" "css_element" in the "div.display-completion" "css_element" should not be visible
-    And ".all" "css_element" in the "div.display-completion" "css_element" should be visible
-    And "img[title='Student 1']" "css_element" in the "div.display-completion .all" "css_element" should be visible
-    And "img[title='Student 2']" "css_element" in the "div.display-completion .all" "css_element" should be visible
+    When I set the field "group" to "All participants"
+    Then "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
-    And I click on "Group" "button"
-    And ".group" "css_element" in the "div.display-completion" "css_element" should be visible
-    And ".all" "css_element" in the "div.display-completion" "css_element" should not be visible
-    And "img[title='Student 1']" "css_element" in the "div.display-completion .group" "css_element" should be visible
-    And "img[title='Student 2']" "css_element" in the "div.display-completion .group" "css_element" should be visible
-    And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
+    And I set the field "group" to "Group 2"
+    And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should not be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should not be visible
+    And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
+
+  @javascript
+  Scenario: All results are shown in "No groups" mode
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    And I add a "response" activity to course "Course 1" section "1"
+    And I set the following fields to these values:
+      | Activity title        | The weather                        |
+      | Activity question     | What is the weather like outside?  |
+      | Response type         | Free text                          |
+      | Response display      | Inline - within the module section |
+      | Shared after response | 1                                  |
+      | Group mode            | No groups                          |
+    And I press "Save and return to course"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    And I set the field "Your answer" to "Answer 1."
+    And I press "Submit"
+    And I log out
+    And I log in as "student2"
+    And I am on "Course 1" course homepage
+    And I set the field "Your answer" to "Answer 2."
+    And I press "Submit"
+    And I log out
+    And I log in as "student3"
+    And I am on "Course 1" course homepage
+    And I set the field "Your answer" to "Answer 3."
+    And I press "Submit"
+    And I log out
+    And I log in as "student1"
+    And I am on "Course 1" course homepage
+    Then "group" "select" should not exist
+    And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
 
   @javascript
   Scenario: Making sure the group toggle functions correctly in the teacher summary.
@@ -194,7 +222,7 @@ Feature: Students should see others' text responses, filtered by group or not
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out

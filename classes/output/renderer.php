@@ -157,6 +157,10 @@ class renderer extends plugin_renderer_base {
     public function render_courseinline($rawdata) {
         $cm = $rawdata->course_module;
         $data = new stdClass();
+        if (groups_get_activity_groupmode($cm)) {
+            groups_get_activity_group($cm, true);
+            $data->groupselector = groups_print_activity_menu($cm, $this->page->url, true);
+        }
         $data->fullpage = !empty($rawdata->fullpage);
         $data->contextid = !empty($rawdata->contextid) ? $rawdata->contextid : '';
         $data->icon_url = $cm->get_icon_url();
