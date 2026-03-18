@@ -48,7 +48,7 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show nothing |
+      | Shared before response | Nothing |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -71,7 +71,8 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show the number of completions - all responders |
+      | Shared before response | Number of responses |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -93,7 +94,8 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show full completions - all responders |
+      | Shared before response | Names of respondents |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -116,7 +118,8 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show full completions - all responders |
+      | Shared before response | Names of respondents |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -171,7 +174,7 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show the number of completions - group members |
+      | Shared before response | Number of responses |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -200,7 +203,7 @@ Feature: Students should see some incentive to reply to text activity
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions before response? | Show full completions - group members |
+      | Shared before response | Names of respondents |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"

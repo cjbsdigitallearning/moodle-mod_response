@@ -505,7 +505,7 @@ class helper {
         $return->responsetype = $response->responsetype;
         $return->aggregate = !empty($response->aggregate) ? $response->aggregate : new stdClass();
         $return->activity = $response->activity;
-        $return->displaypeerresults = $response->displaypeerresults;
+        $return->displaypeerresults = $response->displaypeerresults ?? 0;
         $return->icon = new \pix_icon('icon', '', 'responsetype_' . $response->responsetype);
 
         $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);

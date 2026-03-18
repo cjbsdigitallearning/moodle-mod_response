@@ -273,8 +273,8 @@ class information extends abstractinfo {
                 // $groupusers = helper::get_users_in_group($cm, $group);
                 $groupusers = groups_get_members($groupid);
                 foreach ($groupusers as $groupuser) {
-                    if (isset($rawallusers[$groupuser])) {
-                        $response->aggregate->group[$rawallusers[$groupuser]]++;
+                    if (isset($rawallusers[$groupuser->id])) {
+                        $response->aggregate->group[$rawallusers[$groupuser->id]]++;
                     }
                 }
             } else {

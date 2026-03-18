@@ -29,7 +29,7 @@ Feature: Students should see others' text responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 0 |
+      | Shared after response | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -93,7 +93,7 @@ Feature: Students should see others' text responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | Display completions after response? | 0 |
+      | Shared after response | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -132,7 +132,8 @@ Feature: Students should see others' text responses
       | Activity question | What is the weather like outside? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | All | 1 |
+      | Shared after response | 1 |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I add a "response" activity to course "Course 1" section "2"
     And I set the following fields to these values:
@@ -140,7 +141,8 @@ Feature: Students should see others' text responses
       | Activity question | What is your favourite part of a fried breakfast? |
       | Response type | Free text |
       | Response display | Inline - within the module section |
-      | All | 1 |
+      | Shared after response | 1 |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
