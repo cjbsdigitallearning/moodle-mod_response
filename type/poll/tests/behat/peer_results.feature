@@ -187,13 +187,17 @@ Feature: Students should see others' poll responses, filtered by group or not
     And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should not be visible
     When I set the field "group" to "All participants"
-    And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
+    Then "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
+    And I set the field "group" to "Group 2"
+    And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should not be visible
+    And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should not be visible
     And "img[title='Student 3']" "css_element" in the "div.display-completion" "css_element" should be visible
 
   @javascript
   Scenario: All results are shown in "No groups" mode
-    When I log in as "teacher1"
+    Given I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "response" activity to course "Course 1" section "1"
     And I set the following fields to these values:
@@ -225,7 +229,7 @@ Feature: Students should see others' poll responses, filtered by group or not
     And I press "Submit"
     And I log out
     And I log in as "student1"
-    And I am on "Course 1" course homepage
+    When I am on "Course 1" course homepage
     Then "group" "select" should not exist
     And "img[title='Student 1']" "css_element" in the "div.display-completion" "css_element" should be visible
     And "img[title='Student 2']" "css_element" in the "div.display-completion" "css_element" should be visible
