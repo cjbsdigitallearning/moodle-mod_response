@@ -52,7 +52,7 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show nothing |
+      | Shared before response | Nothing |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -79,7 +79,8 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show the number of completions - all responders |
+      | Shared before response | Number of responses |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -105,7 +106,8 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show full completions - all responders |
+      | Shared before response | Names of respondents |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -132,7 +134,8 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show full completions - all responders |
+      | Shared before response | Names of respondents |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -191,7 +194,7 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show the number of completions - group members |
+      | Shared before response | Number of responses |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -224,7 +227,7 @@ Feature: Students should see some incentive to reply to poll question
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions before response? | Show full completions - group members |
+      | Shared before response | Names of respondents |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"

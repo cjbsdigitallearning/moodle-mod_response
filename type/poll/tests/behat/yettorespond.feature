@@ -90,11 +90,13 @@ Feature: Users should be able to view which poll activities they are yet to resp
     And I press "Next"
     And I set the field "Your answer" to "A good brew can help deal with any situation that comes up."
     And I press "Submit"
-    # Viewing the summary
+   # Viewing the summary
     And I follow "View course summary"
+    And I should see "The weather"
+    And I follow "The weather"
     And I click on "Sunny." "radio"
     And I press "Submit"
-    # Viewing the summary
+# Viewing the summary
     And I follow "View course summary"
     Then I should not see "Yet to respond to"
     And I should see "Sunny."

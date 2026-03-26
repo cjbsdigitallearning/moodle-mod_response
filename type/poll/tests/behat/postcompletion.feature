@@ -33,7 +33,7 @@ Feature: Students should see others' poll responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions after response? | 0 |
+      | Shared after response | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -63,7 +63,7 @@ Feature: Students should see others' poll responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
@@ -105,7 +105,7 @@ Feature: Students should see others' poll responses
       | Choice 2 | Cloudy |
       | Choice 3 | Raining |
       | Add a reflection step | No |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
@@ -138,7 +138,7 @@ Feature: Students should see others' poll responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Display completions after response? | 0 |
+      | Shared after response | 0 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -174,7 +174,7 @@ Feature: Students should see others' poll responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
       | Group mode | Visible groups |
     And I press "Save and return to course"
     And I log out
@@ -224,7 +224,7 @@ Feature: Students should see others' poll responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on your choice {choice} |
-      | Display completions after response? | 1 |
+      | Shared after response | 1 |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
@@ -273,7 +273,8 @@ Feature: Students should see others' poll responses
       | Choice 3 | Raining |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on {choice} |
-      | All | 1 |
+      | Shared after response | 1 |
+      | Group mode | No groups |
     And I press "Save and return to course"
     # Testing with just a simple poll could be ambiguous.
     # And would yield no differences if the other tests pass.
@@ -290,7 +291,8 @@ Feature: Students should see others' poll responses
       | Choice 5 | Other |
       | Add a reflection step | Yes |
       | Reflection text | Please elaborate on {choice} |
-      | All | 1 |
+      | Shared after response | 1 |
+      | Group mode | No groups |
     And I press "Save and return to course"
     And I log out
     And I log in as "student1"
