@@ -365,6 +365,54 @@ class information extends abstractinfo {
             $reflectiontext = !empty($data->{$textid}['text']) ? $data->{$textid}['text'] : '';
             $responseidentifier = $this->save_new_answer($response->id, $userid, $data->{$pollid}, $reflectiontext);
 
+            if (!empty($data->{'responsetype_poll_' . $response->id}['itemid'])) {
+                $cmid = $response->cm->id;
+                $context = \context_module::instance($cmid);
+                $reflectiontext = file_save_draft_area_files(
+                    $data->{'responsetype_poll_' . $response->id}['itemid'],
+                    $context->id,
+                    'responsetype_poll_user',
+                    'response_text',
+                    $responseidentifier,
+                    helper::get_editor_options($context),
+                    $reflectiontext
+                );
+
+                // If we have an old response ID, update any existing file itemids.
+                if ($response->user_responses[$userid]->response_user_id) {
+                    // Get existing old files.
+                    $fs = get_file_storage();
+                    $oldfiles = $fs->get_area_files(
+                        $context->id,
+                        'responsetype_poll_user',
+                        'response_text',
+                        $response->user_responses[$userid]->response_user_id,
+                    );
+
+                    if ($oldfiles) {
+                        foreach ($oldfiles as $file) {
+                            // Create new copies of the files with the new itemid.
+                            $fileupdate['itemid'] = $responseidentifier;
+                            $fs->create_file_from_storedfile($fileupdate, $file->get_id());
+                        }
+
+                        // Delete files with the old itemid.
+                        $fs->delete_area_files(
+                            $context->id,
+                            'responsetype_poll_user',
+                            'response_poll',
+                            $response->user_responses[$userid]->response_user_id,
+                        );
+                    }
+                }
+
+                $instance = new stdClass();
+                $instance->id = $responseidentifier;
+                $instance->response = $response->id;
+                $instance->reflection_text = $reflectiontext;
+
+                $DB->update_record('responsetype_poll_user', $instance);
+            }
             $response->has_just_completed = !empty($reflectiontext);
 
             $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
