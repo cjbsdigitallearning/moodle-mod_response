@@ -253,11 +253,11 @@ class helper {
     /**
      * Returns an array of options for the Atto WYSIWYG editor.
      *
-     * @param context_module $context Context the editor is being added to.
+     * @param \core\context\module $context Context the editor is being added to.
      *
      * @return array An array of options.
      */
-    public static function get_editor_options($context) {
+    public static function get_editor_options(\core\context\module $context) {
         global $CFG;
 
         $editoroptions = [

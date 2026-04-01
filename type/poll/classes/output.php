@@ -102,7 +102,16 @@ class output extends abstractoutput implements renderable, templatable {
 
             $userchoice = $this->data->user_responses[$this->data->viewing_id]->choice;
             $data->user_choice = format_string($this->data->activity->poll_choices[$userchoice]->choice);
-            $data->user_response = helper::clean_text($this->data->user_responses[$this->data->viewing_id]->reflection_text);
+
+            $rewritelinks = file_rewrite_pluginfile_urls(
+                $this->data->user_responses[$this->data->viewing_id]->reflection_text,
+                'pluginfile.php',
+                $data->contextid,
+                'responsetype_poll_user',
+                'response_poll',
+                $this->data->viewing_id
+            );
+            $data->user_response = $rewritelinks;
 
             // This wasn't a template helper until Moodle 3.2...
             $dateformat = get_string('strftimedatetimeshort', 'langconfig');
