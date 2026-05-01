@@ -78,6 +78,15 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
         $data->responsetype = $this->data->responsetype;
         $data->template = 'summaryoutput';
 
+        // Generate the URL for the context where the activity is displayed.
+        $cm = get_coursemodule_from_instance('response', $this->data->activity->response);
+        $course = get_course($cm->course);
+        $data->context_link = \mod_response\helper::get_context_url(
+            $cm,
+            $course,
+            $this->data->activity->responsedisplay
+        )->out(false);
+
         return $data;
     }
 }

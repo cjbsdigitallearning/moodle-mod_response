@@ -81,6 +81,15 @@ class viewallresponses extends abstractoutput implements renderable, templatable
             $data->user_responses[$id]->timecompleted_datetime = userdate($timestamp, $datetimeformat, 99, false, false);
         }
 
+        // Generate the URL for the context where the activity is displayed.
+        $cm = get_coursemodule_from_id('response', $this->data->coursemodule);
+        $course = get_course($cm->course);
+        $data->context_link = \mod_response\helper::get_context_url(
+            $cm,
+            $course,
+            $this->data->responsedisplay
+        )->out(false);
+
         return $data;
     }
 }
