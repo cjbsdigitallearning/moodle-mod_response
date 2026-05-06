@@ -330,7 +330,7 @@ function response_get_coursemodule_info($cm) {
 function response_cm_info_dynamic(cm_info $cm) {
     global $PAGE;
 
-    $customdata = $cm->customdata;
+    $customdata = $cm->get_custom_data();
     $customdata->fullpage = strpos($PAGE->url->get_path(), '/mod/response/view.php') === 0;
 
     // If the default (separate page) view is set, render this view instead.
