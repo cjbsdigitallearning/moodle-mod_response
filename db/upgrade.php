@@ -85,7 +85,7 @@ function xmldb_response_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019120200, 'mod', 'response');
     }
 
-    if ($oldversion < 20200020400) {
+    if ($oldversion < 2020002040) {
 
         $table = new xmldb_table('response');
         $content = new xmldb_field('content', XMLDB_TYPE_TEXT);
@@ -101,10 +101,10 @@ function xmldb_response_upgrade($oldversion) {
             $dbmanager->add_field($table, $contentformat);
         }
 
-        upgrade_plugin_savepoint(true, 20200020400, 'mod', 'response');
+        upgrade_plugin_savepoint(true, 2020002040, 'mod', 'response');
     }
 
-    if ($oldversion < 20200020401) {
+    if ($oldversion < 2020002041) {
 
         $table = new xmldb_table('response');
         $contentformat = new xmldb_field('contentformat', XMLDB_TYPE_INTEGER, 4, null, true, null, 1);
@@ -114,10 +114,10 @@ function xmldb_response_upgrade($oldversion) {
             $dbmanager->change_field_default($table, $contentformat);
         }
 
-        upgrade_plugin_savepoint(true, 20200020401, 'mod', 'response');
+        upgrade_plugin_savepoint(true, 2020002041, 'mod', 'response');
     }
 
-    if ($oldversion < 20250131000) {
+    if ($oldversion < 2025013100) {
 
         $sql = "SELECT cm.*
                   FROM {course_modules} cm
@@ -136,10 +136,10 @@ function xmldb_response_upgrade($oldversion) {
             }
         }
 
-        upgrade_plugin_savepoint(true, 20250131000, 'mod', 'response');
+        upgrade_plugin_savepoint(true, 2025013100, 'mod', 'response');
     }
 
-    if ($oldversion < 20250522000) {
+    if ($oldversion < 2025052201) {
         // Add 'displaycompletionbefore' and 'displaycompletionafter' fields.
         $table = new xmldb_table('response');
         $displaycompletionbeforefield = new xmldb_field(
@@ -220,7 +220,7 @@ function xmldb_response_upgrade($oldversion) {
         unset_config('displaycompletion', 'mod_response');
         unset_config('displaypeerresults', 'mod_response');
 
-        upgrade_plugin_savepoint(true, 20250522000, 'mod', 'response');
+        upgrade_plugin_savepoint(true, 2025052201, 'mod', 'response');
     }
 
     return true;
