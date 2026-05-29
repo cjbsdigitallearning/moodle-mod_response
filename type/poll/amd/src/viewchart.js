@@ -40,10 +40,7 @@ define(['jquery', 'mod_response/Chart', 'mod_response/percentify'],
                 if (set.hasOwnProperty('all')) {
                     this.draw(cm, 'all');
                 }
-                if (set.hasOwnProperty('group')) {
-                    this.draw(cm, 'group');
-                }
-                if (!set.hasOwnProperty('all') && !set.hasOwnProperty('group')) {
+                if (!set.hasOwnProperty('all')) {
                     $('div.user-response[data-response=' + cm + '] .aggregate').hide();
                 }
             },

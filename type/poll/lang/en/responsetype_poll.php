@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['aggregate_title_all'] = 'Answers given by all students';
-$string['aggregate_title_group'] = 'Answers given by your study group';
+$string['aggregate_title_group'] = 'Answers given by your peers';
 $string['maximumwords_default'] = 'This sets the default advised word count when there is a reflection step. If given as 0, the field will be disabled by default.';
 $string['noresponse'] = 'You have not responded yet.';
 $string['nothingwritten'] = 'Please provide an answer.';
