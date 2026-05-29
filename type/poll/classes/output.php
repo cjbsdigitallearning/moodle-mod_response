@@ -135,22 +135,17 @@ class output extends abstractoutput implements renderable, templatable {
             $aggregate = false;
             if (!empty($this->data->aggregate)) {
                 $aggregate = new stdClass();
-                foreach (['group', 'all'] as $set) {
-                    if (empty($this->data->aggregate->$set)) {
-                        continue;
+                $aggregate->all = new stdClass();
+                $aggregate->all->title = $this->data->title;
+                $aggregate->all->labels = [];
+                $aggregate->all->data = [];
+                foreach ($this->data->activity->poll_choices as $choicenum => $choice) {
+                    $aggregate->all->labels[] = $choice->choice;
+                    $amount = 0;
+                    if (!empty($this->data->aggregate->all[$choicenum])) {
+                        $amount = $this->data->aggregate->all[$choicenum];
                     }
-                    $aggregate->$set = new stdClass();
-                    $aggregate->$set->title = get_string('aggregate_title_' . $set, 'responsetype_poll');
-                    $aggregate->$set->labels = [];
-                    $aggregate->$set->data = [];
-                    foreach ($this->data->activity->poll_choices as $choicenum => $choice) {
-                        $aggregate->$set->labels[] = $choice->choice;
-                        $amount = 0;
-                        if (!empty($this->data->aggregate->{$set}[$choicenum])) {
-                            $amount = $this->data->aggregate->{$set}[$choicenum];
-                        }
-                        $aggregate->$set->data[] = $amount;
-                    }
+                    $aggregate->all->data[] = $amount;
                 }
             }
             $data->aggregate = json_encode($aggregate);
