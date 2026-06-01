@@ -251,7 +251,6 @@ class information extends abstractinfo {
         $cm = get_coursemodule_from_instance('response', $response->id);
 
         if ($displaycompletionafter) {
-
             // If we are looking at groups of some kind, check which one we've selected.
             $groupid = groups_get_activity_group($cm);
 
@@ -263,10 +262,9 @@ class information extends abstractinfo {
 
             // We are not using groups. So just get all the data into the "all" array.
             // Or if we are using groups, but we're looking at "all participants".
-            if ($cm->groupmode == NOGROUPS ||
-                (
-                    in_array($cm->groupmode, [SEPARATEGROUPS, VISIBLEGROUPS]) && $groupid < 1
-                )
+            if (
+                $cm->groupmode == NOGROUPS ||
+                (in_array($cm->groupmode, [SEPARATEGROUPS, VISIBLEGROUPS]) && $groupid < 1)
             ) {
                 foreach ($rawallusers as $choice) {
                     $response->aggregate->all[$choice]++;
