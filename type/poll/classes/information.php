@@ -251,45 +251,33 @@ class information extends abstractinfo {
         $cm = get_coursemodule_from_instance('response', $response->id);
 
         if ($displaycompletionafter) {
-            if ($cm->groupmode == NOGROUPS) {
-                $response->aggregate->all = [];
-                // First, make some defaults using all valid choices.
-                foreach ($response->activity->poll_choices as $choice) {
-                    $response->aggregate->all[$choice->responsenum] = 0;
-                }
-                // And aggregate.
+            // If we are looking at groups of some kind, check which one we've selected.
+            $groupid = groups_get_activity_group($cm);
+
+            $response->aggregate->all = [];
+            // First, make some defaults using all valid choices.
+            foreach ($response->activity->poll_choices as $choice) {
+                $response->aggregate->all[$choice->responsenum] = 0;
+            }
+
+            // We are not using groups. So just get all the data into the "all" array.
+            // Or if we are using groups, but we're looking at "all participants".
+            if (
+                $cm->groupmode == NOGROUPS ||
+                (in_array($cm->groupmode, [SEPARATEGROUPS, VISIBLEGROUPS]) && $groupid < 1)
+            ) {
                 foreach ($rawallusers as $choice) {
                     $response->aggregate->all[$choice]++;
                 }
-            }
-            if (in_array($cm->groupmode, [VISIBLEGROUPS, NOGROUPS])) {
-                $groupid = groups_get_activity_group($cm);
-                $response->aggregate->group = [];
-                // First, make some defaults using all valid choices.
-                foreach ($response->activity->poll_choices as $choice) {
-                    $response->aggregate->group[$choice->responsenum] = 0;
-                }
-                // Then fetch users in the groups and sift out the data.
-                // $groupusers = helper::get_users_in_group($cm, $group);
+                $response->title = get_string('aggregate_title_all', 'responsetype_poll');
+            } else if ($cm->groupmode == SEPARATEGROUPS || $cm->groupmode == VISIBLEGROUPS) {
                 $groupusers = groups_get_members($groupid);
                 foreach ($groupusers as $groupuser) {
                     if (isset($rawallusers[$groupuser->id])) {
-                        $response->aggregate->group[$rawallusers[$groupuser->id]]++;
+                        $response->aggregate->all[$rawallusers[$groupuser->id]]++;
                     }
                 }
-            } else {
-                $response->aggregate->group = [];
-                // First, make some defaults using all valid choices.
-                foreach ($response->activity->poll_choices as $choice) {
-                    $response->aggregate->group[$choice->responsenum] = 0;
-                }
-                // Then fetch users in the groups and sift out the data.
-                $groupusers = helper::get_users_in_same_group($response->id, $userid);
-                foreach ($groupusers as $groupuser) {
-                    if (isset($rawallusers[$groupuser])) {
-                        $response->aggregate->group[$rawallusers[$groupuser]]++;
-                    }
-                }
+                $response->title = get_string('aggregate_title_group', 'responsetype_poll');
             }
         }
     }
