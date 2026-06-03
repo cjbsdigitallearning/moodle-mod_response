@@ -96,7 +96,7 @@ class text_form extends abstractform {
 
             $element = 'responsetype_text_' . $this->_customdata->id;
             $defaultvalues[$element]['format'] = FORMAT_HTML;
-            $defaultvalues[$element]['text'] = file_prepare_draft_area($draftitemid, $context->id, 'responsetype_text',
+            $defaultvalues[$element]['text'] = file_prepare_draft_area($draftitemid, $context->id, 'responsetype_text_user',
                 'response_text', $existinganswer->response_user_id, helper::get_editor_options($context),
                 $defaultvalues[$element]['text']);
             $defaultvalues[$element]['itemid'] = $draftitemid;
