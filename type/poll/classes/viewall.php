@@ -23,6 +23,7 @@ use templatable;
 use mod_response\helper;
 use moodle_url;
 use pix_icon;
+use context_module;
 
 /**
  * Creates a renderer for showing all responses to an activity.
@@ -62,7 +63,15 @@ class viewall extends abstractoutput implements renderable, templatable {
         foreach ($data->all_responses as $id => $response) {
             if (isset($this->data->activity->poll_choices[$response->choice])) {
                 $data->all_responses[$id]->choicetext = $this->data->activity->poll_choices[$response->choice]->choice;
-                $data->all_responses[$id]->reflection_text = helper::clean_text($response->reflection_text);
+                $response->reflection_text = file_rewrite_pluginfile_urls(
+                    $response->reflection_text,
+                    'pluginfile.php',
+                    context_module::instance($this->data->cm->id)->id,
+                    'responsetype_poll',
+                    'response_poll',
+                    $response->id
+                );
+                $data->all_responses[$id]->reflection_text = format_text($response->reflection_text);
             } else {
                 unset($data->all_responses[$id]);
             }
