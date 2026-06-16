@@ -231,9 +231,25 @@ class information extends abstractinfo {
 
                 if ($oldfiles) {
                     foreach ($oldfiles as $file) {
-                        // Create new copies of the files with the new itemid.
-                        $fileupdate['itemid'] = $responseidentifier;
-                        $fs->create_file_from_storedfile($fileupdate, $file->get_id());
+                        // Skip directories.
+                        if ($file->is_directory()) {
+                            continue;
+                        }
+                        // Check files already exist, if not create them.
+                        if (
+                            !$fs->file_exists(
+                                $context->id,
+                                'responsetype_text_user',
+                                'response_text',
+                                $responseidentifier,
+                                $file->get_filepath(),
+                                $file->get_filename()
+                            )
+                        ) {
+                            // Create new copies of the files with the new itemid.
+                            $fileupdate['itemid'] = $responseidentifier;
+                            $fs->create_file_from_storedfile($fileupdate, $file->get_id());
+                        }
                     }
 
                     // Delete files with the old itemid.

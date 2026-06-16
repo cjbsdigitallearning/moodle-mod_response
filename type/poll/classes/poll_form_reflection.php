@@ -18,6 +18,7 @@ namespace mod_response\type\poll;
 use mod_response\abstractform;
 use stdClass;
 use mod_response\helper;
+use context_module;
 
 /**
  * Defines the form required for handling a poll response's reflection step.
@@ -81,6 +82,44 @@ class poll_form_reflection extends abstractform {
         $submitarea[] = &$mform->createElement('submit', 'submitbutton', get_string('submit'), $classarray);
         $submitarea[] = &$mform->createElement('submit', 'back', get_string('back'));
         $mform->addGroup($submitarea, 'buttonar' . $this->_customdata->id, '', [' '], false);
+    }
+
+    /**
+     * Process the form's data to include plugin files.
+     *
+     * If editing a response, we need to process the HTML for Atto to include the proper references
+     * to files.
+     *
+     * Not typehinted due to inheritance.
+     *
+     * @param array $defaultvalues The values being submitted for the form.
+     * @return void
+     */
+    public function set_data($defaultvalues) {
+
+        // If this is an edit form, we have to edit the existing stuff.
+        if (!empty($this->_customdata->user_responses)) {
+            $existinganswer = reset($this->_customdata->user_responses);
+
+            $draftitemid = file_get_submitted_draft_itemid('responsetype_poll_' . $this->_customdata->id);
+            $cm = get_coursemodule_from_instance('response', $this->_customdata->id);
+            $context = context_module::instance($cm->id);
+
+            $element = 'responsetype_poll_' . $this->_customdata->id;
+            $defaultvalues[$element]['format'] = FORMAT_HTML;
+            $defaultvalues[$element]['text'] = file_prepare_draft_area(
+                $draftitemid,
+                $context->id,
+                'responsetype_poll_user',
+                'response_poll',
+                $existinganswer->id,
+                helper::get_editor_options($context),
+                $defaultvalues[$element]['text']
+            );
+            $defaultvalues[$element]['itemid'] = $draftitemid;
+        }
+
+        parent::set_data($defaultvalues);
     }
 
     /**

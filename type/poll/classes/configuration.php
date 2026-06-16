@@ -326,7 +326,19 @@ class configuration extends abstractconfig {
         global $DB;
 
         $DB->delete_records('responsetype_poll', ['response' => $id]);
+
+        $userresponses = $DB->get_records('responsetype_poll_user', ['response' => $id]);
         $DB->delete_records('responsetype_poll_choice', ['response' => $id]);
+
+        // Having gotten all the user details, delete all the attached files.
+        $cm = get_coursemodule_from_instance('response', $id);
+        $context = context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_poll_user', 'response_poll', $response->id);
+            }
+        }
     }
 
     /**

@@ -22,6 +22,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use context_module;
 
 /**
  * Creates a renderer for summary of a course's activitities.
@@ -58,7 +59,15 @@ class summaryoutput extends abstractoutput implements renderable, templatable {
             $userchoice = $this->data->response->choice;
             $data->user_choice = $this->data->activity->poll_choices[$userchoice]->choice;
             if (!empty($this->data->response->reflection_text)) {
-                $data->user_response = helper::clean_text($this->data->response->reflection_text);
+                $data->user_response = file_rewrite_pluginfile_urls(
+                    $this->data->response->reflection_text,
+                    'pluginfile.php',
+                    context_module::instance($this->data->cm_id)->id,
+                    'responsetype_poll',
+                    'response_poll',
+                    $this->data->response->id
+                );
+                $data->user_response = format_text($data->user_response);
             }
 
             // Export date+time and date to the template in case people want to change it.

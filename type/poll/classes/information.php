@@ -360,38 +360,19 @@ class information extends abstractinfo {
                     $data->{'responsetype_poll_' . $response->id}['itemid'],
                     $context->id,
                     'responsetype_poll_user',
-                    'response_text',
+                    'response_poll',
                     $responseidentifier,
                     helper::get_editor_options($context),
                     $reflectiontext
                 );
 
-                // If we have an old response ID, update any existing file itemids.
-                if ($response->user_responses[$userid]->response_user_id) {
-                    // Get existing old files.
-                    $fs = get_file_storage();
-                    $oldfiles = $fs->get_area_files(
+                // If we have an old response ID, migrate any existing files to the new itemid.
+                if (array_key_exists($userid, $response->user_responses) && $response->user_responses[$userid]->id) {
+                    $this->migrate_response_files(
                         $context->id,
-                        'responsetype_poll_user',
-                        'response_text',
-                        $response->user_responses[$userid]->response_user_id,
+                        $response->user_responses[$userid]->id,
+                        $responseidentifier
                     );
-
-                    if ($oldfiles) {
-                        foreach ($oldfiles as $file) {
-                            // Create new copies of the files with the new itemid.
-                            $fileupdate['itemid'] = $responseidentifier;
-                            $fs->create_file_from_storedfile($fileupdate, $file->get_id());
-                        }
-
-                        // Delete files with the old itemid.
-                        $fs->delete_area_files(
-                            $context->id,
-                            'responsetype_poll_user',
-                            'response_poll',
-                            $response->user_responses[$userid]->response_user_id,
-                        );
-                    }
                 }
 
                 $instance = new stdClass();
@@ -406,6 +387,22 @@ class information extends abstractinfo {
             $this->progress_activity($response->id, $userid, $responseidentifier, $response->has_just_completed);
 
             if (!empty($response->is_editing) && $response->is_editing == 1) {
+                // When a user presses the next button in a choice form, it will create a new response poll user record.
+                // We need to migrate files from the old response to the new response itemid before redirecting to step 2.
+                if (
+                    array_key_exists($userid, $response->user_responses) &&
+                    $response->user_responses[$userid]->id &&
+                    $response->user_responses[$userid]->id != $responseidentifier
+                ) {
+                    $cmid = $response->cm->id;
+                    $context = \context_module::instance($cmid);
+                    $this->migrate_response_files(
+                        $context->id,
+                        $response->user_responses[$userid]->id,
+                        $responseidentifier
+                    );
+                }
+
                 // Mark that we want to redirect to step 2.
                 $response->is_editing = 2;
                 $redirect = new moodle_url('/mod/response/view.php', ['id' => $response->cm->id, 'editing' => 2]);
@@ -432,6 +429,56 @@ class information extends abstractinfo {
         }
 
         return $redirect;
+    }
+
+    /**
+     * Copies files that don't already exist under the new itemid,
+     * then deletes all files under the old itemid.
+     *
+     * @param int $contextid The context ID.
+     * @param int $olditemid The old response itemid.
+     * @param int $newitemid The new response itemid.
+     */
+    protected function migrate_response_files(int $contextid, int $olditemid, int $newitemid): void {
+        $fs = get_file_storage();
+        $oldfiles = $fs->get_area_files(
+            $contextid,
+            'responsetype_poll_user',
+            'response_poll',
+            $olditemid,
+        );
+
+        if ($oldfiles) {
+            foreach ($oldfiles as $file) {
+                // Skip directories.
+                if ($file->is_directory()) {
+                    continue;
+                }
+                // Check files already exist, if not create them.
+                if (
+                    !$fs->file_exists(
+                        $contextid,
+                        'responsetype_poll_user',
+                        'response_poll',
+                        $newitemid,
+                        $file->get_filepath(),
+                        $file->get_filename()
+                    )
+                ) {
+                    // Create new copies of the files with the new itemid.
+                    $fileupdate['itemid'] = $newitemid;
+                    $fs->create_file_from_storedfile($fileupdate, $file->get_id());
+                }
+            }
+
+            // Delete files with the old itemid.
+            $fs->delete_area_files(
+                $contextid,
+                'responsetype_poll_user',
+                'response_poll',
+                $olditemid,
+            );
+        }
     }
 
     /**
@@ -469,7 +516,18 @@ class information extends abstractinfo {
      */
     public function delete_user_response($course, $cm, $userid) {
         global $DB;
+
+        $userresponses = $DB->get_records('responsetype_poll_user', ['response' => $cm->instance, 'userid' => $userid]);
         $DB->delete_records('responsetype_poll_user', ['response' => $cm->instance, 'userid' => $userid]);
+
+        // Delete any attached files.
+        $context = \context_module::instance($cm->id);
+        $fs = get_file_storage();
+        if (!empty($userresponses)) {
+            foreach ($userresponses as $response) {
+                $fs->delete_area_files($context->id, 'responsetype_poll_user', 'response_poll', $response->id);
+            }
+        }
 
         return true;
     }

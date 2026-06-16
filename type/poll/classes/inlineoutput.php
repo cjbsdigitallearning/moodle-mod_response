@@ -22,6 +22,7 @@ use renderer_base;
 use templatable;
 use mod_response\helper;
 use moodle_url;
+use context_module;
 
 /**
  * Creates a renderer for viewing a user's responses inline.
@@ -53,8 +54,16 @@ class inlineoutput extends abstractoutput implements renderable, templatable {
 
         $userchoice = $this->data->response->choice;
         $data->user_choice = $this->data->activity->poll_choices[$userchoice]->choice;
-
-        $data->user_response = helper::clean_text($this->data->response->reflection_text);
+        $context = context_module::instance($this->data->cm->id);
+        $data->user_response = file_rewrite_pluginfile_urls(
+            $this->data->response->reflection_text,
+            'pluginfile.php',
+            $context->id,
+            'responsetype_poll',
+            'response_poll',
+            $this->data->response->id
+        );
+        $data->user_response = format_text($data->user_response);
 
         $dateformat = get_string('strftimedatefullshort', 'langconfig');
         $datetimeformat = get_string('strftimedatetimeshort', 'langconfig');

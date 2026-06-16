@@ -68,6 +68,9 @@ class output extends abstractoutput implements renderable, templatable {
             } else {
                 $data->description = '';
             }
+        } else {
+            // We probably want the CM for later.
+            $this->data->cm = get_coursemodule_from_instance('response', $this->data->id);
         }
 
         if (empty($this->data->viewing_id)) {
@@ -106,12 +109,12 @@ class output extends abstractoutput implements renderable, templatable {
             $rewritelinks = file_rewrite_pluginfile_urls(
                 $this->data->user_responses[$this->data->viewing_id]->reflection_text,
                 'pluginfile.php',
-                $data->contextid,
-                'responsetype_poll_user',
+                \context_module::instance($this->data->cm->id)->id,
+                'responsetype_poll',
                 'response_poll',
-                $this->data->viewing_id
+                $this->data->user_responses[$this->data->viewing_id]->id
             );
-            $data->user_response = $rewritelinks;
+            $data->user_response = format_text($rewritelinks);
 
             // This wasn't a template helper until Moodle 3.2...
             $dateformat = get_string('strftimedatetimeshort', 'langconfig');
@@ -136,7 +139,7 @@ class output extends abstractoutput implements renderable, templatable {
             if (!empty($this->data->aggregate)) {
                 $aggregate = new stdClass();
                 $aggregate->all = new stdClass();
-                $aggregate->all->title = $this->data->title;
+                $aggregate->all->title = !empty($this->data->title) ? $this->data->title : '';
                 $aggregate->all->labels = [];
                 $aggregate->all->data = [];
                 foreach ($this->data->activity->poll_choices as $choicenum => $choice) {
