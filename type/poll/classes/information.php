@@ -45,8 +45,13 @@ class information extends abstractinfo {
             return true; // Nothing to do here.
         }
 
-        // First the generic record.
-        $response->activity = $DB->get_record('responsetype_poll', ['response' => $response->id]);
+    // First the generic record.
+    $response->activity = $DB->get_record('responsetype_poll', ['response' => $response->id]);
+    if (!$response->activity) {
+        // If the activity record is missing, we should return early to avoid a fatal error
+        // This can happen if the transaction was interrupted during creation or if data is inconsistent.
+        return false;
+    }
 
         // Then the poll choices.
         $response->activity->poll_choices = [];
