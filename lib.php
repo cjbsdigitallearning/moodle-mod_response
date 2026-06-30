@@ -59,6 +59,8 @@ function response_supports($feature) {
 function response_add_instance($moduleinstance, $mform = null) {
 
     global $DB;
+    // Use a transaction to ensure that the main activity record and subplugin data are created together.
+    $transaction = $DB->start_delegated_transaction();
 
     // Let our friendly repackager build most of the object we need.
     $newinstance = helper::package_modform_data($moduleinstance);
@@ -101,6 +103,8 @@ function response_add_instance($moduleinstance, $mform = null) {
         );
     }
 
+    $transaction->allow_commit();
+
     return $newinstance->id;
 }
 
@@ -115,6 +119,8 @@ function response_add_instance($moduleinstance, $mform = null) {
  */
 function response_update_instance($moduleinstance, $mform = null) {
     global $DB;
+    // Use a transaction to ensure that the main activity record and subplugin data are updated together.
+    $transaction = $DB->start_delegated_transaction();
 
     // Let our friendly repackager build most of the object we need.
     $newinstance = helper::package_modform_data($moduleinstance);
@@ -153,6 +159,8 @@ function response_update_instance($moduleinstance, $mform = null) {
         $completionexpected,
     );
 
+    $transaction->allow_commit();
+
     return true;
 }
 
@@ -166,6 +174,10 @@ function response_update_instance($moduleinstance, $mform = null) {
  */
 function response_delete_instance($id) {
     global $DB;
+
+    // Use a transaction to ensure that the main activity record and subplugin data are deleted together.
+    $transaction = $DB->start_delegated_transaction();
+
     // Before we delete it, we need to know what kind of response it was.
     $response = $DB->get_record('response', ['id' => $id]);
 
@@ -177,6 +189,8 @@ function response_delete_instance($id) {
     // Delete completion event from calendar.
     $cm = get_coursemodule_from_instance('response', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'response', $id, null);
+
+    $transaction->allow_commit();
 
     return true;
 }

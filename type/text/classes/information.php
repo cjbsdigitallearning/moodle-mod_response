@@ -42,6 +42,11 @@ class information extends abstractinfo {
         global $DB;
 
         $response->activity = $DB->get_record('responsetype_text', ['response' => $response->id]);
+        if (!$response->activity) {
+            // If the activity record is missing, we should return early to avoid a fatal error
+            // This can happen if the transaction was interrupted during creation or if data is inconsistent.
+            return false;
+        }
 
         return true;
     }
