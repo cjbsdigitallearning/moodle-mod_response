@@ -101,6 +101,13 @@ class viewall extends abstractoutput implements renderable, templatable {
         $data->aggregate = json_encode($data->aggregate);
         $data->chart_colours = $this->stringify_chart_colorset();
 
+        // Generate the URL for the context where the activity is displayed.
+        $data->context_link = \mod_response\helper::get_context_url(
+            $this->data->cm,
+            $this->data->course,
+            $this->data->responsedisplay
+        )->out(false);
+
         return $data;
     }
 }

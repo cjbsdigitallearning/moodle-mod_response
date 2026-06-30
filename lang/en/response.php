@@ -112,6 +112,7 @@ $string['shareyourthoughts'] = 'Share your thoughts';
 $string['subplugintype_responsetype'] = 'Response type';
 $string['subplugintype_responsetype_plural'] = 'Response types';
 $string['viewallresponses'] = 'View all responses';
+$string['viewincontext'] = 'View in context';
 $string['viewcoursesummary'] = 'View course summary';
 $string['viewownpagedescription'] = 'Display description on own page?';
 $string['yettorespond'] = 'Yet to respond to';

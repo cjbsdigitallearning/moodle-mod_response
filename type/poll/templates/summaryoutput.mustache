@@ -83,6 +83,9 @@
                 <div class="clearfix"></div>
                 <div class="context-link text-right">
                     <span class="time-completed">{{{timemodified_date}}}</span>
+                    {{# context_link }}
+                        <a href="{{{context_link}}}">{{# str }} viewincontext, response {{/ str }}</a>
+                    {{/ context_link }}
                 </div>
             </div>
         </div>

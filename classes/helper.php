@@ -33,6 +33,32 @@ use renderer_base;
  */
 class helper {
     /**
+     * Get the "View in context" URL for a response instance.
+     *
+     * @param stdClass $cm The course module object.
+     * @param stdClass $course The course object.
+     * @param int $responsedisplay The 'responsedisplay' setting of the instance.
+     * @return moodle_url The calculated URL.
+     */
+    public static function get_context_url(stdClass $cm, stdClass $course, int $responsedisplay): moodle_url {
+        if ($responsedisplay == 0) { // Own page - on a separate page.
+            return new \moodle_url('/mod/response/view.php', ['id' => $cm->id]);
+        }
+
+        // Inline - within the module section.
+        $courseformat = course_get_format($course);
+        $courselayout = $courseformat->get_course()->coursedisplay ?? 0; // 0 = Show all, 1 = One section per page
+
+        if ($courselayout == 0 || $course->format == 'site') {
+            // Show all sections on one page.
+            return new \moodle_url('/course/view.php', ['id' => $course->id], 'module-' . $cm->id);
+        } else {
+            // Show one section per page.
+            return new \moodle_url('/course/section.php', ['id' => $cm->section], 'module-' . $cm->id);
+        }
+    }
+
+    /**
      * Cleans the response text given by users. In general we only want
      * to preserve the p tags in a post, not the full formatting. (We pass
      * it through Moodle's sanitiser in case of bad stuff on p tags.)
@@ -505,6 +531,7 @@ class helper {
         $return->responsetype = $response->responsetype;
         $return->aggregate = !empty($response->aggregate) ? $response->aggregate : new stdClass();
         $return->activity = $response->activity;
+        $return->activity->responsedisplay = $response->responsedisplay;
         $return->displaypeerresults = $response->displaypeerresults ?? 0;
         $return->icon = new \pix_icon('icon', '', 'responsetype_' . $response->responsetype);
 

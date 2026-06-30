@@ -309,6 +309,10 @@ function response_get_coursemodule_info($cm) {
         $info->iconurl = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
         // Add extra css for inline.
         $info->extraclasses = 'displayresponseinline';
+
+        // This to display the activity in the course view instead own page.
+        $course = $DB->get_record('course', ['id' => $cm->course]);
+        $info->onclick = "location.href='" . helper::get_context_url($cm, $course, 1)->out(true) . "'; return false;";
     } else {
         // Add extra css for own page.
         $info->extraclasses = 'displayresponseownpage';
