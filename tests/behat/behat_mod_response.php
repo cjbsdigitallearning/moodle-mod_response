@@ -29,8 +29,10 @@ class behat_mod_response extends behat_base {
     protected function resolve_page_instance_url(string $type, string $identifier): moodle_url {
         switch (strtolower($type)) {
             case 'view':
-                return new moodle_url('/mod/response/view.php',
-                    ['id' => $this->get_cm_by_response_name($identifier)->id]);
+                return new moodle_url(
+                    '/mod/response/view.php',
+                    ['id' => $this->get_cm_by_response_name($identifier)->id]
+                );
         }
     }
 

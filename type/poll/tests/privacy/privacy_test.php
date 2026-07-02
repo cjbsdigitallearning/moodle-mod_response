@@ -38,8 +38,7 @@ use core_privacy\local\request\approved_userlist;
  * @group mod_response
  * @covers \responsetype_poll\privacy\provider
  */
-class privacy_test extends provider_testcase {
-
+final class privacy_test extends provider_testcase {
     /**
      * Do initial setup to support this test case.
      *
@@ -48,6 +47,7 @@ class privacy_test extends provider_testcase {
     public function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/response/lib.php');
+        parent::setUp();
     }
 
     /**
@@ -390,7 +390,7 @@ class privacy_test extends provider_testcase {
         $response->user_responses = $instance->load_response_for_users($response, [$user]);
         $instance->load_form($response, $user);
 
-        $data = new stdClass;
+        $data = new stdClass();
         $data->{'poll_choice' . $response->id} = $choice;
         $response->in_course = false;
         // It doesn't matter what the URL is, we're not going to visit it directly.
@@ -399,14 +399,14 @@ class privacy_test extends provider_testcase {
 
         // Did this have a reflection step?
         if (!$instance->has_now_completed($response)) {
-            unset ($instance, $response);
+            unset($instance, $response);
             $response = clone $originalresponse;
             $instance = helper::instance_factory($response->responsetype, 'information');
             $instance->load_activity($response);
             $response->user_responses = $instance->load_response_for_users($response, [$user]);
             $instance->load_form($response, $user);
 
-            $data = new stdClass;
+            $data = new stdClass();
             $data->{'poll_choice' . $response->id} = $choice;
             $data->{'responsetype_poll_' . $response->id}['text'] = $reflectiontext;
             $response->in_course = false;

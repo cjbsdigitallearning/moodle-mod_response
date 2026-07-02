@@ -25,7 +25,7 @@
 use mod_response\helper;
 
 require('../../config.php');
-require_once($CFG->dirroot.'/mod/response/lib.php');
+require_once($CFG->dirroot . '/mod/response/lib.php');
 
 $id = required_param('id', PARAM_INT); // Course module ID.
 $userid = required_param('u', PARAM_INT); // User ID.

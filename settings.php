@@ -27,31 +27,52 @@ use mod_response\helper;
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_heading('response_heading', get_string('generalconfig', 'response'),
-                       get_string('explaingeneralconfig', 'response')));
-    $settings->add(new admin_setting_configtext('response/maxprofileimages', get_string('maxprofileimages', 'response'),
-                       get_string('configmaxprofileimages', 'response'), 5, PARAM_INT));
+    $settings->add(
+        new admin_setting_heading(
+            'response_heading',
+            get_string('generalconfig', 'response'),
+            get_string('explaingeneralconfig', 'response')
+        )
+    );
+    $settings->add(new admin_setting_configtext(
+        'response/maxprofileimages',
+        get_string('maxprofileimages', 'response'),
+        get_string('configmaxprofileimages', 'response'),
+        5,
+        PARAM_INT
+    ));
 
-    $settings->add(new admin_setting_heading('pagemodeditdefaults',
-                                             get_string('modeditdefaults', 'admin'),
-                                             get_string('condifmodeditdefaults', 'admin')));
+    $settings->add(new admin_setting_heading(
+        'pagemodeditdefaults',
+        get_string('modeditdefaults', 'admin'),
+        get_string('condifmodeditdefaults', 'admin')
+    ));
 
     // Show completions before response.
     $options = helper::display_completion_options();
-    $settings->add(new admin_setting_configselect('response/displaycompletionbefore',
-                                                  get_string('displaycompletion', 'response'),
-                                                  get_string('displaycompletion_desc', 'response'), 'full', $options));
+    $settings->add(new admin_setting_configselect(
+        'response/displaycompletionbefore',
+        get_string('displaycompletion', 'response'),
+        get_string('displaycompletion_desc', 'response'),
+        'full',
+        $options
+    ));
 
     // Show completions after response.
     $options = [get_string('no'), get_string('yes')];
-    $settings->add(new admin_setting_configselect('response/displaycompletionafter',
-                                                  get_string('displaycompletionafter', 'response'),
-                                                  get_string('displaycompletionafter_desc', 'response'), 'full', $options));
+    $settings->add(new admin_setting_configselect(
+        'response/displaycompletionafter',
+        get_string('displaycompletionafter', 'response'),
+        get_string('displaycompletionafter_desc', 'response'),
+        'full',
+        $options
+    ));
 
     $subplugins = helper::get_type_subplugins();
     $sorter = function ($a, $b) {
         return strcmp($a->display_name, $b->display_name);
     };
+    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
     uasort($subplugins, $sorter);
     foreach ($subplugins as $name => $subplugin) {
         $instance = helper::instance_factory($name, 'configuration');
@@ -61,17 +82,22 @@ if ($ADMIN->fulltree) {
         $subpluginsettings = $instance->get_default_settings();
         if (!empty($subpluginsettings)) {
             // First add a title.
-            $settings->add(new admin_setting_heading('responsetype_' . $name,
-                                                     get_string('responsetype_defaultsettings', 'response', $subplugin), ''));
+            $settings->add(new admin_setting_heading(
+                'responsetype_' . $name,
+                get_string('responsetype_defaultsettings', 'response', $subplugin),
+                ''
+            ));
 
             // Then add the subplugin settings.
             foreach ($subpluginsettings as $subpluginsetting) {
                 $settings->add($subpluginsetting);
             }
         } else {
-            $settings->add(new admin_setting_heading('responsetype_' . $name,
-                                                     get_string('responsetype_defaultsettings', 'response', $subplugin),
-                                                     get_string('responsetype_nodefault', 'response')));
+            $settings->add(new admin_setting_heading(
+                'responsetype_' . $name,
+                get_string('responsetype_defaultsettings', 'response', $subplugin),
+                get_string('responsetype_nodefault', 'response')
+            ));
         }
     }
 }

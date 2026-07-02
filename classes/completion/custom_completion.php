@@ -29,7 +29,6 @@ use core_completion\activity_custom_completion;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_completion extends activity_custom_completion {
-
     /**
      * Fetches the completion state for a given completion rule.
      *
@@ -53,7 +52,6 @@ class custom_completion extends activity_custom_completion {
                 // If we did get a record, and it has a non-empty completion time, we must have completed this activity.
                 $status = true;
             }
-
         }
         return $status ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
     }

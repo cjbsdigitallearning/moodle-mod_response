@@ -32,7 +32,6 @@ use MoodleQuickForm;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class abstractconfig {
-
     /**
      * Attach the form elements required for configuring
      * this response type to an existing moodleform object.

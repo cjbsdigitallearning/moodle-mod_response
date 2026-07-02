@@ -30,8 +30,7 @@ use context;
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface responsetype_provider extends subplugin_provider, shared_userlist_provider {
-
+interface responsetype_provider extends shared_userlist_provider, subplugin_provider {
     /**
      * Export the user data from a subplugin specific context.
      *

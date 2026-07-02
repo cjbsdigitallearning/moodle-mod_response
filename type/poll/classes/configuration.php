@@ -57,8 +57,12 @@ class configuration extends abstractconfig {
         // Add the reflection step configuration.
         $mform->addElement('selectyesno', 'poll_reflectionstep', get_string('poll_reflectionstep', 'responsetype_poll'));
         $mform->setDefault('poll_reflectionstep', $responseconfig->poll_reflectionstep);
-        $mform->addElement('text', 'poll_reflectiontext',
-                get_string('poll_reflectiontext', 'responsetype_poll'), ['size' => '64']);
+        $mform->addElement(
+            'text',
+            'poll_reflectiontext',
+            get_string('poll_reflectiontext', 'responsetype_poll'),
+            ['size' => '64']
+        );
         $mform->setType('poll_reflectiontext', PARAM_TEXT);
         $mform->addHelpButton('poll_reflectiontext', 'poll_reflectiontext', 'responsetype_poll');
         // Disable the reflection text box if we've turned off that step.
@@ -349,12 +353,20 @@ class configuration extends abstractconfig {
      */
     public function get_default_settings() {
         return [
-            new admin_setting_configtext('responsetype_poll/defaultwords', get_string('maximumwords', 'response'),
-                                         get_string('maximumwords_default', 'responsetype_poll'), 0, PARAM_INT),
-            new admin_setting_configselect('responsetype_poll/poll_reflectionstep',
-                                         get_string('poll_reflectionstep', 'responsetype_poll'),
-                                         get_string('poll_reflectionstep_explain', 'responsetype_poll'),
-                                         1, [1 => get_string('yes'), 0 => get_string('no')]),
+            new admin_setting_configtext(
+                'responsetype_poll/defaultwords',
+                get_string('maximumwords', 'response'),
+                get_string('maximumwords_default', 'responsetype_poll'),
+                0,
+                PARAM_INT
+            ),
+            new admin_setting_configselect(
+                'responsetype_poll/poll_reflectionstep',
+                get_string('poll_reflectionstep', 'responsetype_poll'),
+                get_string('poll_reflectionstep_explain', 'responsetype_poll'),
+                1,
+                [1 => get_string('yes'), 0 => get_string('no')]
+            ),
         ];
     }
 }

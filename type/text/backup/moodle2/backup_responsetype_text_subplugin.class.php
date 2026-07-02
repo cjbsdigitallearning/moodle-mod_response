@@ -23,7 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_responsetype_text_subplugin extends backup_subplugin {
-
     /**
      * Returns the subplugin information to attach to response element.
      *
@@ -37,8 +36,11 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
         $subplugin = $this->get_subplugin_element();
         $wrapper = new backup_nested_element($this->get_recommended_name());
 
-        $settings = new backup_nested_element('responsetype_text_settings', null,
-                                              ['maxwords']);
+        $settings = new backup_nested_element(
+            'responsetype_text_settings',
+            null,
+            ['maxwords']
+        );
 
         $settings->set_source_table('responsetype_text', ['response' => backup::VAR_ACTIVITYID]);
 
@@ -53,9 +55,11 @@ class backup_responsetype_text_subplugin extends backup_subplugin {
             $answers->annotate_ids('user', 'userid');
             $wrapper->add_child($answers);
 
-            $answers->annotate_files('responsetype_text_user',
-                                     'response_text',
-                                     'id');
+            $answers->annotate_files(
+                'responsetype_text_user',
+                'response_text',
+                'id'
+            );
         }
 
         return $subplugin;

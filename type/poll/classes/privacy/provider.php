@@ -36,7 +36,6 @@ use context;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements metadataprovider, subplugin_provider {
-
     /**
      * Returns meta data about this system.
      *
@@ -68,7 +67,7 @@ class provider implements metadataprovider, subplugin_provider {
         global $DB;
 
         // Prepare the common SQL fragments.
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $params = array_merge($inresponseparams, ['userid' => $userid]);
 
         $recordset = $DB->get_recordset_sql("
@@ -80,14 +79,14 @@ class provider implements metadataprovider, subplugin_provider {
              WHERE rpu.userid = :userid
                AND rpu.response $inresponsesql
           ORDER BY rpu.response, rpu.timesubmitted", $params);
-        responseprovider::recordset_loop_and_export($recordset, 'response', null, function($carry, $record) {
+        responseprovider::recordset_loop_and_export($recordset, 'response', null, function ($carry, $record) {
             $carry[] = (object) [
                 'choice' => $record->choice,
                 'timesubmitted' => $record->timesubmitted !== null ? transform::datetime($record->timesubmitted) : null,
                 'reflection_text' => $record->reflection_text,
             ];
             return $carry;
-        }, function($responseid, $data) use ($responseidstocmids) {
+        }, function ($responseid, $data) use ($responseidstocmids) {
             $context = context_module::instance($responseidstocmids[$responseid]->cmid);
             writer::with_context($context)->export_related_data([], 'answer_poll', $data);
         });
@@ -115,7 +114,7 @@ class provider implements metadataprovider, subplugin_provider {
     public static function delete_data_for_user(approved_contextlist $contextlist, array $responseidstocmids, int $userid) {
         global $DB;
 
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $params = array_merge($inresponseparams, ['userid' => $userid]);
         $sql = "userid = :userid AND response $inresponsesql";
         $DB->delete_records_select("responsetype_poll_user", $sql, $params);
@@ -131,7 +130,7 @@ class provider implements metadataprovider, subplugin_provider {
     public static function delete_data_for_users(context $context, int $responseid, array $userids) {
         global $DB;
 
-        list($inuserssql, $inusersparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$inuserssql, $inusersparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
         $params = array_merge($inusersparams, ['response' => $responseid]);
         $sql = "userid $inuserssql AND response = :response";
         $DB->delete_records_select("responsetype_poll_user", $sql, $params);

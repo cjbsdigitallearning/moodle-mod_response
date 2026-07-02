@@ -25,7 +25,6 @@ use mod_response\display_completion;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_response_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * Defines the overall structure of the response data for the restore system.
      *

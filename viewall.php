@@ -25,7 +25,7 @@
 use mod_response\helper;
 
 require('../../config.php');
-require_once($CFG->dirroot.'/mod/response/lib.php');
+require_once($CFG->dirroot . '/mod/response/lib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course module ID.
 $r = optional_param('r', 0, PARAM_INT); // Response instance ID.

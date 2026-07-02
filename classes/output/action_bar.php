@@ -23,15 +23,14 @@ use renderable;
 
 /**
  * Renderable class for the action bar elements for mod_response response items.
- * 
+ *
  * Copied and altered from grade/classes/output/action_bar.php
  *
  * @package    mod_response
  * @copyright  2024 Michael Kotlyar <michael.kotlyar@catalyst-eu.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class action_bar implements templatable, renderable {
-
+class action_bar implements renderable, templatable {
     /** @var \context $context The context object. */
     protected $context;
 
@@ -45,6 +44,7 @@ class action_bar implements templatable, renderable {
      * The class constructor.
      *
      * @param \context_module $context The context object.
+     * @param string $resetpath The reset path.
      */
     public function __construct(\context_module $context, string $resetpath = '') {
         $this->context = $context;
@@ -120,9 +120,11 @@ class action_bar implements templatable, renderable {
             );
             $data['searchdropdown'] = $searchdropdown->export_for_template($output);
 
-            if (!empty($SESSION->modresponse["filterfirstname-{$this->context->id}"]) ||
+            if (
+                !empty($SESSION->modresponse["filterfirstname-{$this->context->id}"]) ||
                     !empty($SESSION->modresponse["filterlastname-{$this->context->id}"]) ||
-                    $this->usersearch) {
+                    $this->usersearch
+            ) {
                 $reset = new moodle_url($this->resetpath, [
                     'id' => $cmid,
                     'search' => '',

@@ -34,7 +34,6 @@ use stdClass;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class abstractform extends moodleform {
-
     /**
      * Pass through to the moodleform constructor to ensure
      * our form object has a specific, targetable ID.
@@ -52,8 +51,15 @@ abstract class abstractform extends moodleform {
      * @param bool $editable
      * @param array $ajaxformdata Forms submitted via ajax, must pass their data here, instead of relying on _GET and _POST.
      */
-    public function __construct($action=null, $customdata=null, $method='post', $target='', $attributes=null,
-                                $editable=true, $ajaxformdata=null) {
+    public function __construct(
+        $action = null,
+        $customdata = null,
+        $method = 'post',
+        $target = '',
+        $attributes = null,
+        $editable = true,
+        $ajaxformdata = null
+    ) {
         // Contrary to the documentation, the default ID for a form is simply mform#, e.g. mform1.
         // This makes sure whatever form we make has a more specific ID.
         if (!is_array($attributes)) {
@@ -100,7 +106,6 @@ abstract class abstractform extends moodleform {
      * $this->_customdata should contain the activity data when
      * initialised.
      *
-     * @param int $userid The user viewing the form
      * @param array $submitarea The submission area group from the form
      */
     public function add_precomplete_completion(&$submitarea) {
@@ -140,7 +145,6 @@ abstract class abstractform extends moodleform {
      * styling purposes.
      *
      * @param array $submitarea The submission area group from the form
-     * @param object $response The response object
      * @return array $completions The data about the completions being displayed
      */
     public function add_postcompletion_completion(array &$submitarea): array {

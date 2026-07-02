@@ -268,7 +268,7 @@ function response_delete_response($course, $cm, $userid) {
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
  */
-function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
+function response_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
@@ -309,7 +309,6 @@ function response_get_coursemodule_info($cm) {
 
     $subplugins = helper::get_type_subplugins();
     if (!empty($subplugins[$response->responsetype])) {
-
         $info->icon = 'icon';
         $info->iconcomponent = $subplugins[$response->responsetype]->type;
 
@@ -459,7 +458,7 @@ function mod_response_output_fragment_form($args) {
 
     // Because we have to accept things like editors, we JSONify the data in transit - and unpack it now we have it.
     $json = @json_decode($args['jsonformdata'], true);
-    unset ($args['jsonformdata']);
+    unset($args['jsonformdata']);
 
     // We receive arbitrary arrays here, except... they're flattened in transit by JSON.stringify.
     // So we need to convert "var[x]" into a real array item into $args... regardless of depth or nesting.
@@ -506,8 +505,8 @@ function mod_response_output_fragment_form($args) {
 
     // Before we pass everything to the form, clean out the context because that breaks the form system otherwise.
     $argsclone = $args;
-    unset ($argsclone['context']);
-    unset ($argsclone['editing']);
+    unset($argsclone['context']);
+    unset($argsclone['editing']);
     $PAGE->set_url(new moodle_url('/course/view.php', ['id' => $cm->course]));
     $instance->load_form($response, $USER->id, $argsclone);
 
@@ -620,13 +619,13 @@ function mod_response_output_fragment_answer($args) {
     $data = new stdClass();
     $data = $response;
     $data->response = $response->user_responses[$userid];
-    unset ($data->user_responses);
+    unset($data->user_responses);
 
     $userwrote = $instance->load_user_information($userid);
     $data->user_wrote = !empty($userwrote[$userid]) ? $userwrote[$userid] : [];
     $data->viewing_own = $userid == $USER->id; // Viewing our own item?
 
-    $data->meta = new stdClass;
+    $data->meta = new stdClass();
     $data->meta->cm = $cm;
     $data->meta->context = $context;
 
@@ -695,10 +694,14 @@ function mod_response_output_fragment_completion($args) {
  *
  * @param calendar_event $event
  * @param \core_calendar\action_factory $factory
+ * @param int $userid
  * @return \core_calendar\local\event\entities\action_interface|null
  */
-function mod_response_core_calendar_provide_event_action(calendar_event $event,
-                                                      \core_calendar\action_factory $factory, $userid = 0) {
+function mod_response_core_calendar_provide_event_action(
+    calendar_event $event,
+    \core_calendar\action_factory $factory,
+    $userid = 0
+) {
     global $USER;
 
     if (empty($userid)) {

@@ -23,7 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_responsetype_poll_subplugin extends backup_subplugin {
-
     /**
      * Returns the subplugin information to attach to response element.
      *

@@ -28,7 +28,6 @@ use context_module;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class poll_form_reflection extends abstractform {
-
     /**
      * Defines the items belonging to this form for validation purposes.
      */
