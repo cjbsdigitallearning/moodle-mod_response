@@ -32,7 +32,6 @@ use stdClass;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class postcompletion extends abstractform {
-
     /**
      * Defines the items belonging to this form for validation purposes.
      */

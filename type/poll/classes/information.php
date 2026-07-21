@@ -29,7 +29,6 @@ use user_picture;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class information extends abstractinfo {
-
     /**
      * Retrieves the data for the given instance of activity, e.g.
      * poll choices, or whatever the activity-type-specific data
@@ -45,13 +44,13 @@ class information extends abstractinfo {
             return true; // Nothing to do here.
         }
 
-    // First the generic record.
-    $response->activity = $DB->get_record('responsetype_poll', ['response' => $response->id]);
-    if (!$response->activity) {
-        // If the activity record is missing, we should return early to avoid a fatal error
-        // This can happen if the transaction was interrupted during creation or if data is inconsistent.
-        return false;
-    }
+        // First the generic record.
+        $response->activity = $DB->get_record('responsetype_poll', ['response' => $response->id]);
+        if (!$response->activity) {
+            // If the activity record is missing, we should return early to avoid a fatal error
+            // This can happen if the transaction was interrupted during creation or if data is inconsistent.
+            return false;
+        }
 
         // Then the poll choices.
         $response->activity->poll_choices = [];
@@ -86,7 +85,7 @@ class information extends abstractinfo {
             return [];
         }
 
-        list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
+        [$sql, $params] = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
         $params['response'] = $instance->id;
 
         $query = "SELECT ru.userid, rpu.id, ru.timecreated, ru.timemodified, ru.timecompleted, rpu.choice, rpu.reflection_text
@@ -190,7 +189,6 @@ class information extends abstractinfo {
                 $data = ['poll_choice' . $response->id => $response->user_responses[$userid]->choice];
                 if ($response->activity->reflection_step) {
                     $mform = helper::instance_factory('poll', 'poll_form_choicesbeforereflection', $params);
-
                 } else {
                     $mform = helper::instance_factory('poll', 'poll_form_noreflection', $params);
                 }

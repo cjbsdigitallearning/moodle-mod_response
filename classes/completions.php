@@ -27,7 +27,6 @@ use core_user\fields;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class completions {
-
     /**
      * Returns whether any students have at least started this activity.
      *
@@ -84,7 +83,7 @@ class completions {
         // If the user in question has completed, move them to the start of the list.
         if (!empty($userid) && isset($completions[$userid])) {
             $usercompletion = $completions[$userid];
-            unset ($completions[$userid]);
+            unset($completions[$userid]);
             $completions = [$userid => $usercompletion] + $completions;
         }
 
@@ -115,7 +114,7 @@ class completions {
         }
 
         $fields = implode(',', fields::get_picture_fields());
-        list ($sql, $params) = $DB->get_in_or_equal($useridlist);
+        [$sql, $params] = $DB->get_in_or_equal($useridlist);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', $fields);
 
         foreach ($records as $user) {

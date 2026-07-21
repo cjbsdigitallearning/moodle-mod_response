@@ -23,7 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_responsetype_poll_subplugin extends restore_subplugin {
-
     /**
      * Defines the overall structure of the response data for poll responses.
      *

@@ -24,4 +24,5 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
 $subplugins = (array) json_decode(file_get_contents(__DIR__ . "/subplugins.json"))->plugintypes;

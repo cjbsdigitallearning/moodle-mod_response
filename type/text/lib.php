@@ -38,13 +38,15 @@ use mod_response\helper;
  * @param array $options Additional options affecting the file serving (see the filesystem subsystem)
  * @return bool False if file not found, does not return if found - just send the file
  */
-function responsetype_text_pluginfile(stdClass $course,
-                                      stdClass $cm,
-                                      stdClass $context,
-                                      string $filearea,
-                                      array $args,
-                                      $forcedownload,
-                                      array $options=[]) {
+function responsetype_text_pluginfile(
+    stdClass $course,
+    stdClass $cm,
+    stdClass $context,
+    string $filearea,
+    array $args,
+    $forcedownload,
+    array $options = []
+) {
     global $DB, $USER, $CFG;
 
     // Load the underlying Response library.

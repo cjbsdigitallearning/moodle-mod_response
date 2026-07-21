@@ -32,7 +32,6 @@ function xmldb_response_upgrade($oldversion) {
     $dbmanager = $DB->get_manager();
 
     if ($oldversion < 2019091100) {
-
         $table = new xmldb_table('response');
         $responsedisplay = new xmldb_field('responsedisplay');
         $viewownpagedescription = new xmldb_field('viewownpagedescription');
@@ -53,7 +52,6 @@ function xmldb_response_upgrade($oldversion) {
     }
 
     if ($oldversion < 2019091800) {
-
         $table = new xmldb_table('response');
         $caption = new xmldb_field('caption', XMLDB_TYPE_CHAR, '255');
 
@@ -86,7 +84,6 @@ function xmldb_response_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020002040) {
-
         $table = new xmldb_table('response');
         $content = new xmldb_field('content', XMLDB_TYPE_TEXT);
         $contentformat = new xmldb_field('contentformat', XMLDB_TYPE_INTEGER, 4, null, true, null, 0);
@@ -105,7 +102,6 @@ function xmldb_response_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020002041) {
-
         $table = new xmldb_table('response');
         $contentformat = new xmldb_field('contentformat', XMLDB_TYPE_INTEGER, 4, null, true, null, 1);
 
@@ -118,7 +114,6 @@ function xmldb_response_upgrade($oldversion) {
     }
 
     if ($oldversion < 2025013100) {
-
         $sql = "SELECT cm.*
                   FROM {course_modules} cm
                   JOIN {modules} m ON m.id = cm.module AND m.name  = 'response'

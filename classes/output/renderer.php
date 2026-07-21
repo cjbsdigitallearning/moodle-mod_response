@@ -30,7 +30,6 @@ use mod_response\helper;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends plugin_renderer_base {
-
     /**
      * Rendering the empty response form so users can complete it.
      *
@@ -180,7 +179,7 @@ class renderer extends plugin_renderer_base {
             'content',
             0
         );
-        $formatoptions = new stdClass;
+        $formatoptions = new stdClass();
         $formatoptions->noclean = true;
         $formatoptions->overflowdiv = true;
         $formatoptions->context = $context;

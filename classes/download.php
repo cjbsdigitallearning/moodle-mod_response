@@ -96,8 +96,9 @@ class download {
             'lastname',
         ];
         // Additional user fields according to user policies showuseridentity.
-        $identityfields = \core_user\fields::get_identity_fields($this->context, true);
-        foreach ($identityfields as $field) {
+        // phpcs:ignore Security.Drupal7.DynQueries.D7DynQueriesDirectVar, PHPCS_SecurityAudit.Drupal7.DynQueries.D7DynQueriesDirectVar
+        $userfields = \core_user\fields::get_identity_fields($this->context, true);
+        foreach ($userfields as $field) {
             $userdetailfields[] = $field;
         }
         return $userdetailfields;
@@ -204,6 +205,7 @@ class download {
                 // so we just want the filename.
                 if (str_contains($url, $CFG->wwwroot)) {
                     // Remove the url, leaving just the filename.
+                    // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
                     $filename = basename($url);
                     $formattedtext['withlinks'] = str_replace($url, $filename, $formattedtext['withlinks']);
                 }
@@ -221,10 +223,14 @@ class download {
      */
     public function create_response_file(stdClass $user, string $text): bool {
         // Create a text file with formatted response.
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
         mkdir("{$this->tempresponsedir}/{$user->username}");
         $path = "{$this->tempresponsedir}/{$user->username}/{$user->username}-{$this->usertextfield}.txt";
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
         $myfile = fopen($path, "w");
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
         fwrite($myfile, $text);
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
         if (fclose($myfile)) {
             return true;
         }
@@ -268,6 +274,7 @@ class download {
     public function move_file(string $from): bool {
         // We will also rename the csv.
         $to = "{$this->tempresponsedir}/{$this->responsename}.csv";
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem
         if (copy($from, $to)) {
             return true;
         }

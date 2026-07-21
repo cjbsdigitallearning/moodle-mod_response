@@ -30,7 +30,6 @@ function xmldb_responsetype_text_upgrade($oldversion) {
     $dbmanager = $DB->get_manager();
 
     if ($oldversion < 2020090302) {
-
         $table = new xmldb_table('responsetype_text');
         $editorconfig = new xmldb_field('editorconfig', XMLDB_TYPE_TEXT);
 
@@ -50,7 +49,6 @@ function xmldb_responsetype_text_upgrade($oldversion) {
     }
 
     if ($oldversion < 2024091200) {
-
         // Define field editorconfig to be dropped from responsetype_text.
         $table = new xmldb_table('responsetype_text');
         $field = new xmldb_field('editorconfig');

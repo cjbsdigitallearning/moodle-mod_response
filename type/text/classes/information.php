@@ -29,7 +29,6 @@ use context_module;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class information extends abstractinfo {
-
     /**
      * Retrieves the data for the given instance of activity, e.g.
      * poll choices, or whatever the activity-type-specific data
@@ -71,7 +70,7 @@ class information extends abstractinfo {
             return [];
         }
 
-        list ($sql, $params) = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
+        [$sql, $params] = $DB->get_in_or_equal($users, SQL_PARAMS_NAMED);
         $params['response'] = $instance->id;
 
         $query = "SELECT ru.userid, rtu.id AS response_user_id, ru.timecreated, ru.timemodified, ru.timecompleted, rtu.response_text
@@ -81,8 +80,7 @@ class information extends abstractinfo {
                      AND ru.response = :response";
 
         if ($completedonly) {
-            $query .= '
-                     AND ru.timecompleted > :timecompleted';
+            $query .= ' AND ru.timecompleted > :timecompleted';
             $params['timecompleted'] = 0;
         }
 

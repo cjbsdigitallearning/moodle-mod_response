@@ -22,17 +22,16 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_response_generator extends testing_module_generator {
-
     /**
-     * Create an instance of the response activity in the databae for PHPUnit.
+     * Create an instance of the response activity in the database for PHPUnit.
      *
      * Types not hinted due to inheritance.
      *
      * @param array|stdClass $record The data for creating the activity, as if submitted from the module creation form
-     * @param array $options An array of options passed in that may affect creation of the module.
+     * @param ?array $options An array of options passed in that may affect creation of the module.
      * @return stdClass The entry from the course module's own table (mdl_response) of the created record.
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, ?array $options = null) {
         $record = (object) (array) $record;
 
         if (!isset($record->responsedisplay)) {

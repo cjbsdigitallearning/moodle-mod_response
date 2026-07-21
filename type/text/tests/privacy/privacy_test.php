@@ -38,8 +38,7 @@ use core_privacy\local\request\approved_userlist;
  * @group mod_response
  * @covers \responsetype_text\privacy\provider
  */
-class privacy_test extends provider_testcase {
-
+final class privacy_test extends provider_testcase {
     /**
      * Do initial setup to support this test case.
      *
@@ -48,6 +47,7 @@ class privacy_test extends provider_testcase {
     public function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/response/lib.php');
+        parent::setUp();
     }
 
     /**
@@ -389,7 +389,7 @@ class privacy_test extends provider_testcase {
         $response->user_responses = $instance->load_response_for_users($response, [$user]);
         $instance->load_form($response, $user);
 
-        $data = new stdClass;
+        $data = new stdClass();
         $data->{'responsetype_text_' . $response->id}['text'] = $responsetext;
         $response->in_course = false;
         // It doesn't matter what the URL is, we're not going to visit it directly.

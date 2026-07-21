@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/mod/response/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_response_mod_form extends moodleform_mod {
-
     /** @var array Contains details on all the subplugins, including instances of their objects. */
     protected $subplugins;
 
@@ -288,7 +287,13 @@ class mod_response_mod_form extends moodleform_mod {
             ['group' => 'requiresubmissiongroup'],
         );
 
-        $mform->addGroup($group, 'requiresubmissiongroup' . $suffix, get_string('requiresubmission', 'response'), ' &nbsp; ', false);
+        $mform->addGroup(
+            $group,
+            'requiresubmissiongroup' . $suffix,
+            get_string('requiresubmission', 'response'),
+            ' &nbsp; ',
+            false
+        );
         $mform->addHelpButton('requiresubmissiongroup' . $suffix, 'requiresubmission', 'response');
 
         return ['requiresubmissiongroup' . $suffix];

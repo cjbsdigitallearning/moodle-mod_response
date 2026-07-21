@@ -25,8 +25,8 @@
 use mod_response\helper;
 
 require('../../config.php');
-require_once($CFG->dirroot.'/mod/response/lib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->dirroot . '/mod/response/lib.php');
+require_once($CFG->libdir . '/completionlib.php');
 
 $id = required_param('id', PARAM_INT); // Course ID.
 
@@ -99,7 +99,7 @@ $responselist[] = $noresponseobj;
 // We already filtered activities that haven't been completed. This might result in empty sections.
 foreach ($responselist as $sectionid => $section) {
     if (empty($section->responses)) {
-        unset ($responselist[$sectionid]);
+        unset($responselist[$sectionid]);
     }
 }
 

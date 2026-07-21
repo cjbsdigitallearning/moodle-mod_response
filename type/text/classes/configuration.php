@@ -35,7 +35,6 @@ use stdClass;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class configuration extends abstractconfig {
-
     /**
      * Attach the form elements required for configuring
      * this response type to an existing moodleform object.
@@ -209,8 +208,13 @@ class configuration extends abstractconfig {
      */
     public function get_default_settings() {
         return [
-            new admin_setting_configtext('responsetype_text/defaultwords', get_string('maximumwords', 'response'),
-                                         get_string('maximumwords_default', 'responsetype_text'), 0, PARAM_INT),
+            new admin_setting_configtext(
+                'responsetype_text/defaultwords',
+                get_string('maximumwords', 'response'),
+                get_string('maximumwords_default', 'responsetype_text'),
+                0,
+                PARAM_INT
+            ),
         ];
     }
 
@@ -245,6 +249,7 @@ class configuration extends abstractconfig {
             }
             $groups[$group] = true;
 
+            // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
             $lineplugins = array_map('trim', explode(',', $matches[2]));
             foreach ($lineplugins as $plugin) {
                 if (isset($plugins[$plugin])) {

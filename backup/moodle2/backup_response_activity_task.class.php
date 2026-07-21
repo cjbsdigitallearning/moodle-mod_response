@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/response/backup/moodle2/backup_response_stepslib.php');
+require_once(__DIR__ . '/backup_response_stepslib.php');
 
 /**
  * Provides all the settings and steps to perform one complete backup of response activity
@@ -36,12 +36,10 @@ require_once($CFG->dirroot . '/mod/response/backup/moodle2/backup_response_steps
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_response_activity_task extends backup_activity_task {
-
     /**
      * No specific settings for this activity
      */
     protected function define_my_settings() {
-
     }
 
     /**
@@ -60,14 +58,14 @@ class backup_response_activity_task extends backup_activity_task {
     public static function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot, '/');
-
         // Link to the list of responses.
-        $search = '/(' . $base . '\/mod\/response\/index.php\?id\=)([0-9]+)/';
+        $search = '/(' . preg_quote($CFG->wwwroot, '/') . '\/mod\/response\/index.php\?id=)([0-9]+)/';
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.PregReplace.PregReplaceDyn
         $content = preg_replace($search, '$@RESPONSEINDEX*$2@$', $content);
 
         // Link to response view by module ID.
-        $search = '/(' . $base . '\/mod\/response\/view.php\?id\=)([0-9]+)/';
+        $search = '/(' . preg_quote($CFG->wwwroot, '/') . '\/mod\/response\/view.php\?id=)([0-9]+)/';
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.PregReplace.PregReplaceDyn
         $content = preg_replace($search, '$@RESPONSEVIEWBYID*$2@$', $content);
 
         return $content;

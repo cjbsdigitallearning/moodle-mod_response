@@ -143,7 +143,6 @@ class helper {
         $subplugins = [];
         $subpluginlist = core_component::get_plugin_list('responsetype');
         foreach ($subpluginlist as $name => $path) {
-
             // Set up some details for them.
             $subplugin = new stdClass();
             $subplugin->type = 'responsetype_' . $name;
@@ -175,14 +174,16 @@ class helper {
         }
 
         $classname = $subplugins[$plugin]->classpath . '\\' . $class;
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.FilesystemFunctions.WarnFilesystem,, PHPCS_SecurityAudit.Misc.IncludeMismatch.ErrMiscIncludeMismatchNoExt
         if (!file_exists($subplugins[$plugin]->path . '/classes/' . $class . '.php')) {
             throw new coding_exception('Response subplugin ' . $plugin . ' is missing its ' . $class . ' class');
         }
+        // phpcs:ignore PHPCS_SecurityAudit.Misc.IncludeMismatch.ErrMiscIncludeMismatchNoExt
         require_once($subplugins[$plugin]->path . '/classes/' . $class . '.php');
 
         if (empty($args)) {
             // No arguments, very easy to instantiate.
-            return new $classname;
+            return new $classname();
         }
 
         // Instantiation is a little trickier, and our baseline must be 5.4.x so no splat operator.
@@ -236,17 +237,26 @@ class helper {
     }
 
     /**
-     * Determine if user can see peer response before/after completion.
+     * Takes the form input for configuring this kind of activity
+     * and repackages the data to suit how the database actually wants it.
      *
-     * @param integer $viewerid ID of user viewing the response
-     * @param integer $vieweeid
-     * @param stdClass $cm
-     * @param stdClass $response
-     * @param int $groupid In the case of groupmode = VISIBLEGROUPS, we use this value to determine which groups to view - 0 = all.
-     * @param boolean $before Determine if we are retrieving $response->displaycompletionbefore or $response->displaycompletionafter.
-     * @return boolean
+     * @param int $viewerid the ID of user viewing the response
+     * @param int $vieweeid The ID of user being viewed
+     * @param stdClass $cm The course module
+     * @param stdClass $response The response object
+     * @param int $groupid In the case of groupmode = VISIBLEGROUPS, we use this value to determine which groups to view
+     * @param bool $before Determine if we are retrieving $response->displaycompletionbefore or
+     * $response->displaycompletionafter.
+     * @return bool
      */
-    public static function can_see(int $viewerid, int $vieweeid, stdClass $cm, stdClass $response, int $groupid = 0, bool $before = true): bool {
+    public static function can_see(
+        int $viewerid,
+        int $vieweeid,
+        stdClass $cm,
+        stdClass $response,
+        int $groupid = 0,
+        bool $before = true
+    ): bool {
         // User can see their own response.
         if ($viewerid == $vieweeid) {
             return true;
@@ -268,12 +278,11 @@ class helper {
                 }
                 return has_capability('moodle/course:viewhiddengroups', \context_course::instance($cm->course));
             case SEPARATEGROUPS:
-                return in_array($viewerid, helper::get_users_in_same_group($response->id, $vieweeid));
+                return in_array($viewerid, self::get_users_in_same_group($response->id, $vieweeid));
             case NOGROUPS:
             default:
                 return true;
         }
-
     }
 
     /**
@@ -327,7 +336,7 @@ class helper {
             global $USER;
             $userid = $USER->id;
         }
-        
+
         // Now, figure out which groups the user is in.
         $cm = get_coursemodule_from_instance('response', $id, 0, false, MUST_EXIST);
         $groups = groups_get_user_groups($cm->course, $userid);
@@ -349,11 +358,10 @@ class helper {
     }
 
     /**
-     * Given a response and a user who can access that response activity,
-     * identify which other users are in the same groups.
+     * Given a course module and a group ID, identify which other users are in the same group.
      *
-     * @param int $id Response activity as per resposne table
-     * @param int $userid User ID to look up
+     * @param stdClass $cm The course module object
+     * @param int $groupid The group ID of the group being viewed
      * @return array A list of member ids in the same group
      */
     public static function get_users_in_group($cm, $groupid) {
@@ -452,22 +460,25 @@ class helper {
      *
      * @param array $responses The list of responses to filter
      * @param array $filters The filters to apply 'userid', 'ifirst', 'ilast', and 'search'
-     * @param integer $courseid ID of the course, used to retrieve users that belong to the course the response is in.
+     * @param int $courseid ID of the course, used to retrieve users that belong to the course the response is in.
      * @return array
      */
     public static function filter_responses(array $responses, array $filters, int $courseid) {
         // Return responses from respective user if userid is set.
         if (isset($filters['userid']) && $userid = $filters['userid']) {
+            // phpcs:ignore Security.BadFunctions.CallbackFunctions.WarnCallbackFunctions, PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
             return array_filter($responses, static fn($response) => $response->userid == $userid);
         }
 
         // Filter by first name initial.
         if (isset($filters['ifirst']) && $ifirst = $filters['ifirst']) {
+            // phpcs:ignore Security.BadFunctions.CallbackFunctions.WarnCallbackFunctions, PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
             $responses = array_filter($responses, static fn($response) => stripos($response->first_name, $ifirst) === 0);
         }
 
         // Filter by last name initial.
         if (isset($filters['ilast']) && $ilast = $filters['ilast']) {
+            // phpcs:ignore Security.BadFunctions.CallbackFunctions.WarnCallbackFunctions, PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
             $responses = array_filter($responses, static fn($response) => stripos($response->last_name, $ilast) === 0);
         }
 
@@ -475,6 +486,7 @@ class helper {
         if (isset($filters['search']) && $search = $filters['search']) {
             $searchusers = search_users($courseid, 0, $search);
             $userids = array_column($searchusers, 'id');
+            // phpcs:ignore Security.BadFunctions.CallbackFunctions.WarnCallbackFunctions, PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
             $responses = array_filter($responses, static fn($response) => in_array($response->userid, $userids));
         }
 
@@ -491,8 +503,12 @@ class helper {
      * @param ?renderer_base $renderer Option to use existing renderer.
      * @return object A simple object to pass to the summary template, with an individual activity having already been templated.
      */
-    public static function get_response_data(object $course, object $response, int $userid,
-            ?renderer_base $renderer = null): object {
+    public static function get_response_data(
+        object $course,
+        object $response,
+        int $userid,
+        ?renderer_base $renderer = null
+    ): object {
         global $PAGE;
         if (empty($renderer)) {
             $renderer = $PAGE->get_renderer('mod_response');
@@ -503,7 +519,7 @@ class helper {
         $return = new stdClass();
         $return->activity_title = $cm->name;
         $return->question = $response->question;
-        $instance = helper::instance_factory($response->responsetype, 'information');
+        $instance = self::instance_factory($response->responsetype, 'information');
 
         // Determine if the user has responded.
         // We actually can't rely on completion status if it wasn't tracked by the completion system, so use ours.
@@ -535,7 +551,7 @@ class helper {
         $return->displaypeerresults = $response->displaypeerresults ?? 0;
         $return->icon = new \pix_icon('icon', '', 'responsetype_' . $response->responsetype);
 
-        $renderable = helper::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);
+        $renderable = self::instance_factory($response->responsetype, 'summaryoutput', [$return, $instance]);
         $return->render = $renderer->render($renderable);
 
         return $return;
@@ -544,7 +560,7 @@ class helper {
     /**
      * Ger all responses in course with filters.
      *
-     * @param object $course Standard course object.
+     * @param stdClass $course Standard course object.
      * @param array $filters Filter values from filter form.
      * @return array
      */
@@ -559,7 +575,7 @@ class helper {
             'section_title' => get_string('yettorespond', 'mod_response'),
             'responses' => [],
         ];
-        
+
         if (course_format_uses_sections($course->format)) {
             // This course format uses sections, so we need to arrange for this.
 
@@ -577,8 +593,11 @@ class helper {
                 // If they can delete responses, we need to build suitable links.
                 $context = \context_module::instance($response->coursemodule);
                 if (has_capability('mod/response:manage', $context)) {
-                    foreach ($response->user_responses as $userid => $user_response) {
-                        $deletelink = new moodle_url('/mod/response/deleteanswer.php', ['id' => $response->coursemodule, 'u' => $userid]);
+                    foreach ($response->user_responses as $userid => $userresponse) {
+                        $deletelink = new moodle_url(
+                            '/mod/response/deleteanswer.php',
+                            ['id' => $response->coursemodule, 'u' => $userid]
+                        );
                         $response->user_responses[$userid]->delete_link = $deletelink;
                     }
                 }
@@ -593,7 +612,6 @@ class helper {
                     ];
                     $sectionresponses[$responsesection] = $responsesectionobj;
                 }
-
             }
         } else {
             // No sections here, so present it flat.
@@ -607,7 +625,7 @@ class helper {
 
                 $response->user_responses = [];
                 foreach ($loadedresponses as $loadresponse) {
-                    $activity = helper::get_response_data($course, $response, $loadresponse->userid);
+                    $activity = self::get_response_data($course, $response, $loadresponse->userid);
                     if (isset($activity->response)) {
                         $response->user_responses[] = $activity;
                     } else {

@@ -36,7 +36,6 @@ use context;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements metadataprovider, subplugin_provider {
-
     /**
      * Returns meta data about this system.
      *
@@ -77,18 +76,18 @@ class provider implements metadataprovider, subplugin_provider {
         global $DB;
 
         // Prepare the common SQL fragments.
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $sql = "userid = :userid AND response $inresponsesql";
         $params = array_merge($inresponseparams, ['userid' => $userid]);
 
         $recordset = $DB->get_recordset_select('responsetype_text_user', $sql, $params);
-        responseprovider::recordset_loop_and_export($recordset, 'response', null, function($carry, $record) {
+        responseprovider::recordset_loop_and_export($recordset, 'response', null, function ($carry, $record) {
             $carry[] = (object) [
                 'timesubmitted' => $record->timesubmitted !== null ? transform::datetime($record->timesubmitted) : null,
                 'response_text' => $record->response_text,
             ];
             return $carry;
-        }, function($responseid, $data) use ($responseidstocmids) {
+        }, function ($responseid, $data) use ($responseidstocmids) {
             $context = context_module::instance($responseidstocmids[$responseid]->cmid);
             writer::with_context($context)->export_related_data([], 'answer_text', $data);
         });
@@ -116,7 +115,7 @@ class provider implements metadataprovider, subplugin_provider {
     public static function delete_data_for_user(approved_contextlist $contextlist, array $responseidstocmids, int $userid) {
         global $DB;
 
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $params = array_merge($inresponseparams, ['userid' => $userid]);
         $sql = "userid = :userid AND response $inresponsesql";
         $DB->delete_records_select("responsetype_text_user", $sql, $params);
@@ -132,7 +131,7 @@ class provider implements metadataprovider, subplugin_provider {
     public static function delete_data_for_users(context $context, int $responseid, array $userids) {
         global $DB;
 
-        list($inuserssql, $inusersparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$inuserssql, $inusersparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
         $params = array_merge($inusersparams, ['response' => $responseid]);
         $sql = "userid $inuserssql AND response = :response";
         $DB->delete_records_select("responsetype_text_user", $sql, $params);

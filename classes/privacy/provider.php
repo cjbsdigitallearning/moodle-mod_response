@@ -38,7 +38,6 @@ use core_privacy\manager;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements metadataprovider, pluginprovider, userlist_provider {
-
     /** Interface for all response type sub-plugins. */
     const RESPONSETYPE_INTERFACE = 'mod_response\privacy\responsetype_provider';
 
@@ -143,7 +142,8 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
 
         $user = $contextlist->get_user();
         $userid = $user->id;
-        $cmids = array_reduce($contextlist->get_contexts(), function($carry, $context) {
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
+        $cmids = array_reduce($contextlist->get_contexts(), function ($carry, $context) {
             if ($context->contextlevel == CONTEXT_MODULE) {
                 $carry[] = $context->instanceid;
             }
@@ -157,19 +157,19 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
         $responseidstocmids = static::get_response_ids_to_cmids_from_cmids($cmids);
 
         // Prepare the common SQL fragments.
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $sql = "userid = :userid AND response $inresponsesql";
         $params = array_merge($inresponseparams, ['userid' => $userid]);
 
         $recordset = $DB->get_recordset_select('response_user', $sql, $params);
-        static::recordset_loop_and_export($recordset, 'response', null, function($carry, $record) {
+        static::recordset_loop_and_export($recordset, 'response', null, function ($carry, $record) {
             // There will only be one row per response activity, so no need to use $carry.
             return (object) [
                 'firstaction' => $record->timecreated !== null ? transform::datetime($record->timecreated) : null,
                 'lastchanged' => $record->timemodified !== null ? transform::datetime($record->timemodified) : null,
                 'timecompleted' => $record->timecompleted !== null ? transform::datetime($record->timecompleted) : null,
             ];
-        }, function($responseid, $data) use ($user, $responseidstocmids) {
+        }, function ($responseid, $data) use ($user, $responseidstocmids) {
             // This combines the overall completion data we need with the activity data.
             $context = context_module::instance($responseidstocmids[$responseid]->cmid);
             $contextdata = helper::get_context_data($context, $user);
@@ -183,8 +183,12 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
         });
 
         // Now call out to the subplugins. Also might as well reuse stuff we already queried that they will need.
-        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
-                'export_user_data', [$contextlist, $responseidstocmids, $userid]);
+        manager::plugintype_class_callback(
+            'responsetype',
+            self::RESPONSETYPE_INTERFACE,
+            'export_user_data',
+            [$contextlist, $responseidstocmids, $userid]
+        );
 
         return $contextlist;
     }
@@ -209,8 +213,12 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
         $responseid = $cm->instance;
 
         // First pass it to the subplugins in case they've declared foreign keys.
-        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
-                'delete_data_for_all_users_in_context', [$context, $responseid]);
+        manager::plugintype_class_callback(
+            'responsetype',
+            self::RESPONSETYPE_INTERFACE,
+            'delete_data_for_all_users_in_context',
+            [$context, $responseid]
+        );
 
         // Then delete what's left.
         $DB->delete_records('response_user', ['response' => $responseid]);
@@ -233,11 +241,15 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
         }
 
         // First pass it to the subplugins in case they've declared foreign keys.
-        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
-                'delete_data_for_users', [$context, $responseid, $userids]);
+        manager::plugintype_class_callback(
+            'responsetype',
+            self::RESPONSETYPE_INTERFACE,
+            'delete_data_for_users',
+            [$context, $responseid, $userids]
+        );
 
         // Delete the response for the users.
-        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
         $inparams['responseid'] = $responseid;
         $sql = "response = :responseid AND userid {$insql}";
 
@@ -265,7 +277,8 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
 
         $user = $contextlist->get_user();
         $userid = $user->id;
-        $cmids = array_reduce($contextlist->get_contexts(), function($carry, $context) {
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
+        $cmids = array_reduce($contextlist->get_contexts(), function ($carry, $context) {
             if ($context->contextlevel == CONTEXT_MODULE) {
                 $carry[] = $context->instanceid;
             }
@@ -279,11 +292,15 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
         $responseidstocmids = static::get_response_ids_to_cmids_from_cmids($cmids);
 
         // First pass it to the subplugins in case they've declared foreign keys.
-        manager::plugintype_class_callback('responsetype', self::RESPONSETYPE_INTERFACE,
-                'delete_data_for_user', [$contextlist, $responseidstocmids, $userid]);
+        manager::plugintype_class_callback(
+            'responsetype',
+            self::RESPONSETYPE_INTERFACE,
+            'delete_data_for_user',
+            [$contextlist, $responseidstocmids, $userid]
+        );
 
         // Then delete what's left.
-        list($inresponsesql, $inresponseparams) = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
+        [$inresponsesql, $inresponseparams] = $DB->get_in_or_equal(array_keys($responseidstocmids), SQL_PARAMS_NAMED);
         $params = array_merge($inresponseparams, ['userid' => $userid]);
         $sql = "userid = :userid AND response $inresponsesql";
         $DB->delete_records_select("response_user", $sql, $params);
@@ -297,7 +314,7 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
      */
     protected static function get_response_ids_to_cmids_from_cmids(array $cmids) {
         global $DB;
-        list($insql, $inparams) = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($cmids, SQL_PARAMS_NAMED);
         $sql = "
             SELECT r.id, cm.id AS cmid, r.question
               FROM {response} r
@@ -321,8 +338,13 @@ class provider implements metadataprovider, pluginprovider, userlist_provider {
      * @param callable $export The function to export the dataset, receives the last value from $splitkey and the dataset.
      * @return void
      */
-    public static function recordset_loop_and_export(\moodle_recordset $recordset, $splitkey, $initial,
-            callable $reducer, callable $export) {
+    public static function recordset_loop_and_export(
+        \moodle_recordset $recordset,
+        $splitkey,
+        $initial,
+        callable $reducer,
+        callable $export
+    ) {
         $data = $initial;
         $lastid = null;
 

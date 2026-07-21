@@ -76,7 +76,7 @@ abstract class abstractinfo {
             foreach (array_keys($responses) as $userid) {
                 // It shouldn't happen but that means it might sometime...
                 if (!isset($users[$userid])) {
-                    unset ($responses[$userid]);
+                    unset($responses[$userid]);
                     continue;
                 }
 
@@ -218,7 +218,9 @@ abstract class abstractinfo {
             return $v >= 1;
         };
         $ids = (array) $ids;
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
         $ids = array_map('intval', $ids);
+        // phpcs:ignore PHPCS_SecurityAudit.BadFunctions.CallbackFunctions.WarnCallbackFunctions
         $ids = array_filter($ids, $filter);
         $ids = array_unique($ids);
         if ($implode) {
@@ -258,7 +260,7 @@ abstract class abstractinfo {
 
         $users = [];
         $fields = fields::get_picture_fields();
-        list ($sql, $params) = $DB->get_in_or_equal($userids);
+        [$sql, $params] = $DB->get_in_or_equal($userids);
         $records = $DB->get_records_select('user', 'id ' . $sql, $params, '', implode(',', $fields));
 
         $users = [];
