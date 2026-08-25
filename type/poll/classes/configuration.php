@@ -22,6 +22,7 @@ use MoodleQuickForm;
 use stdClass;
 use admin_setting_configtext;
 use admin_setting_configselect;
+use context_module;
 
 /**
  * Defines everything for showing, loading and saving config for polls in response activities.
