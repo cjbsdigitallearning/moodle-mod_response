@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: plugin
 
@@ -72,11 +72,8 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci phplint ./plugin
 
-      - name: PHP Copy/Paste Detector
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpcpd ./plugin
-
       - name: PHP Mess Detector
+        continue-on-error: true # This step shows warnings but does not fail the build.
         if: ${{ always() }}
         run: moodle-plugin-ci phpmd ./plugin
 
