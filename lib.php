@@ -339,6 +339,35 @@ function response_get_coursemodule_info($cm) {
 }
 
 /**
+ * Mark the activity as viewed.
+ *
+ * Triggers the course_module_viewed event and updates the completion state.
+ *
+ * @param stdClass $response The response instance record.
+ * @param stdClass $course The course record.
+ * @param stdClass|cm_info $cm The course module record.
+ * @param context_module $context The module context.
+ */
+function response_view($response, $course, $cm, $context) {
+    global $CFG;
+    require_once($CFG->libdir . '/completionlib.php');
+
+    // Trigger course_module_viewed event.
+    $event = \mod_response\event\course_module_viewed::create([
+        'context' => $context,
+        'objectid' => $response->id,
+    ]);
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('response', $response);
+    $event->trigger();
+
+    // Completion.
+    $completion = new completion_info($course);
+    $completion->set_module_viewed($cm);
+}
+
+/**
  * Adds any behaviour for the course module when rendering the
  * dynamic view of the course.
  *
