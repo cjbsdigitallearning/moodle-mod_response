@@ -26,10 +26,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2025052203;
 $plugin->release   = '1.0.1';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
+$plugin->requires  = 2024100700; // Moodle 4.5.0 release is the minimum targeted version.
 $plugin->component = 'mod_response';
 $plugin->supported = [
-    403,
     405,
+    501,
 ];
 $plugin->maturity  = MATURITY_ALPHA;
