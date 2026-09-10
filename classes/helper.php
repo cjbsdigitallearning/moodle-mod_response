@@ -456,6 +456,43 @@ class helper {
     }
 
     /**
+     * Read the stored initials filter for a context from the session cache.
+     *
+     * @param \context $context The module context the filter belongs to.
+     * @return array A [firstinitial, lastinitial] pair; either value is '' when not set.
+     */
+    public static function get_initials_filter(\context $context): array {
+        $cache = \cache::make('mod_response', 'initialsfilter');
+        return [
+            (string) $cache->get("filterfirstname-{$context->id}"),
+            (string) $cache->get("filtersurname-{$context->id}"),
+        ];
+    }
+
+    /**
+     * Store the initials filter for a context in the session cache.
+     *
+     * Pass null for a value to leave the currently stored value untouched.
+     *
+     * @param \context $context The module context the filter belongs to.
+     * @param string|null $firstinitial The first name initial to store, or null to skip.
+     * @param string|null $lastinitial The surname initial to store, or null to skip.
+     */
+    public static function set_initials_filter(
+        \context $context,
+        ?string $firstinitial = null,
+        ?string $lastinitial = null
+    ): void {
+        $cache = \cache::make('mod_response', 'initialsfilter');
+        if (!is_null($firstinitial)) {
+            $cache->set("filterfirstname-{$context->id}", $firstinitial);
+        }
+        if (!is_null($lastinitial)) {
+            $cache->set("filtersurname-{$context->id}", $lastinitial);
+        }
+    }
+
+    /**
      * Filters list of responses with filter settings.
      *
      * @param array $responses The list of responses to filter

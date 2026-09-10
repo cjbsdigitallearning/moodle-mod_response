@@ -17,6 +17,7 @@
 namespace mod_response\output;
 
 use core\output\comboboxsearch;
+use mod_response\helper;
 use moodle_url;
 use templatable;
 use renderable;
@@ -71,7 +72,7 @@ class action_bar implements renderable, templatable {
      * @throws \moodle_exception
      */
     public function export_for_template(\renderer_base $output): array {
-        global $OUTPUT, $SESSION, $USER, $PAGE;
+        global $OUTPUT, $USER, $PAGE;
         $cmid = $this->context->instanceid;
 
         // If the user has the capability to view all responses, display the group selector (if applicable), the user selector
@@ -120,9 +121,10 @@ class action_bar implements renderable, templatable {
             );
             $data['searchdropdown'] = $searchdropdown->export_for_template($output);
 
+            [$filterfirstname, $filterlastname] = helper::get_initials_filter($this->context);
             if (
-                !empty($SESSION->modresponse["filterfirstname-{$this->context->id}"]) ||
-                    !empty($SESSION->modresponse["filterlastname-{$this->context->id}"]) ||
+                $filterfirstname !== '' ||
+                    $filterlastname !== '' ||
                     $this->usersearch
             ) {
                 $reset = new moodle_url($this->resetpath, [
