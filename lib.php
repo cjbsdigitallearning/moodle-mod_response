@@ -42,7 +42,10 @@ function response_supports($feature) {
         case FEATURE_BACKUP_MOODLE2:
             return true;
         default:
-            return false;
+            // Return null for unknown features so core applies its own default
+            // (e.g. FEATURE_CAN_DISPLAY, added in Moodle 5.0, must not be a hard false
+            // or the activity can only be placed in section 0).
+            return null;
     }
 }
 
