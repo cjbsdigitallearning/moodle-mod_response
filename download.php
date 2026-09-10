@@ -30,12 +30,19 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/lib/csvlib.class.php');
 
 global $DB;
-require_login();
 
-$id = optional_param('id', '', PARAM_INT);
-$ids = optional_param('ids', '', PARAM_TEXT);
-$courseid = optional_param('course', '', PARAM_INT);
+$id = optional_param('id', 0, PARAM_INT);
+$ids = optional_param('ids', '', PARAM_SEQUENCE);
+$courseid = optional_param('course', 0, PARAM_INT);
+
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+
+require_login($course);
+require_sesskey();
+
+if (empty($id) && empty($ids)) {
+    throw new moodle_exception('invalidaccessparameter', 'error');
+}
 
 $allresponses = false;
 $csvs = [];
@@ -54,8 +61,9 @@ if (!empty($id)) {
 }
 
 foreach ($responses as $response) {
-    $cm = get_coursemodule_from_instance('response', $response->id);
+    $cm = get_coursemodule_from_instance('response', $response->id, $course->id, false, MUST_EXIST);
     $context = context_module::instance($cm->id);
+    require_capability('mod/response:viewall', $context);
     $users = get_enrolled_users($context, 'mod/response:participate');
 
     $subplugin = helper::instance_factory($response->responsetype, 'information');
