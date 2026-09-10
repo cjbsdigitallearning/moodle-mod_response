@@ -52,6 +52,12 @@ class mod_response_generator extends testing_module_generator {
         if (!isset($record->displaycompletion)) {
             $record->displaycompletion = 'full';
         }
+        if (!isset($record->displaycompletionbefore)) {
+            $record->displaycompletionbefore = 0;
+        }
+        if (!isset($record->displaycompletionafter)) {
+            $record->displaycompletionafter = 0;
+        }
 
         return parent::create_instance($record, (array) $options);
     }

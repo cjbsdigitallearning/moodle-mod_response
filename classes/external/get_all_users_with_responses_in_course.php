@@ -59,7 +59,18 @@ class get_all_users_with_responses_in_course extends external_api {
      * @return array Users to pass back to the calling widget.
      */
     public static function execute(int $courseid, int $cmid): array {
-        $context = \context_module::instance($cmid);
+        [
+            'courseid' => $courseid,
+            'cmid' => $cmid,
+        ] = self::validate_parameters(self::execute_parameters(), [
+            'courseid' => $courseid,
+            'cmid' => $cmid,
+        ]);
+
+        // Make sure the course module exists and belongs to the given course.
+        $cm = get_coursemodule_from_id('response', $cmid, $courseid, false, MUST_EXIST);
+
+        $context = \context_module::instance($cm->id);
         self::validate_context($context);
         require_capability('mod/response:viewall', $context);
 

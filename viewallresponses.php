@@ -51,12 +51,7 @@ foreach (['userid', 'search', 'ifirst', 'ilast'] as $param) {
 }
 
 // Set initials.
-if (!is_null($ifirst)) {
-    $SESSION->modresponse["filterfirstname-{$context->id}"] = $ifirst;
-}
-if (!is_null($ilast)) {
-    $SESSION->modresponse["filtersurname-{$context->id}"] = $ilast;
-}
+helper::set_initials_filter($context, $ifirst, $ilast);
 
 $PAGE->set_url('/mod/response/viewallresponses.php', ['id' => $cmid, ...$filters]);
 

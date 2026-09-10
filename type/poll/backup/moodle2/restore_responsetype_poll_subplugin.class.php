@@ -131,10 +131,10 @@ class restore_responsetype_poll_subplugin extends restore_subplugin {
         }
 
         foreach ($values as $userid => $response) {
-            $params = [$response['id'], $parentid, $userid];
-            $DB->execute('UPDATE {response_user}
-                             SET response_identifier = ?
-                           WHERE response = ? AND userid = ?', $params);
+            $DB->set_field('response_user', 'response_identifier', $response['id'], [
+                'response' => $parentid,
+                'userid' => $userid,
+            ]);
         }
     }
 }
