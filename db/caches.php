@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Cache definitions for mod_response.
  *
  * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @copyright 2025 Catalyst IT Europe Ltd.
+ * @author    Waleed Hassan <waleed.hassan@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025052203;
-$plugin->release   = '1.0.1';
-$plugin->requires  = 2024100700; // Moodle 4.5.0 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->supported = [
-    405,
-    501,
+$definitions = [
+
+    // Per-user, per-context initials filter selected on the "view all responses" pages.
+    'initialsfilter' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simpledata' => true,
+    ],
 ];
-$plugin->maturity  = MATURITY_ALPHA;

@@ -60,12 +60,7 @@ $response->cm = $cm;
 $response->course = $course;
 
 // Set initials.
-if (isset($firstinitial)) {
-    $SESSION->modresponse["filterfirstname-{$context->id}"] = $firstinitial;
-}
-if (isset($lastinitial)) {
-    $SESSION->modresponse["filtersurname-{$context->id}"] = $lastinitial;
-}
+helper::set_initials_filter($context, $firstinitial, $lastinitial);
 
 // Set up and show the form.
 $PAGE->set_title($course->shortname . ': ' . $response->name);

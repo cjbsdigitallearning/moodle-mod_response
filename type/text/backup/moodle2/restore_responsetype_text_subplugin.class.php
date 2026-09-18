@@ -142,10 +142,10 @@ class restore_responsetype_text_subplugin extends restore_subplugin {
         }
 
         foreach ($values as $userid => $response) {
-            $params = [$response['id'], $newresponseid, $userid];
-            $DB->execute('UPDATE {response_user}
-                             SET response_identifier = ?
-                           WHERE response = ? AND userid = ?', $params);
+            $DB->set_field('response_user', 'response_identifier', $response['id'], [
+                'response' => $newresponseid,
+                'userid' => $userid,
+            ]);
         }
     }
 }
