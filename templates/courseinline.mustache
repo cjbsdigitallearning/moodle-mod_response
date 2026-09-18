@@ -42,7 +42,7 @@
         "heading": "This response",
         "question": "Do you like responses?",
         "contextid": 64,
-        "form": { a string that contains a rendered Moodle form's HTML }
+        "form": "<form>...</form>"
     }
 }}
 
@@ -97,6 +97,9 @@
         </div>
         <div class="card-footer"></div>
     </div>
+    {{# fullpage }}
+        </section>
+    {{/ fullpage }}
 
 {{# form }}
 {{#js}}

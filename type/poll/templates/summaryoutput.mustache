@@ -42,12 +42,12 @@
         "icon": "<img class=\"smallicon\" alt=\"\" src=\"http://your.moodle.here/theme/image.php/clean/responsetype_poll/1506688378/icon\">",
         "activity_title": "The weather",
         "activity_question": "What's the weather doing today?",
-        "user_choice": "Sunny."
+        "user_choice": "Sunny.",
         "user_response": "It's sunny outside and it's warm for October.",
         "timemodified_date": "02/10/17",
         "response_id": "1",
-        "aggregate": "{\"group\":{\"title\":\"Answers given by your study group\",\"labels\":[\"Sunny\",\"Cloudy\",\"Stormy\",\"Raining\",\"Other\"],\"data\":[0,2,0,0,0]},\"all\":{\"title\":\"Answers given by all students\",\"labels\":[\"Sunny\",\"Cloudy\",\"Stormy\",\"Raining\",\"Other\"],\"data\":[0,2,0,0,0]} }",
-        "colours": "[\"#f3c300\",\"#875692\",\"#f38400\",\"#a1caf1\",\"#be0032\",\"#c2b280\",\"#7f180d\",\"#008856\",\"#e68fac\",\"#0067a5\"]"
+        "aggregate": "{}",
+        "colours": "[]"
     }
 }}
 <div class="activity-title responsetype-poll" data-response="{{response_id}}">
@@ -94,5 +94,5 @@
 {{#js}}
 require(['mod_response/summarychart'], function(summarychart) {
     summarychart({{response_id}}, {{{aggregate}}}, {{{colours}}}, {{#quote}}{{# str }} selectedby, responsetype_poll {{/ str }}{{/quote}});
-})
+});
 {{/js}}
