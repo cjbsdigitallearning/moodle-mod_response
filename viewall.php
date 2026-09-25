@@ -118,7 +118,6 @@ if (has_capability('mod/response:manage', $context)) {
 if (has_capability('mod/response:viewall', $context, $USER)) {
     // Params for the download.
     $urlparams['id'] = $response->id;
-    $urlparams['course'] = $course->id;
     $urlparams['sesskey'] = sesskey();
     $url = new moodle_url('/mod/response/download.php', $urlparams);
     $button = new single_button($url, get_string('downloadresponses', 'response'), 'post');

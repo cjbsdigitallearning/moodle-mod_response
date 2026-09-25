@@ -31,11 +31,10 @@ require_once($CFG->dirroot . '/lib/csvlib.class.php');
 
 global $DB;
 require_login();
+require_sesskey();
 
 $id = optional_param('id', '', PARAM_INT);
-$ids = optional_param('ids', '', PARAM_TEXT);
-$courseid = optional_param('course', '', PARAM_INT);
-$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+$ids = optional_param('ids', '', PARAM_SEQUENCE);
 
 $allresponses = false;
 $csvs = [];
@@ -46,16 +45,38 @@ if (!empty($id)) {
 } else {
     // All responses.
     $allresponses = true;
-    [$insql, $inparams] = $DB->get_in_or_equal(explode(',', $ids));
+    $responseids = clean_param_array(explode(',', $ids), PARAM_INT);
+    if (empty($responseids)) {
+        throw new moodle_exception('invalidaccessparameter', 'error');
+    }
+    [$insql, $inparams] = $DB->get_in_or_equal($responseids);
     $sql = "SELECT *
               FROM {response}
                    WHERE id " . $insql;
     $responses = $DB->get_records_sql($sql, $inparams);
 }
 
+if (empty($responses)) {
+    throw new moodle_exception('invalidaccessparameter', 'error');
+}
+
+// The course is derived from each response's course module rather than trusted from user input, and every
+// response in the batch is checked and required to belong to the same course.
+$course = null;
+
 foreach ($responses as $response) {
-    $cm = get_coursemodule_from_instance('response', $response->id);
+    $cm = get_coursemodule_from_instance('response', $response->id, 0, false, MUST_EXIST);
+
+    if ($course === null) {
+        $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    } else if ((int) $course->id !== (int) $cm->course) {
+        throw new moodle_exception('invalidcoursemodule', 'error');
+    }
+
+    require_course_login($course, true, $cm);
     $context = context_module::instance($cm->id);
+    require_capability('mod/response:viewall', $context);
+
     $users = get_enrolled_users($context, 'mod/response:participate');
 
     $subplugin = helper::instance_factory($response->responsetype, 'information');
