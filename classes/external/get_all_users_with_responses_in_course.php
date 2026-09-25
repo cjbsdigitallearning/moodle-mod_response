@@ -59,11 +59,16 @@ class get_all_users_with_responses_in_course extends external_api {
      * @return array Users to pass back to the calling widget.
      */
     public static function execute(int $courseid, int $cmid): array {
-        $context = \context_module::instance($cmid);
+        $params = self::validate_parameters(
+            self::execute_parameters(),
+            ['courseid' => $courseid, 'cmid' => $cmid],
+        );
+
+        $context = \context_module::instance($params['cmid']);
         self::validate_context($context);
         require_capability('mod/response:viewall', $context);
 
-        $userids = helper::get_all_userids_with_responses_in_course($courseid);
+        $userids = helper::get_all_userids_with_responses_in_course($params['courseid']);
         return [
             'users' => core_user_external::get_users_by_field('id', $userids),
         ];
