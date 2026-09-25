@@ -59,6 +59,9 @@ require_capability('mod/response:view', $context);
 $response->course = $cm->course;
 $response->cm = $cm;
 
+// Mark viewed and trigger the course_module_viewed event.
+response_view($response, $course, $cm, $context);
+
 // Editing requires privileges.
 $canedit = has_capability('mod/response:editown', $context);
 $response->is_editing = false;
