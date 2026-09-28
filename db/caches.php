@@ -15,21 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Cache definitions for mod_response.
  *
  * @package   mod_response
- * @copyright 2017 Peter Spicer <peter.spicer@catalyst-eu.net>
+ * @author    Simon Thornett <simon.thornett@catalyst-eu.net>
+ * @copyright Catalyst IT, 2026
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026092801;
-$plugin->release   = '1.0.1';
-$plugin->requires  = 2016052307; // Moodle 3.1.7 release is the minimum targeted version.
-$plugin->component = 'mod_response';
-$plugin->supported = [
-    403,
-    405,
+$definitions = [
+    // Remembers the "initials" name filter a user has applied to the viewall/viewallresponses pages, per module context,
+    // for the duration of their session.
+    'initialsfilter' => [
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'simpledata' => true,
+    ],
 ];
-$plugin->maturity  = MATURITY_ALPHA;

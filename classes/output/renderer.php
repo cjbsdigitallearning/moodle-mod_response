@@ -21,6 +21,7 @@ use context_module;
 use plugin_renderer_base;
 use stdClass;
 use mod_response\helper;
+use mod_response\initials_filter;
 
 /**
  * Rendering a response activity.
@@ -245,12 +246,13 @@ class renderer extends plugin_renderer_base {
         \context $context,
         string $slug
     ): stdClass {
-        global $SESSION, $COURSE;
+        global $COURSE;
         // User search.
         $searchvalue = optional_param('search', null, PARAM_NOTAGS);
         $url = new \moodle_url($slug, ['id' => $context->instanceid]);
-        $firstinitial = $SESSION->modresponse["filterfirstname-{$context->id}"] ?? '';
-        $lastinitial  = $SESSION->modresponse["filtersurname-{$context->id}"] ?? '';
+        $initialsfilter = initials_filter::get($context->id);
+        $firstinitial = $initialsfilter['firstinitial'];
+        $lastinitial  = $initialsfilter['lastinitial'];
 
         $renderer = $this->page->get_renderer('core_user');
         $initialsbar = $renderer->partial_user_search($url, $firstinitial, $lastinitial, true);
