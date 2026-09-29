@@ -23,6 +23,7 @@
  */
 
 use mod_response\helper;
+use mod_response\initials_filter;
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
@@ -51,12 +52,7 @@ foreach (['userid', 'search', 'ifirst', 'ilast'] as $param) {
 }
 
 // Set initials.
-if (!is_null($ifirst)) {
-    $SESSION->modresponse["filterfirstname-{$context->id}"] = $ifirst;
-}
-if (!is_null($ilast)) {
-    $SESSION->modresponse["filtersurname-{$context->id}"] = $ilast;
-}
+initials_filter::set($context->id, $ifirst, $ilast);
 
 $PAGE->set_url('/mod/response/viewallresponses.php', ['id' => $cmid, ...$filters]);
 

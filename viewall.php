@@ -23,6 +23,7 @@
  */
 
 use mod_response\helper;
+use mod_response\initials_filter;
 
 require('../../config.php');
 require_once($CFG->dirroot . '/mod/response/lib.php');
@@ -60,12 +61,7 @@ $response->cm = $cm;
 $response->course = $course;
 
 // Set initials.
-if (isset($firstinitial)) {
-    $SESSION->modresponse["filterfirstname-{$context->id}"] = $firstinitial;
-}
-if (isset($lastinitial)) {
-    $SESSION->modresponse["filtersurname-{$context->id}"] = $lastinitial;
-}
+initials_filter::set($context->id, $firstinitial, $lastinitial);
 
 // Set up and show the form.
 $PAGE->set_title($course->shortname . ': ' . $response->name);
