@@ -4,11 +4,11 @@ Response is new style of Moodle activity that can either exist on its own page o
 
 A report of all response activities within a Moodle course is available to both students and teachers, with teachers being able to download all responses for further analysis or use in other tools or activities. Our aim is to expand the reporting capabilities in time to allow responses form multiple Moodle courses to be reported on.
 
-# Use cases
+## Use cases
 1) Quick poll on the understanding of a topic or concept, with a reflection text response allowing students to expand on the why behind their poll response.
 2) As a reflective learning journal building up small bite size reflections on each topic or concept in a course for later reflection by the student or to help with revision, these may assist the teacher in understanding how students are learning and which areas they might need to provide more content or revisit ahead of summative assessment.
 
-## License ##
+### License ###
 
 The plugin was originally developed by Catalyst IT Europe (http://www.catalyst-eu.net/)
 
