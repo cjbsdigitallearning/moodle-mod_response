@@ -1,6 +1,5 @@
 # Response
 
-##
 Response is new style of Moodle activity that can either exist on its own page or inline within a course, like a Text and media area (aka Label). The main plugin is designed to encourage student participation by displaying (or not) that other students have already responded. Sub-plugins allow for different types of response, such as polls or free text responses from students. Reports and graphs are produced to provide teachers with actionable metrics.
 
 A report of all response activities within a Moodle course is available to both students and teachers, with teachers being able to download all responses for further analysis or use in other tools or activities. Our aim is to expand the reporting capabilities in time to allow responses form multiple Moodle courses to be reported on.
